@@ -1,8 +1,8 @@
-import React, { forwardRef, useState } from 'react';
-import { Map, Plane, Home } from 'lucide-react';
+import { forwardRef, useState } from "react";
+import { Map, Plane, Home } from "lucide-react";
 
 export const DetailsSection = forwardRef<HTMLElement>((_, ref) => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
   const renderAccommodationTable = () => (
     <div className="details-table">
@@ -334,37 +334,37 @@ export const DetailsSection = forwardRef<HTMLElement>((_, ref) => {
     <section id="details" ref={ref} className="content-section">
       <div className="content-wrapper">
         <h2 className="details-title">ДЕТАЛИ МАРШРУТА</h2>
-        
+
         <div className="details-tabs">
-          <button 
-            className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveTab('overview')}
+          <button
+            className={`tab ${activeTab === "overview" ? "active" : ""}`}
+            onClick={() => setActiveTab("overview")}
           >
             <Map size={24} />
             <span>Обзор</span>
           </button>
-          <button 
-            className={`tab ${activeTab === 'flights' ? 'active' : ''}`}
-            onClick={() => setActiveTab('flights')}
+          <button
+            className={`tab ${activeTab === "flights" ? "active" : ""}`}
+            onClick={() => setActiveTab("flights")}
           >
             <Plane size={24} />
             <span>Рейсы</span>
           </button>
-          <button 
-            className={`tab ${activeTab === 'accommodation' ? 'active' : ''}`}
-            onClick={() => setActiveTab('accommodation')}
+          <button
+            className={`tab ${activeTab === "accommodation" ? "active" : ""}`}
+            onClick={() => setActiveTab("accommodation")}
           >
             <Home size={24} />
             <span>Проживание</span>
           </button>
         </div>
 
-        {activeTab === 'overview' && renderOverviewTable()}
-        {activeTab === 'flights' && renderFlightsTable()}
-        {activeTab === 'accommodation' && renderAccommodationTable()}
+        {activeTab === "overview" && renderOverviewTable()}
+        {activeTab === "flights" && renderFlightsTable()}
+        {activeTab === "accommodation" && renderAccommodationTable()}
       </div>
     </section>
   );
 });
 
-DetailsSection.displayName = 'DetailsSection';
+DetailsSection.displayName = "DetailsSection";

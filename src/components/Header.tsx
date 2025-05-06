@@ -1,6 +1,7 @@
 import React from 'react';
 import { Share2, Sun, Menu } from 'lucide-react';
 import { Logo } from './Logo';
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   currentSection: string;
@@ -8,12 +9,12 @@ interface HeaderProps {
   scrollToDetails: () => void;
 }
 
-export function Header({ currentSection, navRef, scrollToDetails }: HeaderProps) {
+const Header = ({ currentSection, navRef, scrollToDetails }: HeaderProps) => {
   return (
     <header className="header">
-      <a href="/" className="logo">
+      <Link to="/" className="logo">
         <Logo />
-      </a>
+      </Link>
       <nav className="nav" ref={navRef}>
         <a href="#hero" className={`nav-link ${currentSection === 'hero' ? 'active' : ''}`}>Титульная страница</a>
         <a href="#details" onClick={scrollToDetails} className={`nav-link ${currentSection === 'details' ? 'active' : ''}`}>Детали маршрута</a>
@@ -33,3 +34,5 @@ export function Header({ currentSection, navRef, scrollToDetails }: HeaderProps)
     </header>
   );
 }
+
+export default Header;

@@ -2,6 +2,8 @@ import React from 'react';
 import { Share2, Sun, Menu } from 'lucide-react';
 import { Logo } from './Logo';
 import { Link } from 'react-router-dom';
+import { RootState } from '../store';
+import { useSelector } from 'react-redux';
 
 interface HeaderProps {
   currentSection: string;
@@ -10,10 +12,15 @@ interface HeaderProps {
 }
 
 const Header = ({ currentSection, navRef, scrollToDetails }: HeaderProps) => {
+  const name_eng = useSelector((state: RootState) => state.travelProgram.program?.name_eng);
   return (
     <header className="header">
-      <Link to="/" className="logo">
-        <Logo />
+      <Link to={isLoggedIn ? '/admin' : `/travel-programm/${name_eng}`} className="logo">
+        {isLoggedIn ? (
+          <span className="admin-text">ADMIN</span>
+        ) : (
+          <Logo />
+        )}
       </Link>
       <nav className="nav" ref={navRef}>
         <a href="#hero" className={`nav-link ${currentSection === 'hero' ? 'active' : ''}`}>Титульная страница</a>

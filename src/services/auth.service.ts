@@ -1,35 +1,6 @@
-import api from '../api/baseApi';
 import { authActions } from '../store/reducers/auth';
 import { store } from '../store';
 import AuthApi from '../api/auth.api';
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-interface RegisterCredentials {
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}
-
-
-
-interface RefreshResponse {
-  accessToken: string;
-}
-
-interface ValidateSessionResponse {
-  user: User;
-}
 
 const clearAuthState = () => {
   store.dispatch(authActions.setToken(null));
@@ -38,7 +9,7 @@ const clearAuthState = () => {
 };
 
 export const authService = {
-  async login(credentials: LoginCredentials) {
+  async login(credentials: Parameters<typeof AuthApi.login>[0]) {
     try {
       const response = await AuthApi.login(credentials);
       
@@ -54,13 +25,9 @@ export const authService = {
     }
   },
 
-  async register(credentials: RegisterCredentials) {
+  async register(credentials: Parameters<typeof AuthApi.register>[0]) {
     try {
-      const response = await api.post('auth/register', {
-        json: credentials,
-        timeout: 10000,
-      });
-      
+      const response = await AuthApi.register(credentials);
       return response;
     } catch (error) {
       console.error('Registration error:', error);
@@ -70,13 +37,8 @@ export const authService = {
 
   async refreshToken() {
     try {
-      const response = await api.post('auth/refresh-token', {
-        credentials: 'include',
-        timeout: 5000,
-      }).json<RefreshResponse>();
-      
+      const response = await AuthApi.refreshToken();
       store.dispatch(authActions.setToken(response.accessToken));
-      
       return response.accessToken;
     } catch (error) {
       console.error('Refresh token error:', error);
@@ -87,15 +49,8 @@ export const authService = {
 
   async logout(silent = false) {
     try {
-      // First clear the local state
       clearAuthState();
-      
-      // Then attempt to clear the server-side session
-      await api.post('auth/logout', {
-        credentials: 'include',
-        timeout: 5000,
-        retry: 0,
-      });
+      await AuthApi.logout();
     } catch (error) {
       if (!silent) {
         console.error('Logout error:', error);
@@ -106,14 +61,9 @@ export const authService = {
 
   async validateSession() {
     try {
-      const response = await api.get('auth/profile', {
-        credentials: 'include',
-        timeout: 5000,
-      }).json<ValidateSessionResponse>();
-      
+      const response = await AuthApi.validateSession();
       store.dispatch(authActions.setUser(response.user));
       store.dispatch(authActions.setIsLoggedIn(true));
-      
       return response.user;
     } catch (error) {
       clearAuthState();

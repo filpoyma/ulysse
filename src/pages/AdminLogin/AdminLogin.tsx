@@ -1,26 +1,24 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { authService } from '../../services';
-import styles from './AdminLogin.module.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { authService } from "../../services";
+import styles from "./AdminLogin.module.css";
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    
+    setError("");
+
     try {
       await authService.login({ email, password });
-      navigate('/admin');
+      navigate("/admin");
     } catch (err) {
-      setError('Invalid email or password');
-      console.error('Login error:', err);
+      setError("Invalid email or password");
+      console.error("Login error:", err);
     }
   };
 
@@ -50,9 +48,13 @@ const AdminLogin = () => {
               required
             />
           </div>
-          <button type="submit" className={styles.button}>Login</button>
+          <button type="submit" className={styles.button}>
+            Login
+          </button>
           <div className={styles.links}>
-            <Link to="/ulyseadmin/register">Don't have an account? Register</Link>
+            <Link to="/ulyseadmin/register">
+              Don't have an account? Register
+            </Link>
           </div>
         </form>
       </div>

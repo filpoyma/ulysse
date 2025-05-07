@@ -1,16 +1,27 @@
-import api from '../api/baseApi';
+import travelProgramApi from "../api/travelProgram.api.ts";
+import { travelProgramActions } from "../store/reducers/travelProgram";
+import { store } from "../store";
 
 export const travelProgramService = {
-  async getAll() {
-    return api.get('travel-program').json();
+  getAll() {
+    return travelProgramApi.getAll();
   },
-  async createTemplate(name: string) {
-    return api.post('travel-program/template', { json: { name } }).json();
+  createTemplate(name: string) {
+    return travelProgramApi.createTemplate(name);
   },
   async getById(id: string) {
-    return api.get(`travel-program/${id}`).json();
+    const res = await travelProgramApi.getById(id);
+    if (res && res.data) {
+      store.dispatch(travelProgramActions.setProgram(res.data));
+    }
   },
   async getByName(name: string) {
-    return api.get(`travel-program/name/${name}`).json();
+    const res = await travelProgramApi.getByName(name);
+    if (res && res.data) {
+      store.dispatch(travelProgramActions.setProgram(res.data));
+    }
   },
-}; 
+  async delete(id: string) {
+    return travelProgramApi.delete(id);
+  },
+};

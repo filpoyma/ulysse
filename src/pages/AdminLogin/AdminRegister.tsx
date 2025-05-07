@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { authService } from '../../services';
-import styles from './AdminLogin.module.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { authService } from "../../services";
+import styles from "./AdminLogin.module.css";
 
 const AdminRegister = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    
+    setError("");
+
     try {
       await authService.register({ name, email, password });
-      navigate('/ulyseadmin'); // Redirect to login page after successful registration
+      navigate("/admin");
     } catch (err) {
-      setError('Registration failed. Please try again.');
-      console.error('Registration error:', err);
+      setError("Registration failed. Please try again.");
+      console.error("Registration error:", err);
     }
   };
 
@@ -59,7 +59,9 @@ const AdminRegister = () => {
               required
             />
           </div>
-          <button type="submit" className={styles.button}>Register</button>
+          <button type="submit" className={styles.button}>
+            Register
+          </button>
           <div className={styles.links}>
             <Link to="/ulyseadmin">Already have an account? Login</Link>
           </div>

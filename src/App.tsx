@@ -1,8 +1,8 @@
 import React, { Suspense, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { authService } from "./services";
-import AdminPanel from './pages/AdminPanel';
-import NotFoundPage from './pages/NotFoundPage';
+import AdminPanel from './pages/AdminPanel/AdminPanel';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 const TravelProgram = React.lazy(() => import("./pages/TravelProgram"));
 const AdminLogin = React.lazy(() => import("./pages/AdminLogin/AdminLogin"));

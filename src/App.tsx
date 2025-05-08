@@ -1,6 +1,5 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import { authService } from "./services";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 
@@ -13,14 +12,6 @@ const AdminRegister = React.lazy(
 );
 
 const App = () => {
-  useEffect(() => {
-    // Validate session on app load
-    authService.validateSession().catch(() => {
-      // Error handling is done in the service
-      console.log("Session validation failed");
-    });
-  }, []);
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>

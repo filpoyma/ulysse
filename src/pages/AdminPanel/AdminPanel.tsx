@@ -8,6 +8,7 @@ import styles from "./AdminPanel.module.css";
 import AdminNav from "./components/AdminNav.tsx";
 import { ProgramsSection } from "./components/ProgramsSection";
 import { HotelsSection } from "./components/HotelsSection";
+import { Loader } from "../../components/Loader/Loader";
 
 type NavItem =
   | "itineraries"
@@ -52,11 +53,11 @@ const AdminPanel: FC = () => {
   };
 
   if (isValidating) {
-    return <div className={styles.loading}>Loading...</div>;
+    return <Loader />;
   }
 
   if (!isLoggedIn) {
-   return <AdminSignIn />;
+    return <AdminSignIn />;
   }
 
   return (

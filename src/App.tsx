@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+import { Loader } from "./components/Loader/Loader";
 
 const TravelProgram = React.lazy(() => import("./pages/TravelProgram"));
 const AdminLogin = React.lazy(
@@ -13,7 +14,7 @@ const AdminRegister = React.lazy(
 
 const App = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loader />}>
       <Routes>
         <Route
           path="/travel-programm/:programName"

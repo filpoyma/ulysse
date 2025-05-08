@@ -4,6 +4,7 @@ import { usePrograms } from "../hooks/usePrograms";
 import { SectionHeader } from "./SectionHeader";
 import ProgramsTable from "./ProgramsTable.tsx";
 import CreateTemplateModal from "../../../components/CreateTemplateModal/CreateTemplateModal";
+import { Loader } from "../../../components/Loader/Loader";
 import styles from "../AdminPanel.module.css";
 
 export const ProgramsSection: FC = () => {
@@ -36,7 +37,7 @@ export const ProgramsSection: FC = () => {
       />
       {error && <div className={styles.error}>{error}</div>}
       {loading ? (
-        <div className={styles.loading}>Загрузка...</div>
+        <Loader />
       ) : (
         <ProgramsTable
           programs={programs}

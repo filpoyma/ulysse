@@ -2,6 +2,7 @@ import { FC, useEffect } from "react";
 import { useHotelsCollect } from "../hooks/useHotelsCollect.ts";
 import { SectionHeader } from "./SectionHeader";
 import HotelsCollectTable from "./HotelsCollectTable.tsx";
+import { Loader } from "../../../components/Loader/Loader";
 import styles from "../AdminPanel.module.css";
 
 export const HotelsSection: FC = () => {
@@ -42,7 +43,7 @@ export const HotelsSection: FC = () => {
       />
       {error && <div className={styles.error}>{error}</div>}
       {loading ? (
-        <div className={styles.loading}>Загрузка...</div>
+        <Loader />
       ) : (
         <HotelsCollectTable
           hotels={hotels}

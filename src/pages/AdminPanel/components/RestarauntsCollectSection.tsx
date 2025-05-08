@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { Loader } from "../../../components/Loader/Loader";
+import OverlayLoader from "../../../components/Loader/OverlayLoader";
 import { SectionHeader } from "./SectionHeader";
 import RestarauntsCollectTable from "./RestarauntsCollectTable";
 import { useRestarauntsCollect } from "../hooks/useRestarauntsCollect";
@@ -34,12 +34,12 @@ export const RestarauntsCollectSection: FC = () => {
   return (
     <div className={styles.section}>
       <SectionHeader
-        title="Рестораны"
+        title="Список ресторанов"
         onCreateClick={handleCreateRestarauntClick}
         isCreating={isCreating}
       />
       {error && <div className={styles.error}>{error}</div>}
-      {loading && <Loader />}
+      {<OverlayLoader isLoading={loading} />}
       <RestarauntsCollectTable
         restaraunts={restaraunts}
         isCreatingRestaraunt={isCreating}

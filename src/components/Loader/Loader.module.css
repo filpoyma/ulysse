@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: var(--header-bg);
+  background-color: var(--accent-color);
 }
 
 .loader {
@@ -17,7 +17,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: var(--accent-color);
+  background-color: var(--header-bg);
   animation: bounce 0.5s ease-in-out infinite;
 }
 
@@ -44,4 +44,4 @@
   50% {
     transform: translateY(-10px);
   }
-} 
+}

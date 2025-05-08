@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../../services";
 import styles from "./AdminLogin.module.css";
+import { Loader } from "../../components/Loader/Loader.tsx";
 
 const AdminSignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -14,13 +17,18 @@ const AdminSignIn = () => {
     setError("");
 
     try {
+      setIsLoading(true);
       await authService.login({ email, password });
       navigate("/admin");
     } catch (err) {
       setError("Invalid email or password");
       console.error("Login error:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className={styles.container}>

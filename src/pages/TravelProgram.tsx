@@ -17,7 +17,7 @@ const TravelProgram = () => {
   const navRef = useRef<HTMLElement>(null);
   const [currentSection, setCurrentSection] = useState('hero');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImageNumber, setSelectedImageNumber] = useState<number | null>(null);
+  const [selectedImageNumber, setSelectedImageNumber] = useState<number | null>(0);
 
   const dispatch = useDispatch();
   const program = useSelector((state: RootState) => state.travelProgram.program);

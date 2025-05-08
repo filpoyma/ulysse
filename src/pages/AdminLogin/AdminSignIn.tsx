@@ -3,8 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../../services";
 import styles from "./AdminLogin.module.css";
 
-const AdminRegister = () => {
-  const [name, setName] = useState("");
+const AdminSignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,30 +14,20 @@ const AdminRegister = () => {
     setError("");
 
     try {
-      await authService.register({ name, email, password });
+      await authService.login({ email, password });
       navigate("/admin");
     } catch (err) {
-      setError("Registration failed. Please try again.");
-      console.error("Registration error:", err);
+      setError("Invalid email or password");
+      console.error("Login error:", err);
     }
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.form}>
-        <h1>Admin Registration</h1>
+        <h1>Admin Login</h1>
         <form onSubmit={handleSubmit}>
           {error && <div className={styles.error}>{error}</div>}
-          <div className={styles.formGroup}>
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
           <div className={styles.formGroup}>
             <label htmlFor="email">Email</label>
             <input
@@ -60,10 +49,12 @@ const AdminRegister = () => {
             />
           </div>
           <button type="submit" className={styles.button}>
-            Register
+            Login
           </button>
           <div className={styles.links}>
-            <Link to="/ulyseadmin">Already have an account? Login</Link>
+            <Link to="/ulyseadmin/register">
+              Don't have an account? Register
+            </Link>
           </div>
         </form>
       </div>
@@ -71,4 +62,4 @@ const AdminRegister = () => {
   );
 };
 
-export default AdminRegister;
+export default AdminSignIn;

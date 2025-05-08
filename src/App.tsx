@@ -1,13 +1,15 @@
 import React, { Suspense, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { authService } from "./services";
-import AdminPanel from './pages/AdminPanel/AdminPanel';
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import AdminPanel from "./pages/AdminPanel/AdminPanel";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 
 const TravelProgram = React.lazy(() => import("./pages/TravelProgram"));
-const AdminLogin = React.lazy(() => import("./pages/AdminLogin/AdminLogin"));
+const AdminLogin = React.lazy(
+  () => import("./pages/AdminLogin/AdminSignIn.tsx")
+);
 const AdminRegister = React.lazy(
-  () => import("./pages/AdminLogin/AdminRegister")
+  () => import("./pages/AdminLogin/AdminSighUp.tsx")
 );
 
 const App = () => {
@@ -22,7 +24,10 @@ const App = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="/travel-programm/:programName" element={<TravelProgram />} />
+        <Route
+          path="/travel-programm/:programName"
+          element={<TravelProgram />}
+        />
         <Route path="/ulyseadmin" element={<AdminLogin />} />
         <Route path="/ulyseadmin/register" element={<AdminRegister />} />
         <Route path="/admin" element={<AdminPanel />} />

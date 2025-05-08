@@ -24,8 +24,9 @@ const CreateTemplateModal: React.FC<Props> = ({ open, onClose, onCreate }) => {
           style={{ width: '100%', margin: '16px 0', padding: 8, fontSize: 16 }}
         />
         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-          <button onClick={onClose}>Отмена</button>
+          <button className="modal-btn" onClick={onClose}>Отмена</button>
           <button
+            className="modal-btn"
             onClick={() => {
               if (name.trim()) onCreate(name.trim());
             }}

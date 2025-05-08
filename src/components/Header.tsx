@@ -4,6 +4,7 @@ import { Logo } from './Logo';
 import { Link } from 'react-router-dom';
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
+import { selectIsLoggedIn } from '../store/selectors';
 
 interface HeaderProps {
   currentSection: string;
@@ -13,6 +14,7 @@ interface HeaderProps {
 
 const Header = ({ currentSection, navRef, scrollToDetails }: HeaderProps) => {
   const name_eng = useSelector((state: RootState) => state.travelProgram.program?.name_eng);
+  const isLoggedIn = useSelector(selectIsLoggedIn)
   return (
     <header className="header">
       <Link to={isLoggedIn ? '/admin' : `/travel-programm/${name_eng}`} className="logo">

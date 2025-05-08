@@ -1,7 +1,7 @@
-import { FC } from 'react';
-import { Edit, Trash2 } from 'lucide-react';
-import { TravelProgram } from '../../types/travelProgram.types';
-import styles from './AdminPanel.module.css';
+import { FC } from "react";
+import { Edit, Trash2 } from "lucide-react";
+import { TravelProgram } from "../../../types/travelProgram.types.ts";
+import styles from "../AdminPanel.module.css";
 
 interface ProgramsTableProps {
   programs: TravelProgram[];
@@ -9,10 +9,10 @@ interface ProgramsTableProps {
   onDeleteProgram: (id: string) => void;
 }
 
-const ProgramsTable: FC<ProgramsTableProps> = ({ 
-  programs, 
-  onProgramClick, 
-  onDeleteProgram 
+const ProgramsTable: FC<ProgramsTableProps> = ({
+  programs,
+  onProgramClick,
+  onDeleteProgram,
 }) => {
   return (
     <div className={styles.tableWrapper}>
@@ -66,4 +66,4 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
   );
 };
 
-export default ProgramsTable; 
+export default ProgramsTable;

@@ -3,7 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../../services";
 import styles from "./AdminLogin.module.css";
 
-const AdminLogin = () => {
+const AdminSighUp = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,20 +15,30 @@ const AdminLogin = () => {
     setError("");
 
     try {
-      await authService.login({ email, password });
+      await authService.register({ name, email, password });
       navigate("/admin");
     } catch (err) {
-      setError("Invalid email or password");
-      console.error("Login error:", err);
+      setError("Registration failed. Please try again.");
+      console.error("Registration error:", err);
     }
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.form}>
-        <h1>Admin Login</h1>
+        <h1>Admin Registration</h1>
         <form onSubmit={handleSubmit}>
           {error && <div className={styles.error}>{error}</div>}
+          <div className={styles.formGroup}>
+            <label htmlFor="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
           <div className={styles.formGroup}>
             <label htmlFor="email">Email</label>
             <input
@@ -49,12 +60,10 @@ const AdminLogin = () => {
             />
           </div>
           <button type="submit" className={styles.button}>
-            Login
+            Register
           </button>
           <div className={styles.links}>
-            <Link to="/ulyseadmin/register">
-              Don't have an account? Register
-            </Link>
+            <Link to="/ulyseadmin">Already have an account? Login</Link>
           </div>
         </form>
       </div>
@@ -62,4 +71,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default AdminSighUp;

@@ -109,13 +109,15 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
 
   // Клик по превью для выбора фона
   const handlePreviewClick = async (img: UploadedImage) => {
+    console.log(imageNumber, programName);
     if (!programName || imageNumber === null) return;
     const imageId = img._id || img.id;
+    console.log('imageId', imageId);
     if (!imageId) return;
     try {
       const res = await imageService.setBgImage({ programName, imageId, imageNumber });
       // Обновляем bgImages в сторе
-  
+      console.log('program', program);
       if (program) {
         console.log('imageNumber', imageNumber);
         const newBgImages = [...(res.data.program.bgImages || [])];

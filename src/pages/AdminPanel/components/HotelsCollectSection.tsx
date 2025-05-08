@@ -9,8 +9,15 @@ export const HotelsCollectSection: FC = () => {
   const {
     hotels,
     isCreatingHotel,
+    newHotel,
+    editingHotelId,
+    editingHotelData,
+    sortField,
+    sortOrder,
     error,
     loading,
+    nameInputRef,
+    handleSortHotels,
     handleHotelClick,
     handleEditHotelChange,
     handleSaveEditHotel,
@@ -24,34 +31,40 @@ export const HotelsCollectSection: FC = () => {
   } = useHotelsCollect();
 
   useEffect(() => {
-    fetchHotels();
-  }, [fetchHotels]);
+    if (!hotels.length) fetchHotels();
+  }, []);
 
   return (
-    <div className={styles.section}>
+    <>
       <SectionHeader
-        title="Отели"
+        title="Список отелей"
         onCreateClick={handleCreateHotelClick}
         isCreating={isCreatingHotel}
       />
-
       {error && <div className={styles.error}>{error}</div>}
-      {loading && <Loader />}
-
-      {hotels && (
+      {loading ? (
+        <Loader />
+      ) : (
         <HotelsCollectTable
           hotels={hotels}
           onHotelClick={handleHotelClick}
           onDeleteHotel={handleDeleteHotel}
           isCreatingHotel={isCreatingHotel}
+          newHotel={newHotel}
           onNewHotelChange={handleNewHotelChange}
           onSaveNewHotel={handleSaveNewHotel}
           onCancelNewHotel={handleCancelNewHotel}
+          nameInputRef={nameInputRef}
+          editingHotelId={editingHotelId}
+          editingHotelData={editingHotelData}
           onEditHotelChange={handleEditHotelChange}
           onSaveEditHotel={handleSaveEditHotel}
           onCancelEditHotel={handleCancelEditHotel}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          onSort={handleSortHotels}
         />
       )}
-    </div>
+    </>
   );
 };

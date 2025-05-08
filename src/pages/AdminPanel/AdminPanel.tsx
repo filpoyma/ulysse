@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import styles from "./AdminPanel.module.css";
 import AdminNav from "./components/AdminNav.tsx";
 import { ProgramsSection } from "./components/ProgramsSection";
-import { HotelsSection } from "./components/HotelsSection";
+import { HotelsCollectSection } from "./components/HotelsCollectSection.tsx";
+import { RestarauntsCollectSection } from "./components/RestarauntsCollectSection";
 import { Loader } from "../../components/Loader/Loader";
 
 type NavItem =
@@ -71,7 +72,8 @@ const AdminPanel: FC = () => {
       {error && <div className={styles.error}>{error}</div>}
 
       {activeNavItem === "itineraries" && <ProgramsSection />}
-      {activeNavItem === "hotels-collections" && <HotelsSection />}
+      {activeNavItem === "hotels-collections" && <HotelsCollectSection />}
+      {activeNavItem === "restaurants-collections" && <RestarauntsCollectSection />}
     </div>
   );
 };

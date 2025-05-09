@@ -1,6 +1,5 @@
 import api from "../api/baseApi";
 
-
 interface FirstPageData {
   title: string;
   subtitle: string;
@@ -38,7 +37,7 @@ const travelProgramApi = {
   },
   async updateFirstPage(id: string, data: FirstPageData) {
     const url = this.getUrl(`${id}/first-page`);
-    return api.put(url, { json: { data } }).json();
+    return api.put(url, { json: data }).json();
   },
 };
 

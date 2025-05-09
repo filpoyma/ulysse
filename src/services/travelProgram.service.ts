@@ -34,10 +34,11 @@ export const travelProgramService = {
   async delete(id: string) {
     return travelProgramApi.delete(id);
   },
-  async updateFirstPage(programName: string, data: FirstPageData): Promise<ApiResponse<any>> {
+  async updateFirstPage(programName: string, data: FirstPageData) {
     const res = await travelProgramApi.updateFirstPage(programName, data);
     if (res?.data) {
-      store.dispatch(travelProgramActions.setProgram(res.data));
+      console.log("data>>>>>>>>>>>>", res?.data);
+      store.dispatch(travelProgramActions.updateProgram({firstPage: res.data}));
     }
   },
 };

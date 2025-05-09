@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { FirstPage } from '../../../types/travelProgram.types';
 
 export interface IBgImage {
   _id: string;
@@ -11,6 +12,7 @@ export interface ITravelProgram {
   _id: string;
   name: string;
   bgImages: IBgImage[];
+  firstPage: FirstPage;
   [key: string]: any;
 }
 

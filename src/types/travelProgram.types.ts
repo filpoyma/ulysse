@@ -5,6 +5,12 @@ export interface BackgroundImage {
   updatedAt: string;
 }
 
+export interface FirstPage {
+  title: string;
+  subtitle: string;
+  footer: string;
+}
+
 export interface TravelProgram {
   _id: string;
   name: string;
@@ -12,6 +18,7 @@ export interface TravelProgram {
   createdAt: string;
   updatedAt: string;
   bgImages: BackgroundImage[];
+  firstPage: FirstPage;
   // TODO: Add more fields as needed
 }
 

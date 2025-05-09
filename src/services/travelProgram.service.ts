@@ -37,8 +37,9 @@ export const travelProgramService = {
   async updateFirstPage(programName: string, data: FirstPageData) {
     const res = await travelProgramApi.updateFirstPage(programName, data);
     if (res?.data) {
-      console.log("data>>>>>>>>>>>>", res?.data);
-      store.dispatch(travelProgramActions.updateProgram({firstPage: res.data}));
+      store.dispatch(
+        travelProgramActions.updateProgram({ firstPage: res.data })
+      );
     }
   },
 };

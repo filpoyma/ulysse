@@ -1,30 +1,33 @@
 import { FC, useEffect } from "react";
-import OverlayLoader from "../../../components/Loader/OverlayLoader";
 import { SectionHeader } from "./SectionHeader";
 import RestarauntsCollectTable from "./RestarauntsCollectTable";
 import { useRestarauntsCollect } from "../hooks/useRestarauntsCollect";
 import styles from "../AdminPanel.module.css";
+import { Loader } from "../../../components/Loader/Loader";
 
 export const RestarauntsCollectSection: FC = () => {
   const {
     restaraunts,
     loading,
     error,
-    isCreating,
+    isCreatingRestaraunt,
     newRestaraunt,
     editingRestarauntId,
     editingRestarauntData,
+    sortField,
+    sortOrder,
     nameInputRef,
-    fetchRestaraunts,
-    handleCreateRestarauntClick,
-    handleNewRestarauntChange,
-    handleSaveNewRestaraunt,
-    handleCancelNewRestaraunt,
+    handleSortRestaraunts,
     handleRestarauntClick,
     handleEditRestarauntChange,
     handleSaveEditRestaraunt,
     handleCancelEditRestaraunt,
     handleDeleteRestaraunt,
+    handleCreateRestarauntClick,
+    handleNewRestarauntChange,
+    handleSaveNewRestaraunt,
+    handleCancelNewRestaraunt,
+    fetchRestaraunts,
   } = useRestarauntsCollect();
 
   useEffect(() => {
@@ -36,26 +39,32 @@ export const RestarauntsCollectSection: FC = () => {
       <SectionHeader
         title="Список ресторанов"
         onCreateClick={handleCreateRestarauntClick}
-        isCreating={isCreating}
+        isCreating={isCreatingRestaraunt}
       />
       {error && <div className={styles.error}>{error}</div>}
-      {<OverlayLoader isLoading={loading} />}
-      <RestarauntsCollectTable
-        restaraunts={restaraunts}
-        isCreatingRestaraunt={isCreating}
-        newRestaraunt={newRestaraunt}
-        onNewRestarauntChange={handleNewRestarauntChange}
-        onSaveNewRestaraunt={handleSaveNewRestaraunt}
-        onCancelNewRestaraunt={handleCancelNewRestaraunt}
-        nameInputRef={nameInputRef}
-        editingRestarauntId={editingRestarauntId}
-        editingRestarauntData={editingRestarauntData}
-        onRestarauntClick={handleRestarauntClick}
-        onEditRestarauntChange={handleEditRestarauntChange}
-        onSaveEditRestaraunt={handleSaveEditRestaraunt}
-        onCancelEditRestaraunt={handleCancelEditRestaraunt}
-        onDeleteRestaraunt={handleDeleteRestaraunt}
-      />
+      {loading ? (
+        <Loader />
+      ) : (
+        <RestarauntsCollectTable
+          restaraunts={restaraunts}
+          onRestarauntClick={handleRestarauntClick}
+          onDeleteRestaraunt={handleDeleteRestaraunt}
+          isCreatingRestaraunt={isCreatingRestaraunt}
+          newRestaraunt={newRestaraunt}
+          onNewRestarauntChange={handleNewRestarauntChange}
+          onSaveNewRestaraunt={handleSaveNewRestaraunt}
+          onCancelNewRestaraunt={handleCancelNewRestaraunt}
+          nameInputRef={nameInputRef}
+          editingRestarauntId={editingRestarauntId}
+          editingRestarauntData={editingRestarauntData}
+          onEditRestarauntChange={handleEditRestarauntChange}
+          onSaveEditRestaraunt={handleSaveEditRestaraunt}
+          onCancelEditRestaraunt={handleCancelEditRestaraunt}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          onSort={handleSortRestaraunts}
+        />
+      )}
     </div>
   );
 };

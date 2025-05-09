@@ -15,6 +15,9 @@ export const ProgramsSection: FC = () => {
     error,
     isModalOpen,
     setIsModalOpen,
+    sortField,
+    sortOrder,
+    handleSortPrograms,
     fetchPrograms,
     handleCreateTemplate,
     handleCreateTemplateSubmit,
@@ -27,6 +30,9 @@ export const ProgramsSection: FC = () => {
 
   const handleProgramClick = async (name_eng: string) => {
     navigate(`/travel-programm/${name_eng}`);
+  };
+  const handleProgramEdit = async (id: string) => {
+    navigate(`/travel-programm/${id}`);
   };
 
   return (
@@ -42,7 +48,11 @@ export const ProgramsSection: FC = () => {
         <ProgramsTable
           programs={programs}
           onProgramClick={handleProgramClick}
+          onProgramEdit={handleProgramEdit}
           onDeleteProgram={handleDeleteProgram}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          onSort={handleSortPrograms}
         />
       )}
       <CreateTemplateModal

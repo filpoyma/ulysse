@@ -12,18 +12,23 @@ interface IAuthState {
   token: string | null;
   user: IUser | null;
   isLoggedIn: boolean;
+  isLoading: boolean;
 }
 
 const initialState: IAuthState = {
   token: null,
   user: null,
   isLoggedIn: false,
+  isLoading: false,
 };
 
 const { reducer: authReducer, actions: authActions } = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    setIsLoading(state: IAuthState, action: PayloadAction<boolean>) {
+      state.isLoading = action.payload;
+    },
     setToken(state: IAuthState, action: PayloadAction<string | null>) {
       state.token = action.payload;
     },

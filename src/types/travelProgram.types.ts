@@ -8,6 +8,7 @@ export interface BackgroundImage {
 export interface TravelProgram {
   _id: string;
   name: string;
+  name_eng: string;
   createdAt: string;
   updatedAt: string;
   bgImages: BackgroundImage[];
@@ -20,4 +21,4 @@ export interface TravelProgramResponse {
 
 export interface TravelProgramSingleResponse {
   data: TravelProgram;
-} 
+}

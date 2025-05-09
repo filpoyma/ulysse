@@ -1,5 +1,16 @@
 import api from "../api/baseApi";
 
+
+interface FirstPageData {
+  title: string;
+  subtitle: string;
+  footer: string;
+}
+
+interface ApiResponse<T> {
+  data: T;
+}
+
 const travelProgramApi = {
   basePath: "travel-program",
   getUrl(path?: string) {
@@ -24,6 +35,10 @@ const travelProgramApi = {
   async delete(id: string) {
     const url = this.getUrl(id);
     return api.delete(url).json();
+  },
+  async updateFirstPage(id: string, data: FirstPageData) {
+    const url = this.getUrl(`${id}/first-page`);
+    return api.put(url, { json: { data } }).json();
   },
 };
 

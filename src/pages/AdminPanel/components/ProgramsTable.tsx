@@ -1,28 +1,75 @@
 import { FC } from "react";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { TravelProgram } from "../../../types/travelProgram.types.ts";
 import styles from "../AdminPanel.module.css";
 
 interface ProgramsTableProps {
   programs: TravelProgram[];
   onProgramClick: (id: string) => void;
+  onProgramEdit: (id: string) => void;
   onDeleteProgram: (id: string) => void;
+  sortField?: keyof TravelProgram;
+  sortOrder?: "asc" | "desc";
+  onSort?: (field: keyof TravelProgram) => void;
 }
 
 const ProgramsTable: FC<ProgramsTableProps> = ({
   programs,
   onProgramClick,
   onDeleteProgram,
+  onProgramEdit,
+  sortField,
+  sortOrder,
+  onSort,
 }) => {
+  const renderSortIcon = (field: keyof TravelProgram) => {
+    if (!sortField || sortField !== field) return null;
+    return sortOrder === "asc" ? (
+      <ChevronUp size={16} className={styles.sortArrow} />
+    ) : (
+      <ChevronDown size={16} className={styles.sortArrow} />
+    );
+  };
+
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Имя программы</th>
-            <th>Дата создания</th>
-            <th>Дата обновления</th>
-            <th>Кол-во фоновых картинок</th>
+            <th
+              onClick={() => onSort && onSort("name")}
+              style={{ cursor: "pointer", minWidth: 120 }}
+            >
+              Имя программы
+              <span className={styles.sortArrow}>{renderSortIcon("name")}</span>
+            </th>
+            <th
+              onClick={() => onSort && onSort("createdAt")}
+              style={{ cursor: "pointer", minWidth: 120 }}
+            >
+              Дата создания
+              <span className={styles.sortArrow}>
+                {renderSortIcon("createdAt")}
+              </span>
+            </th>
+            <th
+              onClick={() => onSort && onSort("updatedAt")}
+              style={{ cursor: "pointer", minWidth: 120 }}
+            >
+              Дата обновления
+              <span className={styles.sortArrow}>
+                {renderSortIcon("updatedAt")}
+              </span>
+            </th>
+            <th
+              onClick={() => onSort && onSort("bgImages")}
+              style={{ cursor: "pointer", minWidth: 120 }}
+            >
+              Кол-во фоновых картинок
+              <span className={styles.sortArrow}>
+                {renderSortIcon("bgImages")}
+              </span>
+            </th>
             <th>Действия</th>
           </tr>
         </thead>
@@ -44,7 +91,7 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
                 <div className={styles.actions}>
                   <button
                     className={styles.actionButton}
-                    onClick={() => onProgramClick(program._id)}
+                    onClick={() => onProgramEdit(program._id)}
                     title="Редактировать"
                   >
                     <Edit size={16} />

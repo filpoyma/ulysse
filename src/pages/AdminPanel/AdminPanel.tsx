@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { selectIsLoggedIn } from "../../store/selectors";
+import { selectIsLoading, selectIsLoggedIn } from "../../store/selectors";
 import { authService } from "../../services";
 import AdminSignIn from "../AdminLogin/AdminSignIn.tsx";
 import { useNavigate } from "react-router-dom";
@@ -26,22 +26,10 @@ const AdminPanel: FC = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const [activeNavItem, setActiveNavItem] = useState<NavItem>("itineraries");
   const [error, setError] = useState<string | null>(null);
-  const [isValidating, setIsValidating] = useState(true);
+  
   const navigate = useNavigate();
+  const isLoading = useSelector(selectIsLoading);
 
-  useEffect(() => {
-    const validateSession = async () => {
-      try {
-        await authService.validateSession();
-      } catch (err) {
-        console.error("Session validation error:", err);
-      } finally {
-        setIsValidating(false);
-      }
-    };
-
-    validateSession();
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -53,7 +41,7 @@ const AdminPanel: FC = () => {
     }
   };
 
-  if (isValidating) {
+  if (isLoading) {
     return <Loader />;
   }
 

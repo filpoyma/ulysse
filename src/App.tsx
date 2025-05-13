@@ -3,9 +3,14 @@ import { Routes, Route } from "react-router-dom";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { Loader } from "./components/Loader/Loader";
-import { authService } from "./services/auth.service.ts";
+import { authService } from "./services";
 import { useDispatch } from "react-redux";
-import { authActions } from "./store/reducers/auth/index.ts";
+import { authActions } from "./store/reducers/auth";
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.locale("ru");
+dayjs.extend(customParseFormat)
 
 const TravelProgram = React.lazy(() => import("./pages/TravelProgram"));
 const AdminLogin = React.lazy(

@@ -1,11 +1,13 @@
-import React, { useRef, useState, useEffect } from 'react';
-import './ImageUploadModal.css';
-import { imageService } from '../../services/image.service';
-import { ROOT_URL } from '../../constants/api.constants';
-import { selectIsLoggedIn } from '../../store/selectors';
-import { useSelector, useDispatch } from 'react-redux';
-import { travelProgramActions } from '../../store/reducers/travelProgram';
-import { RootState } from '../../store';
+import React, { useRef, useState, useEffect } from "react";
+import "./ImageUploadModal.css";
+import { imageService } from "../../services/image.service";
+import { ROOT_URL } from "../../constants/api.constants";
+import { selectIsLoggedIn } from "../../store/selectors";
+import { useSelector, useDispatch } from "react-redux";
+import { travelProgramActions } from "../../store/reducers/travelProgram";
+import { RootState } from "../../store";
+import { createArrayFromNumberWithId } from "../../utils/helpers.ts";
+import { IUploadedImage } from "../../types/travelProgram.types.ts";
 
 interface Props {
   open: boolean;
@@ -14,39 +16,31 @@ interface Props {
   imageNumber: number | null;
 }
 
-interface UploadedImage {
-  _id?: string; // id из MongoDB
-  id?: string; // на всякий случай, если id приходит как id
-  filename: string;
-  path: string;
-  originalName: string;
-  mimetype: string;
-  size: number;
-}
-
-interface UploadResponse {
-  message: string;
-  image: UploadedImage;
-}
-
-const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNumber }) => {
+const ImageUploadModal: React.FC<Props> = ({
+  open,
+  onClose,
+  programName,
+  imageNumber,
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<IUploadedImage[]>([]);
 
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
-  const program = useSelector((state: RootState) => state.travelProgram.program);
-  console.log('isLoggedIn', isLoggedIn);
+  const program = useSelector(
+    (state: RootState) => state.travelProgram.program
+  );
+  console.log("isLoggedIn", isLoggedIn);
 
   // Загружаем все изображения при открытии модального окна
   useEffect(() => {
     if (!open) return;
     (async () => {
       try {
-        const images = await imageService.getAllImages() as UploadedImage[];
+        const images = (await imageService.getAllImages()) as IUploadedImage[];
         setUploadedImages(images);
       } catch {
         // Не критично, просто не показываем картинки
@@ -75,14 +69,14 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
     if (!file) return;
     setLoading(true);
     try {
-      const response = await imageService.uploadImage(file) as UploadResponse;
+      const response = await imageService.uploadImage(file);
       if (response && response.image && response.image.path) {
         setUploadedImages((prev) => [...prev, response.image]);
       }
       setSuccess(true);
     } catch (e: unknown) {
-      let message = 'Ошибка загрузки';
-      if (typeof e === 'object' && e && 'message' in e) {
+      let message = "Ошибка загрузки";
+      if (typeof e === "object" && e && "message" in e) {
         message = (e as { message: string }).message;
       }
       setError(message);
@@ -91,7 +85,7 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
     }
   };
 
-  const handleDelete = async (img: UploadedImage) => {
+  const handleDelete = async (img: IUploadedImage) => {
     const id = img._id || img.id;
     if (!id) return;
     setLoading(true);
@@ -99,7 +93,7 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
       await imageService.deleteImage(id);
       setUploadedImages((prev) => prev.filter((i) => (i._id || i.id) !== id));
     } catch {
-      setError('Ошибка удаления');
+      setError("Ошибка удаления");
     } finally {
       setLoading(false);
     }
@@ -108,94 +102,124 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
   const maxCells = Math.max(uploadedImages.length, 9);
 
   // Клик по превью для выбора фона
-  const handlePreviewClick = async (img: UploadedImage) => {
-    console.log(imageNumber, programName);
+  const handlePreviewClick = async (img: IUploadedImage) => {
     if (!programName || imageNumber === null) return;
     const imageId = img._id || img.id;
-    console.log('imageId', imageId);
     if (!imageId) return;
     try {
-      const res = await imageService.setBgImage({ programName, imageId, imageNumber });
+      const res = await imageService.setBgImage({
+        programName,
+        imageId,
+        imageNumber,
+      });
       // Обновляем bgImages в сторе
-      console.log('program', program);
       if (program) {
-        console.log('imageNumber', imageNumber);
+        console.log("imageNumber", imageNumber);
         const newBgImages = [...(res.data.program.bgImages || [])];
         newBgImages[imageNumber] = {
-          _id: img._id || img.id || '',
+          _id: img._id || img.id || "",
           filename: img.filename,
           path: img.path,
-
         };
         dispatch(travelProgramActions.setBgImages(newBgImages));
       }
     } catch {
-      setError('Ошибка выбора фоновой картинки');
+      setError("Ошибка выбора фоновой картинки");
     }
   };
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content" style={{ position: 'relative' }}>
+      <div className="modal-content" style={{ position: "relative" }}>
         <button
           className="modal-close-top"
           onClick={onClose}
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 12,
             right: 12,
-            background: 'transparent',
-            border: 'none',
-            borderRadius: '50%',
+            background: "transparent",
+            border: "none",
+            borderRadius: "50%",
             width: 32,
             height: 32,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 10,
           }}
           title="Закрыть"
         >
-          <span className="modal-cross" style={{ fontSize: 28, color: '#222', lineHeight: 1 }}>×</span>
+          <span
+            className="modal-cross"
+            style={{ fontSize: 28, color: "#222", lineHeight: 1 }}
+          >
+            ×
+          </span>
         </button>
         <div className="modal-header">
-          <h3 className="modal-title-upload" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>ЗАГРУЗИТЬ ИЗОБРАЖЕНИЕ</h3>
+          <h3
+            className="modal-title-upload"
+            onClick={handleTitleClick}
+            style={{ cursor: "pointer" }}
+          >
+            ЗАГРУЗИТЬ ИЗОБРАЖЕНИЕ
+          </h3>
           {error ? (
-            <div style={{ color: 'red', marginBottom: 8 }}>{`${error}`}</div>
+            <div style={{ color: "red", marginBottom: 8 }}>{`${error}`}</div>
           ) : success ? (
-            <div style={{ color: 'green', marginBottom: 8 }}>файл успешно загружен</div>
+            <div style={{ color: "green", marginBottom: 8 }}>
+              файл успешно загружен
+            </div>
           ) : (
-            <p className="modal-subtext">размер изображения не менее 1080x1080 пикселей</p>
+            <p className="modal-subtext">
+              размер изображения не менее 1080x1080 пикселей
+            </p>
           )}
           <input
             type="file"
             accept="image/*"
             ref={fileInputRef}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             onChange={handleFileChange}
           />
         </div>
         <div className="modal-grid-wrapper">
           <div className="modal-grid">
-          {[...Array(maxCells)].map((_, i) => {
+            {createArrayFromNumberWithId(maxCells).map((id, i) => {
               const img = uploadedImages[i];
               return (
-                <div className="modal-cell" key={i} style={{ position: 'relative', width: 120, height: 120 }}>
+                <div
+                  className="modal-cell"
+                  key={id}
+                  style={{ position: "relative", width: 120, height: 120 }}
+                >
                   {img ? (
                     <>
                       <img
-                        src={`${ROOT_URL}/` + img.path.replace(/^\//, '')}
+                        src={`${ROOT_URL}/` + img.path.replace(/^\//, "")}
                         alt="preview"
                         onClick={() => handlePreviewClick(img)}
-                        style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8, cursor: 'pointer' }}
+                        style={{
+                          width: 120,
+                          height: 120,
+                          objectFit: "cover",
+                          borderRadius: 8,
+                          cursor: "pointer",
+                        }}
                       />
                       <button
                         className="modal-delete-btn"
                         onClick={() => handleDelete(img)}
                         title="Удалить изображение"
                       >
-                        <span className="modal-cross" style={{ fontSize: 28, color: '#222', lineHeight: 1 }}>×</span>
+                        <span
+                          className="modal-cross"
+                          style={{ fontSize: 28, color: "#222", lineHeight: 1 }}
+                        >
+                          ×
+                        </span>
                       </button>
                     </>
                   ) : null}
@@ -205,11 +229,11 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
           </div>
         </div>
         <button className="modal-close" onClick={onClose} disabled={loading}>
-          {loading ? 'Загрузка...' : 'Закрыть'}
+          {loading ? "Загрузка..." : "Закрыть"}
         </button>
       </div>
     </div>
   );
 };
 
-export default ImageUploadModal; 
+export default ImageUploadModal;

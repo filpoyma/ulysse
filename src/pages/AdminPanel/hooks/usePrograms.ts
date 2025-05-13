@@ -1,13 +1,14 @@
-import { useState, useMemo } from 'react';
-import { travelProgramService } from '../../../services/travelProgram.service';
-import { TravelProgram, TravelProgramResponse } from '../../../types/travelProgram.types';
+import { useState, useMemo } from "react";
+import { travelProgramService } from "../../../services/travelProgram.service";
+import { ITravelProgramResponse } from "../../../types/travelProgram.types";
 
 export const usePrograms = () => {
-  const [programs, setPrograms] = useState<TravelProgram[]>([]);
+  const [programs, setPrograms] = useState<ITravelProgramResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [sortField, setSortField] = useState<keyof TravelProgram>("name");
+  const [sortField, setSortField] =
+    useState<keyof ITravelProgramResponse>("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const sortedPrograms = useMemo(() => {
@@ -22,7 +23,7 @@ export const usePrograms = () => {
     return arr;
   }, [programs, sortField, sortOrder]);
 
-  const handleSortPrograms = (field: keyof TravelProgram) => {
+  const handleSortPrograms = (field: keyof ITravelProgramResponse) => {
     if (sortField === field) {
       setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
@@ -35,7 +36,7 @@ export const usePrograms = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await travelProgramService.getAll() as TravelProgramResponse;
+      const response = await travelProgramService.getAll();
       setPrograms(response.data || []);
     } catch (err) {
       setError("Ошибка при загрузке программ");
@@ -86,4 +87,4 @@ export const usePrograms = () => {
     handleCreateTemplateSubmit,
     handleDeleteProgram,
   };
-}; 
+};

@@ -1,16 +1,7 @@
 import travelProgramApi from "../api/travelProgram.api.ts";
 import { travelProgramActions } from "../store/reducers/travelProgram";
 import { store } from "../store";
-
-interface FirstPageData {
-  title: string;
-  subtitle: string;
-  footer: string;
-}
-
-interface ApiResponse<T> {
-  data: T;
-}
+import { IFirstPageData } from "../types/travelProgram.types.ts";
 
 export const travelProgramService = {
   getAll() {
@@ -34,12 +25,50 @@ export const travelProgramService = {
   async delete(id: string) {
     return travelProgramApi.delete(id);
   },
-  async updateFirstPage(programName: string, data: FirstPageData) {
+  async updateFirstPage(programName: string, data: IFirstPageData) {
     const res = await travelProgramApi.updateFirstPage(programName, data);
     if (res?.data) {
       store.dispatch(
         travelProgramActions.updateProgram({ firstPage: res.data })
       );
+    }
+  },
+  async updateReviewDay(
+    programId: string,
+    dayIndex: number,
+    data: {
+      day?: Date;
+      numOfDay?: string;
+      activity?: {
+        icon: string;
+        dayActivity: {
+          line1: string;
+          line2?: string;
+          line3?: string;
+          isFlight: boolean;
+          more?: string;
+        };
+      }[];
+    }
+  ) {
+    const res = await travelProgramApi.updateReviewDay(programId, dayIndex, data);
+    if (res?.data) {
+      const program = store.getState().travelProgram.program;
+      if (program) {
+        const updatedReview = [...program.secondPageTables.routeDetailsTable.review];
+        updatedReview[dayIndex] = res.data;
+        store.dispatch(
+          travelProgramActions.updateProgram({
+            secondPageTables: {
+              ...program.secondPageTables,
+              routeDetailsTable: {
+                ...program.secondPageTables.routeDetailsTable,
+                review: updatedReview,
+              },
+            },
+          })
+        );
+      }
     }
   },
 };

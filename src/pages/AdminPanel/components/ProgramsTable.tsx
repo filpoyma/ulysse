@@ -1,16 +1,16 @@
 import { FC } from "react";
 import { Edit, Trash2, ChevronDown, ChevronUp } from "lucide-react";
-import { TravelProgram } from "../../../types/travelProgram.types.ts";
+import { ITravelProgramResponse } from "../../../types/travelProgram.types.ts";
 import styles from "../AdminPanel.module.css";
 
 interface ProgramsTableProps {
-  programs: TravelProgram[];
+  programs: ITravelProgramResponse[];
   onProgramClick: (id: string) => void;
   onProgramEdit: (id: string) => void;
   onDeleteProgram: (id: string) => void;
-  sortField?: keyof TravelProgram;
+  sortField?: keyof ITravelProgramResponse;
   sortOrder?: "asc" | "desc";
-  onSort?: (field: keyof TravelProgram) => void;
+  onSort?: (field: keyof ITravelProgramResponse) => void;
 }
 
 const ProgramsTable: FC<ProgramsTableProps> = ({
@@ -22,7 +22,7 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
   sortOrder,
   onSort,
 }) => {
-  const renderSortIcon = (field: keyof TravelProgram) => {
+  const renderSortIcon = (field: keyof ITravelProgramResponse) => {
     if (!sortField || sortField !== field) return null;
     return sortOrder === "asc" ? (
       <ChevronUp size={16} className={styles.sortArrow} />

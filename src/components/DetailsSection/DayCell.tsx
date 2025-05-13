@@ -1,17 +1,40 @@
-import React from 'react';
+import dayjs from 'dayjs';
+import styles from './index.module.css';
 
 interface DayCellProps {
   title: string;
   subtitle: string;
   date: string;
+  isEditable?: boolean;
+  onDateChange?: (newDate: string) => void;
+  onTitleChange?: (newTitle: string) => void;
 }
 
-export function DayCell({ title, subtitle, date }: DayCellProps) {
+export function DayCell({ title, subtitle, date, isEditable, onDateChange, onTitleChange }: DayCellProps) {
   return (
-    <div className="day-cell">
-      <div className="day-title">{title}</div>
-      <div className="day-subtitle">{subtitle}</div>
-      <div className="day-date">{date}</div>
+    <div className={'day-cell'}>
+      {isEditable ? (
+        <input
+          type="number"
+          defaultValue={title}
+          className={styles['editable-input']}
+          onChange={e => onTitleChange && onTitleChange(e.target.value)}
+        />
+      ) : (
+        <div className={'day-title'}>{`День ${title}`}</div>
+      )}
+      <div className={'day-date'}>{subtitle}</div>
+
+      {isEditable ? (
+        <input
+          type="text"
+          defaultValue={dayjs(date, 'DD MMMM YYYY').format('DD.MM.YYYY')}
+          className={styles['editable-input']}
+          onChange={e => onDateChange && onDateChange(e.target.value)}
+        />
+      ) : (
+        <div className={'day-date'}>{date}</div>
+      )}
     </div>
   );
 }

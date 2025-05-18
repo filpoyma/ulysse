@@ -1,7 +1,62 @@
 import styles from './index.module.css';
-import { DayCell } from './DayCell';
+import { useSelector } from 'react-redux';
+import { selectTravelProgram, selectIsLoggedIn } from '../../store/selectors.ts';
+import { useState } from 'react';
+import { Check, X } from 'lucide-react';
+import { travelProgramService } from '../../services/travelProgram.service';
 
 export function AccommodationTable() {
+  const program = useSelector(selectTravelProgram);
+  const accommodationData = program?.secondPageTables?.accommodation || [];
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const [editableRow, setEditableRow] = useState<number | null>(null);
+  const [editedData, setEditedData] = useState<{
+    period: string;
+    hotelName: string;
+    details: string;
+    numOfNights: number;
+  } | null>(null);
+
+  const handleRowClick = (index: number) => {
+    if (isLoggedIn) {
+      setEditableRow(index);
+      setEditedData({
+        period: accommodationData[index].period,
+        hotelName: accommodationData[index].hotelName,
+        details: accommodationData[index].details,
+        numOfNights: accommodationData[index].numOfNights,
+      });
+    }
+  };
+
+  const handleInputChange = (field: string, value: string | number) => {
+    if (editedData) {
+      setEditedData({
+        ...editedData,
+        [field]: field === 'numOfNights' ? Number(value) : value,
+      });
+    }
+  };
+
+  const handleSave = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (editableRow !== null && editedData && program?._id) {
+      try {
+        await travelProgramService.updateAccommodationRow(program._id, editableRow, editedData);
+        setEditableRow(null);
+        setEditedData(null);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleCancel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditableRow(null);
+    setEditedData(null);
+  };
+
   return (
     <div className={`${styles['details-table']} ${styles['accommodation-table']}`}>
       <div className={styles['table-header']}>
@@ -10,118 +65,77 @@ export function AccommodationTable() {
         <div className={styles['header-cell']}>Детали</div>
         <div className={styles['header-cell']}>Ночи</div>
       </div>
-      <div className={styles['table-row']}>
-        <DayCell 
-          title="День 1-2"
-          subtitle="Понедельник"
-          date="23 сен 2025"
-        />
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>Giraffe Manor</div>
-            </div>
+      {accommodationData.map((row, index) => (
+        <div key={index} className={styles['table-row']} style={{ position: 'relative' }}>
+          {/* 4 ячейки */}
+          <div onClick={() => handleRowClick(index)} style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}>
+            {editableRow === index ? (
+              <input
+                type="text"
+                defaultValue={editedData?.period}
+                className={styles['editable-input']}
+                onClick={e => e.stopPropagation()}
+                onChange={e => handleInputChange('period', e.target.value)}
+              />
+            ) : (
+              row.period
+            )}
+          </div>
+          <div onClick={() => handleRowClick(index)} style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}>
+            {editableRow === index ? (
+              <input
+                type="text"
+                defaultValue={editedData?.hotelName}
+                className={styles['editable-input']}
+                onClick={e => e.stopPropagation()}
+                onChange={e => handleInputChange('hotelName', e.target.value)}
+              />
+            ) : (
+              row.hotelName
+            )}
+          </div>
+          <div onClick={() => handleRowClick(index)} style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}>
+            {editableRow === index ? (
+              <input
+                type="text"
+                defaultValue={editedData?.details}
+                className={styles['editable-input']}
+                onClick={e => e.stopPropagation()}
+                onChange={e => handleInputChange('details', e.target.value)}
+              />
+            ) : (
+              row.details
+            )}
+          </div>
+          <div onClick={() => handleRowClick(index)} style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}>
+            {editableRow === index ? (
+              <input
+                type="number"
+                defaultValue={editedData?.numOfNights}
+                className={styles['editable-input']}
+                onClick={e => e.stopPropagation()}
+                onChange={e => handleInputChange('numOfNights', e.target.value)}
+              />
+            ) : (
+              row.numOfNights
+            )}
           </div>
         </div>
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>—</div>
-            </div>
+      ))}
+      {editableRow !== null && (
+        <div className={styles['edit-controls']} style={{ marginTop: 42, display: 'flex', justifyContent: 'flex-end' }}>
+          <div className={styles['edit-icons']}>
+            <button className={styles['edit-icon']} onClick={handleSave}>
+              <Check size={16} />
+            </button>
+            <button className={styles['edit-icon']} onClick={handleCancel}>
+              <X size={16} />
+            </button>
           </div>
         </div>
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>1</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className={styles['table-row']}>
-        <DayCell 
-          title="День 2-4"
-          subtitle="Вторник-Четверг"
-          date="24-26 сен 2025"
-        />
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>Segera Retreat</div>
-            </div>
-          </div>
-        </div>
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>Garden House</div>
-            </div>
-          </div>
-        </div>
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>2</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className={styles['table-row']}>
-        <DayCell 
-          title="День 4-7"
-          subtitle="Четверг-Воскресенье"
-          date="26-29 сен 2025"
-        />
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>Sanctuary Olonana Camp</div>
-            </div>
-          </div>
-        </div>
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>Suites</div>
-            </div>
-          </div>
-        </div>
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>3</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className={styles['table-row']}>
-        <DayCell 
-          title="День 7-10"
-          subtitle="Воскресенье-Среда"
-          date="29 сен - 2 окт 2025"
-        />
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>Alfagiri Villas</div>
-            </div>
-          </div>
-        </div>
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>Villas</div>
-            </div>
-          </div>
-        </div>
-        <div className={styles['activities-cell']}>
-          <div className={styles['activity-item']}>
-            <div className={styles['activity-details']}>
-              <div>3</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
+
+

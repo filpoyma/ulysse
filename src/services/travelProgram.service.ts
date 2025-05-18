@@ -1,7 +1,7 @@
-import travelProgramApi from "../api/travelProgram.api.ts";
-import { travelProgramActions } from "../store/reducers/travelProgram";
-import { store } from "../store";
-import { IFirstPageData } from "../types/travelProgram.types.ts";
+import travelProgramApi from '../api/travelProgram.api.ts';
+import { travelProgramActions } from '../store/reducers/travelProgram';
+import { store } from '../store';
+import { IFirstPageData } from '../types/travelProgram.types.ts';
 
 export const travelProgramService = {
   getAll() {
@@ -28,9 +28,7 @@ export const travelProgramService = {
   async updateFirstPage(programName: string, data: IFirstPageData) {
     const res = await travelProgramApi.updateFirstPage(programName, data);
     if (res?.data) {
-      store.dispatch(
-        travelProgramActions.updateProgram({ firstPage: res.data })
-      );
+      store.dispatch(travelProgramActions.updateProgram({ firstPage: res.data }));
     }
   },
   async updateReviewDay(
@@ -49,7 +47,7 @@ export const travelProgramService = {
           more?: string;
         };
       }[];
-    }
+    },
   ) {
     const res = await travelProgramApi.updateReviewDay(programId, dayIndex, data);
     if (res?.data) {
@@ -66,7 +64,34 @@ export const travelProgramService = {
                 review: updatedReview,
               },
             },
-          })
+          }),
+        );
+      }
+    }
+  },
+  async updateAccommodationRow(
+    programId: string,
+    rowIndex: number,
+    data: {
+      period: string;
+      hotelName: string;
+      details: string;
+      numOfNights: number;
+    },
+  ) {
+    const res = await travelProgramApi.updateAccommodationRow(programId, rowIndex, data);
+    if (res) {
+      const program = store.getState().travelProgram.program;
+      if (program) {
+        const updatedAccommodation = [...program.secondPageTables.accommodation];
+        updatedAccommodation[rowIndex] = res.data;
+        store.dispatch(
+          travelProgramActions.updateProgram({
+            secondPageTables: {
+              ...program.secondPageTables,
+              accommodation: updatedAccommodation,
+            },
+          }),
         );
       }
     }

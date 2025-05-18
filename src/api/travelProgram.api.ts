@@ -1,9 +1,10 @@
-import api from "../api/baseApi";
+import api from '../api/baseApi';
 import {
+  IAccommodation,
   IFirstPageData,
   ITravelProgramResponse,
   TravelProgramSingleResponse,
-} from "../types/travelProgram.types.ts";
+} from '../types/travelProgram.types.ts';
 
 interface FirstPageData {
   title: string;
@@ -12,7 +13,7 @@ interface FirstPageData {
 }
 
 const travelProgramApi = {
-  basePath: "travel-program",
+  basePath: 'travel-program',
   getUrl(path?: string) {
     return path ? `${this.basePath}/${path}/` : `${this.basePath}/`;
   },
@@ -21,7 +22,7 @@ const travelProgramApi = {
     return api.get(url).json();
   },
   async createTemplate(name: string): Promise<TravelProgramSingleResponse> {
-    const url = this.getUrl("template");
+    const url = this.getUrl('template');
     return api.post(url, { json: { name } }).json();
   },
   async getById(id: string): Promise<TravelProgramSingleResponse> {
@@ -38,7 +39,7 @@ const travelProgramApi = {
   },
   async updateFirstPage(
     id: string,
-    data: FirstPageData
+    data: FirstPageData,
   ): Promise<{ data: IFirstPageData; success: boolean }> {
     const url = this.getUrl(`${id}/first-page`);
     return api.put(url, { json: data }).json();
@@ -47,7 +48,8 @@ const travelProgramApi = {
     id: string,
     dayIndex: number,
     data: {
-      day?: string;
+      day?: Date;
+      numOfDay: string;
       activity?: {
         icon: string;
         dayActivity: {
@@ -58,9 +60,23 @@ const travelProgramApi = {
           more?: string;
         };
       }[];
-    }
+    },
   ): Promise<{ data: any; success: boolean }> {
     const url = this.getUrl(`${id}/review-day/${dayIndex}`);
+    return api.put(url, { json: data }).json();
+  },
+
+  async updateAccommodationRow(
+    programId: string,
+    rowIndex: number,
+    data: {
+      period: string;
+      hotelName: string;
+      details: string;
+      numOfNights: number;
+    },
+  ): Promise<{ data: IAccommodation; success: boolean }> {
+    const url = this.getUrl(`${programId}/accommodation/${rowIndex}`);
     return api.put(url, { json: data }).json();
   },
 };

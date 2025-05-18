@@ -243,6 +243,51 @@
   color: var(--table-text-color);
 }
 
+.accommodation-table .table-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 20%) minmax(200px, 80%) minmax(150px, 20%) minmax(100px, 10%);
+  width: 100%;
+}
+
+.accommodation-table .table-row > div {
+  border-right: 1px solid var(--border-color);
+  padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.accommodation-table .table-row > div:last-child {
+  border-right: none;
+  text-align: center;
+}
+
+.accommodation-table .table-row > div:first-child {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 100%;
+  color: var(--table-title-text-color);
+}
+
+.accommodation-table .table-row > div:not(:first-child) {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 100%;
+  color: var(--table-text-color);
+}
+
+.accommodation-table .editable-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.94rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+}
+
 /* Обновляем медиа-запросы */
 @media (max-width: 1024px) {
   .flights-table .table-header,

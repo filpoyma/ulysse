@@ -14,6 +14,13 @@ export interface IFirstPageData {
   footer: string;
 }
 
+export interface IAccommodation {
+  period: string;
+  hotelName: string;
+  details: string;
+  numOfNights: number;
+}
+
 export interface ITravelProgramResponse {
   _id: string;
   name: string;
@@ -44,23 +51,7 @@ export interface ITravelProgramResponse {
         }[];
       }[];
     };
-    // flights: {
-    //   day: string;
-    //   flight: {
-    //     icon: string;
-    //     dayActivity: {
-    //       title: string;
-    //       subtitle: string;
-    //       more: string;
-    //     }[];
-    //   }[];
-    // }[];
-    accommodation: {
-      day: string;
-      hotelName: string;
-      details: string;
-      numOfNights: number;
-    }[];
+    accommodation: IAccommodation[];
   };
   createdAt: string;
   updatedAt: string;

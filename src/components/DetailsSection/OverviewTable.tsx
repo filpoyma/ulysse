@@ -6,6 +6,8 @@ import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts'
 import { useState } from 'react';
 import styles from './index.module.css';
 import { travelProgramService } from '../../services/travelProgram.service';
+import { store } from '../../store';
+import { travelProgramActions } from '../../store/reducers/travelProgram';
 
 const ICON_OPTIONS = [
   { value: 'none', label: 'Map', icon: Map },
@@ -48,7 +50,6 @@ export function OverviewTable() {
       setEditableRow(index);
       // Инициализируем editedData текущими данными строки
       const currentRow = reviewData[index];
-      console.log('currentRow>>>>>>>>>>',currentRow);
       setEditedData({
         day: new Date(currentRow.day),
         numOfDay: String(currentRow.numOfDay),
@@ -67,11 +68,10 @@ export function OverviewTable() {
   };
 
   const handleDateChange = (newDate: string) => {
-
     if (editedData) {
       setEditedData({
         ...editedData,
-        day: dayjs(newDate, 'DD.MM.YYYY').toDate()
+        day: dayjs(newDate, 'DD.MM.YYYY').toDate(),
       });
     }
   };
@@ -95,9 +95,12 @@ export function OverviewTable() {
           [field]: value,
         },
       };
-      setEditedData({
-        ...editedData,
-        activity: updatedActivity,
+      setEditedData(prevData => {
+        if (!prevData) return null;
+        return {
+          ...prevData,
+          activity: updatedActivity,
+        };
       });
     }
   };
@@ -110,13 +113,24 @@ export function OverviewTable() {
         icon: iconValue,
         dayActivity: {
           ...updatedActivity[activityIndex].dayActivity,
-          isFlight: iconValue === 'plane'
-        }
+          isFlight: iconValue === 'plane',
+        },
       };
-      setEditedData(() => ({
-        ...editedData,
-        activity: updatedActivity,
-      }));
+      setEditedData(prevData => {
+        if (!prevData) return null;
+        return {
+          ...prevData,
+          activity: updatedActivity,
+        };
+      });
+      // Диспатчим изменение иконки в стор
+      store.dispatch(
+        travelProgramActions.updateActivityIcon({
+          dayIndex: editableRow!,
+          activityIndex,
+          icon: iconValue,
+        }),
+      );
       setShowIconDropdown(null);
     }
   };
@@ -146,19 +160,20 @@ export function OverviewTable() {
         const newDay = {
           day: new Date(),
           numOfDay: String(reviewData.length + 1),
-          activity: [{
-            icon: 'none',
-            dayActivity: {
-              line1: 'Новая активность',
-              line2: 'Новая активность',
-              line3: 'Новая активность',
-              isFlight: false,
-              more: '',
-            }
-          }]
+          activity: [
+            {
+              icon: 'none',
+              dayActivity: {
+                line1: 'Title',
+                line2: 'Subtitle',
+                line3: 'One More Line',
+                isFlight: false,
+                more: 'more info',
+              },
+            },
+          ],
         };
-        console.log(newDay);
-        
+
         await travelProgramService.updateReviewDay(program._id, reviewData.length, newDay);
       } catch (error) {
         console.error('Failed to add new row:', error);
@@ -168,7 +183,11 @@ export function OverviewTable() {
 
   const getIconComponent = (iconValue: string) => {
     const option = ICON_OPTIONS.find(opt => opt.value === iconValue);
-    return option ? <option.icon size={20} className={styles['activity-icon']} /> : <Map size={20} className={styles['activity-icon']} />;
+    return option ? (
+      <option.icon size={20} className={styles['activity-icon']} />
+    ) : (
+      <Map size={20} className={styles['activity-icon']} />
+    );
   };
 
   return (
@@ -197,13 +216,16 @@ export function OverviewTable() {
                 <div key={activity.id} className={styles['activity-item']}>
                   {editableRow === index ? (
                     <div className={styles['icon-selector']}>
-                      <div 
+                      <div
                         className={styles['icon-button']}
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
-                          setShowIconDropdown(showIconDropdown?.activityIndex === activityIndex ? null : { activityIndex });
-                        }}
-                      >
+                          setShowIconDropdown(
+                            showIconDropdown?.activityIndex === activityIndex
+                              ? null
+                              : { activityIndex },
+                          );
+                        }}>
                         {getIconComponent(activity.icon)}
                       </div>
                       {showIconDropdown?.activityIndex === activityIndex && (
@@ -212,11 +234,10 @@ export function OverviewTable() {
                             <div
                               key={option.value}
                               className={styles['icon-option']}
-                              onClick={(e) => {
+                              onClick={e => {
                                 e.stopPropagation();
                                 handleIconChange(activityIndex, option.value);
-                              }}
-                            >
+                              }}>
                               <option.icon size={20} />
                               <span>{option.label}</span>
                             </div>
@@ -239,30 +260,28 @@ export function OverviewTable() {
                     ) : (
                       <div>{activity.dayActivity.line1}</div>
                     )}
-                    {
-                      (editableRow === index ? (
-                        <input
-                          type="text"
-                          defaultValue={activity.dayActivity.line2}
-                          className={styles['editable-input']}
-                          onClick={e => e.stopPropagation()}
-                          onChange={e => handleInputChange(activityIndex, 'line2', e.target.value)}
-                        />
-                      ) : (
-                        <div>{activity.dayActivity.line2}</div>
-                      ))}
-                    {
-                      (editableRow === index ? (
-                        <input
-                          type="text"
-                          defaultValue={activity.dayActivity.line3}
-                          className={styles['editable-input']}
-                          onClick={e => e.stopPropagation()}
-                          onChange={e => handleInputChange(activityIndex, 'line3', e.target.value)}
-                        />
-                      ) : (
-                        <div>{activity.dayActivity.line3}</div>
-                      ))}
+                    {editableRow === index ? (
+                      <input
+                        type="text"
+                        defaultValue={activity.dayActivity.line2}
+                        className={styles['editable-input']}
+                        onClick={e => e.stopPropagation()}
+                        onChange={e => handleInputChange(activityIndex, 'line2', e.target.value)}
+                      />
+                    ) : (
+                      <div>{activity.dayActivity.line2}</div>
+                    )}
+                    {editableRow === index ? (
+                      <input
+                        type="text"
+                        defaultValue={activity.dayActivity.line3}
+                        className={styles['editable-input']}
+                        onClick={e => e.stopPropagation()}
+                        onChange={e => handleInputChange(activityIndex, 'line3', e.target.value)}
+                      />
+                    ) : (
+                      <div>{activity.dayActivity.line3}</div>
+                    )}
                     {editableRow === index ? (
                       <div className={styles['activity-subtext']}>
                         <div className={styles['more-text']}>Дополнительная информация</div>
@@ -274,20 +293,22 @@ export function OverviewTable() {
                           onChange={e => handleInputChange(activityIndex, 'more', e.target.value)}
                         />
                       </div>
-                    ) : activity.dayActivity.more && (
-                      <div className={styles['activity-subtext']}>
-                        <div
-                          className={styles['more-text']}
-                          onClick={e => toggleActivity(activity.id, e)}>
-                          {expandedActivities[activity.id] ? 'СКРЫТЬ' : 'ПОДРОБНЕЕ'}
+                    ) : (
+                      activity.dayActivity.more && (
+                        <div className={styles['activity-subtext']}>
+                          <div
+                            className={styles['more-text']}
+                            onClick={e => toggleActivity(activity.id, e)}>
+                            {expandedActivities[activity.id] ? 'СКРЫТЬ' : 'ПОДРОБНЕЕ'}
+                          </div>
+                          <div
+                            className={`${styles['more-details']} ${
+                              expandedActivities[activity.id] ? styles.expanded : ''
+                            }`}>
+                            {activity.dayActivity.more}
+                          </div>
                         </div>
-                        <div
-                          className={`${styles['more-details']} ${
-                            expandedActivities[activity.id] ? styles.expanded : ''
-                          }`}>
-                          {activity.dayActivity.more}
-                        </div>
-                      </div>
+                      )
                     )}
                   </div>
                 </div>

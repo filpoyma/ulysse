@@ -8,6 +8,12 @@ interface ITravelProgramState {
   program: ITravelProgramResponse | null;
 }
 
+interface IUpdateActivityIconPayload {
+  dayIndex: number;
+  activityIndex: number;
+  icon: string;
+}
+
 const initialState: ITravelProgramState = {
   program: null,
 };
@@ -40,6 +46,18 @@ const { reducer: travelProgramReducer, actions: travelProgramActions } =
       ) {
         if (state.program) {
           state.program.bgImages = action.payload;
+        }
+      },
+      updateActivityIcon(
+        state: ITravelProgramState,
+        action: PayloadAction<IUpdateActivityIconPayload>
+      ) {
+        if (state.program?.secondPageTables?.routeDetailsTable?.review) {
+          const { dayIndex, activityIndex, icon } = action.payload;
+          const review = state.program.secondPageTables.routeDetailsTable.review;
+          if (review[dayIndex]?.activity[activityIndex]) {
+            review[dayIndex].activity[activityIndex].icon = icon;
+          }
         }
       },
     },

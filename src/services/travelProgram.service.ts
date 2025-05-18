@@ -103,14 +103,14 @@ export const travelProgramService = {
       if (program) {
         const updatedAccommodation = [...program.secondPageTables.accommodation];
         updatedAccommodation.splice(rowIndex, 1);
-        store.dispatch(
+      store.dispatch(
           travelProgramActions.updateProgram({
             secondPageTables: {
               ...program.secondPageTables,
               accommodation: updatedAccommodation,
             },
           }),
-        );
+      );
       }
     }
   },

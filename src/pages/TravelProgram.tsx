@@ -4,6 +4,8 @@ import Header from "../components/Header";
 import { DetailsSection } from "../components/DetailsSection";
 import ImageUploadModal from "../components/ImageUploadModal/ImageUploadModal";
 import FirstPage from "../components/FirstPage";
+import MapBox from '../components/MapBox/MapBoxCustomLayer.component';
+import MapPage from '../components/MapPage/MapPage';
 import { useSelector } from "react-redux";
 import { travelProgramService } from "../services/travelProgram.service";
 import { RootState } from "../store";
@@ -58,14 +60,19 @@ const TravelProgram: React.FC = () => {
     const handleScroll = () => {
       const heroSection = document.getElementById("hero");
       const detailsSection = document.getElementById("details");
+      const mapSection = document.getElementById("map");
 
-      if (!heroSection || !detailsSection) return;
+      if (!heroSection || !detailsSection || !mapSection) return;
 
       const heroRect = heroSection.getBoundingClientRect();
       const detailsRect = detailsSection.getBoundingClientRect();
+      const mapRect = mapSection.getBoundingClientRect();
       const headerHeight = 80;
 
-      if (detailsRect.top <= headerHeight + 100) {
+      if (mapRect.top <= headerHeight + 100) {
+        setCurrentSection("map");
+        setSelectedImageNumber(2);
+      } else if (detailsRect.top <= headerHeight + 100) {
         setCurrentSection("details");
         setSelectedImageNumber(1);
       } else if (heroRect.top >= -100) {
@@ -84,6 +91,10 @@ const TravelProgram: React.FC = () => {
 
   const secondPageBg = program?.bgImages?.[1]?.path
     ? `${ROOT_URL}/${program.bgImages[1].path.replace(/^\//, "")}`
+    : "https://images.pexels.com/photos/4577791/pexels-photo-4577791.jpeg?auto=compress&cs=tinysrgb&w=1920";
+
+    const thirdPageBg = program?.bgImages?.[2]?.path
+    ? `${ROOT_URL}/${program.bgImages[2].path.replace(/^\//, "")}`
     : "https://images.pexels.com/photos/4577791/pexels-photo-4577791.jpeg?auto=compress&cs=tinysrgb&w=1920";
 
   return (
@@ -123,6 +134,13 @@ const TravelProgram: React.FC = () => {
               onClick={() => setIsModalOpen(true)}
             />
           </div>
+          <div
+            className={`background-image ${
+              currentSection === "map" ? "active" : ""
+            }`}
+          >
+            <MapBox style='https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json' />
+          </div>
         </div>
         <div className="right-side">
           <FirstPage
@@ -132,6 +150,9 @@ const TravelProgram: React.FC = () => {
             onScrollToDetails={scrollToDetails}
           />
           <DetailsSection ref={detailsRef} />
+          <div id="map">
+            <MapPage />
+          </div>
         </div>
       </div>
     </>

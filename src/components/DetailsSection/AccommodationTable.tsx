@@ -2,7 +2,7 @@ import styles from './index.module.css';
 import { useSelector } from 'react-redux';
 import { selectTravelProgram, selectIsLoggedIn } from '../../store/selectors.ts';
 import { useState } from 'react';
-import { Check, Plus, X, Minus } from 'lucide-react';
+import { Check, Plus, X, Trash2 } from 'lucide-react';
 import { travelProgramService } from '../../services/travelProgram.service';
 
 export function AccommodationTable() {
@@ -177,7 +177,7 @@ export function AccommodationTable() {
                 className={`${styles['edit-icon']} ${styles['del-icon']}`}
                 onClick={handleDelete}
                 title="Удалить">
-                <Minus size={16} />
+                <Trash2 size={16} />
               </button>
               <button className={styles['edit-icon']} onClick={handleSave} title="Сохранить">
                 <Check size={16} />

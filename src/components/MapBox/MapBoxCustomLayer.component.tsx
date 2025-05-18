@@ -48,6 +48,11 @@ const MapWithCustomLayer = () => {
       zoom: 6,
     });
 
+    map.on('click', (e) => {
+      const lngLat = e.lngLat; // объект {lng, lat}
+      console.log('Координаты клика:', lngLat.lng, lngLat.lat);
+    });
+
     // Добавляем маркеры
     trackData.cities.forEach(city => {
       new mapboxgl.Marker({ color: city.markerColor })

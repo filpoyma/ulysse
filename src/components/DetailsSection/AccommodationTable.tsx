@@ -2,7 +2,7 @@ import styles from './index.module.css';
 import { useSelector } from 'react-redux';
 import { selectTravelProgram, selectIsLoggedIn } from '../../store/selectors.ts';
 import { useState } from 'react';
-import { Check, Plus, X } from 'lucide-react';
+import { Check, Plus, X, Minus } from 'lucide-react';
 import { travelProgramService } from '../../services/travelProgram.service';
 
 export function AccommodationTable() {
@@ -157,11 +157,16 @@ export function AccommodationTable() {
             className={styles['edit-controls']}
             style={{ marginTop: 42, display: 'flex', justifyContent: 'flex-end' }}>
             <div className={styles['edit-icons']}>
-              <button className={styles['edit-icon']} onClick={handleSave}>
-                <Check size={16} />
-              </button>
               <button className={styles['edit-icon']} onClick={handleCancel}>
                 <X size={16} />
+              </button>
+              <button
+                className={`${styles['edit-icon']} ${styles['del-icon']}`}
+                onClick={handleCancel}>
+                <Minus size={16} />
+              </button>
+              <button className={styles['edit-icon']} onClick={handleSave}>
+                <Check size={16} />
               </button>
             </div>
           </div>

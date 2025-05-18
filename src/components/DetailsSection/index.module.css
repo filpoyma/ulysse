@@ -104,6 +104,7 @@
   color: var(--primary-color);
   background-color: var(--input-bg);
   transition: border-color 0.2s ease;
+  margin-bottom: 3px;
 }
 
 .overview-table .editable-input:focus {
@@ -130,6 +131,7 @@
 }
 
 .edit-icon {
+  position: relative;
   width: 24px;
   height: 24px;
   padding: 4px;
@@ -140,9 +142,20 @@
   transition: all 0.2s ease;
 }
 
+.del-icon {
+  color: orangered;
+  border: 1px solid orangered;
+}
+
 .edit-icon:hover {
   background-color: var(--secondary-color);
   border-color: var(--secondary-color);
+  color: white;
+}
+
+.del-icon:hover {
+  background-color: orangered;
+  border-color: orangered;
   color: white;
 }
 
@@ -221,7 +234,7 @@
 /* Стили для AccommodationTable */
 .accommodation-table .table-header,
 .accommodation-table .table-row {
-  grid-template-columns: minmax(150px, 20%) minmax(200px, 80%) minmax(150px, 20%) minmax(100px, 10%);
+  grid-template-columns: minmax(70px, 20%) minmax(150px, 80%) minmax(150px, 20%) minmax(80px, 10%);
 }
 
 .accommodation-table .activities-cell {
@@ -245,7 +258,6 @@
 
 .accommodation-table .table-row {
   display: grid;
-  grid-template-columns: minmax(150px, 20%) minmax(200px, 80%) minmax(150px, 20%) minmax(100px, 10%);
   width: 100%;
 }
 
@@ -389,4 +401,4 @@
 .icon-option span {
   font-size: 0.9rem;
   color: var(--text-color);
-} 
+}

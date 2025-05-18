@@ -334,6 +334,7 @@ body {
   flex: 1;
   font-size: 0.94rem;
   color: var(--table-text-color);
+
 }
 
 .activity-details > div:nth-child(3) {

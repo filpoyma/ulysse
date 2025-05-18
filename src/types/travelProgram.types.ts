@@ -23,6 +23,7 @@ export interface IAccommodation {
 
 export interface ITravelProgramResponse {
   _id: string;
+  id: string;
   name: string;
   name_eng: string;
   days: number;
@@ -37,6 +38,7 @@ export interface ITravelProgramResponse {
       review: {
         day: string;
         numOfDay: number;
+        id: string;
         activity: {
           id: string;
           icon: string;

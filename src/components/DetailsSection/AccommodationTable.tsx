@@ -170,15 +170,16 @@ export function AccommodationTable() {
             className={styles['edit-controls']}
             style={{ marginTop: 42, display: 'flex', justifyContent: 'flex-end' }}>
             <div className={styles['edit-icons']}>
-              <button className={styles['edit-icon']} onClick={handleCancel}>
+              <button className={styles['edit-icon']} onClick={handleCancel} title="Отмена">
                 <X size={16} />
               </button>
               <button
                 className={`${styles['edit-icon']} ${styles['del-icon']}`}
-                onClick={handleDelete}>
+                onClick={handleDelete}
+                title="Удалить">
                 <Minus size={16} />
               </button>
-              <button className={styles['edit-icon']} onClick={handleSave}>
+              <button className={styles['edit-icon']} onClick={handleSave} title="Сохранить">
                 <Check size={16} />
               </button>
             </div>

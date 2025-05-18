@@ -361,13 +361,14 @@ export function OverviewTable() {
                     <button
                       className={styles['edit-icon']}
                       onClick={handleAddNewActivity}
-                      type="button">
+                      type="button"
+                      title="Добавить">
                       <Plus size={16} />
                     </button>
-                    <button className={styles['edit-icon']} onClick={handleSave}>
+                    <button className={styles['edit-icon']} onClick={handleSave} title="Сохранить">
                       <Check size={16} />
                     </button>
-                    <button className={styles['edit-icon']} onClick={handleCancel}>
+                    <button className={styles['edit-icon']} onClick={handleCancel} title="Отменить">
                       <X size={16} />
                     </button>
                   </div>

@@ -210,8 +210,7 @@ export function OverviewTable() {
           isFlight: false,
           more: 'more info',
         },
-      };
-      console.log('New activity to add:', newActivity);
+      };  
       return {
         ...prevData,
         activity: [...(prevData.activity || []), newActivity],
@@ -361,14 +360,13 @@ export function OverviewTable() {
                     <button
                       className={styles['edit-icon']}
                       onClick={handleAddNewActivity}
-                      type="button"
-                      title="Добавить">
+                      type="button">
                       <Plus size={16} />
                     </button>
-                    <button className={styles['edit-icon']} onClick={handleSave} title="Сохранить">
+                    <button className={styles['edit-icon']} onClick={handleSave}>
                       <Check size={16} />
                     </button>
-                    <button className={styles['edit-icon']} onClick={handleCancel} title="Отменить">
+                    <button className={styles['edit-icon']} onClick={handleCancel}>
                       <X size={16} />
                     </button>
                   </div>

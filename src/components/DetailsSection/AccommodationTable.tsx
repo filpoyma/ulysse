@@ -57,6 +57,19 @@ export function AccommodationTable() {
     setEditedData(null);
   };
 
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (editableRow !== null && program?._id) {
+      try {
+        await travelProgramService.deleteAccommodationRow(program._id, editableRow);
+        setEditableRow(null);
+        setEditedData(null);
+      } catch (error) {
+        console.error('Failed to delete row:', error);
+      }
+    }
+  };
+
   const handleAddNewRow = async () => {
     if (program?._id) {
       try {
@@ -162,7 +175,7 @@ export function AccommodationTable() {
               </button>
               <button
                 className={`${styles['edit-icon']} ${styles['del-icon']}`}
-                onClick={handleCancel}>
+                onClick={handleDelete}>
                 <Minus size={16} />
               </button>
               <button className={styles['edit-icon']} onClick={handleSave}>

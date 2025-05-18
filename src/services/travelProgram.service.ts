@@ -96,4 +96,22 @@ export const travelProgramService = {
       }
     }
   },
+  async deleteAccommodationRow(programId: string, rowIndex: number) {
+    const res = await travelProgramApi.deleteAccommodationRow(programId, rowIndex);
+    if (res) {
+      const program = store.getState().travelProgram.program;
+      if (program) {
+        const updatedAccommodation = [...program.secondPageTables.accommodation];
+        updatedAccommodation.splice(rowIndex, 1);
+        store.dispatch(
+          travelProgramActions.updateProgram({
+            secondPageTables: {
+              ...program.secondPageTables,
+              accommodation: updatedAccommodation,
+            },
+          }),
+        );
+      }
+    }
+  },
 };

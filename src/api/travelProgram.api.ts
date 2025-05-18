@@ -79,6 +79,14 @@ const travelProgramApi = {
     const url = this.getUrl(`${programId}/accommodation/${rowIndex}`);
     return api.put(url, { json: data }).json();
   },
+
+  async deleteAccommodationRow(
+    programId: string,
+    rowIndex: number,
+  ): Promise<{ data: IAccommodation[]; success: boolean }> {
+    const url = this.getUrl(`${programId}/accommodation/${rowIndex}`);
+    return api.delete(url).json();
+  },
 };
 
 export default travelProgramApi;

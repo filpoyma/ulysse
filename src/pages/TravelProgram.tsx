@@ -51,7 +51,8 @@ const TravelProgram: React.FC = () => {
 
   useEffect(() => {
     const rightSide = document.querySelector('.right-side');
-    if (!rightSide) return;
+    const leftSide = document.querySelector('.left-side');
+    if (!rightSide || !leftSide) return;
 
     const handleScroll = () => {
       const detailsSection = document.getElementById('details');
@@ -60,22 +61,21 @@ const TravelProgram: React.FC = () => {
       if (!detailsSection) return;
 
       const headerHeight = 80;
-      const viewportHeight = window.innerHeight - headerHeight;
+      const leftSideHeight = leftSide.offsetHeight;
       const scrollTop = rightSide.scrollTop;
+      const detailsSectionStart = detailsSection.offsetTop - 686;
+      console.log(detailsSectionStart);
 
-      // Найти начало DetailsSection относительно скролла rightSide
-      const detailsSectionStart = detailsSection.offsetTop - headerHeight;
-      const detailsScrolled = scrollTop - detailsSectionStart;
+      // Сколько пикселей верх DetailsSection уже влез под шапку
+      const scrolled = scrollTop + headerHeight - detailsSectionStart;
 
       backgroundImages.forEach((img, index) => {
         if (index === 0) {
-          // Первая картинка всегда на месте
           (img as HTMLElement).style.transform = `translateY(0)`;
         } else if (index === 1) {
-          // Вторая картинка начинает наезжать на первую с началом DetailsSection
-          let translateY = viewportHeight;
-          if (detailsScrolled > 0) {
-            translateY = Math.max(0, viewportHeight - detailsScrolled);
+          let translateY = leftSideHeight;
+          if (scrolled > 0) {
+            translateY = Math.max(0, leftSideHeight - scrolled);
           }
           (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
         }
@@ -93,9 +93,6 @@ const TravelProgram: React.FC = () => {
   const secondPageBg = program?.bgImages?.[1]?.path
     ? `${ROOT_URL}/${program.bgImages[1].path.replace(/^\//, '')}`
     : 'https://images.pexels.com/photos/4577791/pexels-photo-4577791.jpeg?auto=compress&cs=tinysrgb&w=1920';
-
-  console.log('First page bg:', firstPageBg);
-  console.log('Second page bg:', secondPageBg);
 
   return (
     <>

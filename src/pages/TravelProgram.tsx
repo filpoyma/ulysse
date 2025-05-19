@@ -8,9 +8,9 @@ import MapBox from '../components/MapBox/MapBoxCustomLayer.component';
 import MapPage from '../components/MapPage/MapPage';
 import { useSelector } from 'react-redux';
 import { travelProgramService } from '../services/travelProgram.service';
-import { RootState } from '../store';
 import { ROOT_URL } from '../constants/api.constants';
 import { IFirstPageData as FirstPageType } from '../types/travelProgram.types';
+import { selectIsLoggedIn, selectTravelProgram } from '../store/selectors.ts';
 
 const DEFAULT_FIRST_PAGE: FirstPageType = {
   title: '',
@@ -26,10 +26,11 @@ const TravelProgram: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const selectedImageNumberRef = useRef<number | null>(0);
 
-  const program = useSelector((state: RootState) => state.travelProgram.program);
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const program = useSelector(selectTravelProgram);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+
   const firstPage: FirstPageType = program?.firstPage || DEFAULT_FIRST_PAGE;
-  console.log('RENDER');
+
   useEffect(() => {
     if (programName) {
       travelProgramService.getByName(programName).catch(console.error);
@@ -66,29 +67,22 @@ const TravelProgram: React.FC = () => {
       const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
 
       const detailsSectionStart = detailsSection.offsetTop - leftSideHeight;
-      const scrolled = scrollTop + headerHeight - detailsSectionStart;
+      const detailsScrolled = scrollTop + headerHeight - detailsSectionStart;
 
       const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
       const mapScrolled = scrollTop + headerHeight - mapSectionStart;
 
-      if (mapScrolled > 0) {
-        console.log('n');
-        selectedImageNumberRef.current = null;
-      } else if (scrolled > 0) {
-        console.log('1');
-        selectedImageNumberRef.current = 1;
-      } else {
-        console.log('0');
-        selectedImageNumberRef.current = 0;
-      }
+      if (mapScrolled > 0) selectedImageNumberRef.current = null;
+      else if (detailsScrolled > 0) selectedImageNumberRef.current = 1;
+      else selectedImageNumberRef.current = 0;
 
       backgroundImages.forEach((img, index) => {
         if (index === 0) {
           (img as HTMLElement).style.transform = `translateY(0)`;
         } else if (index === 1) {
           let translateY = leftSideHeight;
-          if (scrolled > 0) {
-            translateY = Math.max(0, leftSideHeight - scrolled);
+          if (detailsScrolled > 0) {
+            translateY = Math.max(0, leftSideHeight - detailsScrolled);
           }
           (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
         } else if (index === 2) {

@@ -24,7 +24,7 @@ const TravelProgram: React.FC = () => {
   const navRef = useRef<HTMLElement>(null);
   const [currentSection, setCurrentSection] = useState('hero');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImageNumber, setSelectedImageNumber] = useState<number | null>(0);
+  const selectedImageNumberRef = useRef<number | null>(0);
 
   const program = useSelector((state: RootState) => state.travelProgram.program);
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -71,6 +71,17 @@ const TravelProgram: React.FC = () => {
       const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
       const mapScrolled = scrollTop + headerHeight - mapSectionStart;
 
+      if (mapScrolled > 0) {
+        console.log('n');
+        selectedImageNumberRef.current = null;
+      } else if (scrolled > 0) {
+        console.log('1');
+        selectedImageNumberRef.current = 1;
+      } else {
+        console.log('0');
+        selectedImageNumberRef.current = 0;
+      }
+
       backgroundImages.forEach((img, index) => {
         if (index === 0) {
           (img as HTMLElement).style.transform = `translateY(0)`;
@@ -110,7 +121,7 @@ const TravelProgram: React.FC = () => {
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         programName={programName}
-        imageNumber={selectedImageNumber}
+        imageNumber={selectedImageNumberRef.current}
       />
       <div className="page-container">
         <div className="left-side">

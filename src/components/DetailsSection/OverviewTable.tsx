@@ -210,7 +210,7 @@ export function OverviewTable() {
           isFlight: false,
           more: 'more info',
         },
-      };  
+      };
       return {
         ...prevData,
         activity: [...(prevData.activity || []), newActivity],

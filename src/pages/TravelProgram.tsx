@@ -29,7 +29,7 @@ const TravelProgram: React.FC = () => {
   const program = useSelector((state: RootState) => state.travelProgram.program);
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const firstPage: FirstPageType = program?.firstPage || DEFAULT_FIRST_PAGE;
-
+  console.log('RENDER');
   useEffect(() => {
     if (programName) {
       travelProgramService.getByName(programName).catch(console.error);
@@ -57,17 +57,19 @@ const TravelProgram: React.FC = () => {
     const handleScroll = () => {
       const detailsSection = document.getElementById('details');
       const backgroundImages = document.querySelectorAll('.background-image');
+      const mapSection = document.getElementById('map');
 
       if (!detailsSection) return;
 
       const headerHeight = 80;
-      const leftSideHeight = leftSide.offsetHeight;
       const scrollTop = rightSide.scrollTop;
-      const detailsSectionStart = detailsSection.offsetTop - 686;
-      console.log(detailsSectionStart);
+      const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
 
-      // Сколько пикселей верх DetailsSection уже влез под шапку
+      const detailsSectionStart = detailsSection.offsetTop - leftSideHeight;
       const scrolled = scrollTop + headerHeight - detailsSectionStart;
+
+      const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
+      const mapScrolled = scrollTop + headerHeight - mapSectionStart;
 
       backgroundImages.forEach((img, index) => {
         if (index === 0) {
@@ -76,6 +78,13 @@ const TravelProgram: React.FC = () => {
           let translateY = leftSideHeight;
           if (scrolled > 0) {
             translateY = Math.max(0, leftSideHeight - scrolled);
+          }
+          (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
+        } else if (index === 2) {
+          // MapBox: аналогичная логика для третьей картинки
+          let translateY = leftSideHeight;
+          if (mapScrolled > 0) {
+            translateY = Math.max(0, leftSideHeight - mapScrolled);
           }
           (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
         }
@@ -106,20 +115,23 @@ const TravelProgram: React.FC = () => {
       <div className="page-container">
         <div className="left-side">
           <div className="background-image" style={{ zIndex: 1 }}>
-            <img 
-              src={firstPageBg} 
-              alt="Leopard in tree" 
+            <img
+              src={firstPageBg}
+              alt="Leopard in tree"
               onClick={() => setIsModalOpen(true)}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
           <div className="background-image" style={{ zIndex: 2 }}>
-            <img 
-              src={secondPageBg} 
-              alt="Safari landscape" 
+            <img
+              src={secondPageBg}
+              alt="Safari landscape"
               onClick={() => setIsModalOpen(true)}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
+          </div>
+          <div className="background-image" style={{ zIndex: 3 }}>
+            <MapBox />
           </div>
         </div>
         <div className="right-side">

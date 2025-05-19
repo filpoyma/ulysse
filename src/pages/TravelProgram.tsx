@@ -54,46 +54,32 @@ const TravelProgram: React.FC = () => {
     if (!rightSide) return;
 
     const handleScroll = () => {
-      const heroSection = document.getElementById('hero');
       const detailsSection = document.getElementById('details');
-      const mapSection = document.getElementById('map');
       const backgroundImages = document.querySelectorAll('.background-image');
 
-      if (!heroSection || !detailsSection || !mapSection) return;
+      if (!detailsSection) return;
 
-      const heroRect = heroSection.getBoundingClientRect();
-      const detailsRect = detailsSection.getBoundingClientRect();
-      const mapRect = mapSection.getBoundingClientRect();
       const headerHeight = 80;
-
-      // Get scroll position and viewport height
-      const scrollTop = rightSide.scrollTop;
       const viewportHeight = window.innerHeight - headerHeight;
+      const scrollTop = rightSide.scrollTop;
 
-      // Update image positions based on scroll
+      // Найти начало DetailsSection относительно скролла rightSide
+      const detailsSectionStart = detailsSection.offsetTop - headerHeight;
+      const detailsScrolled = scrollTop - detailsSectionStart;
+
       backgroundImages.forEach((img, index) => {
         if (index === 0) {
-          // First image moves with first section
-          const translateY = -scrollTop;
-          (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
+          // Первая картинка всегда на месте
+          (img as HTMLElement).style.transform = `translateY(0)`;
         } else if (index === 1) {
-          // Second image follows first image with stacking effect
-          const translateY = Math.min(0, -scrollTop + viewportHeight);
+          // Вторая картинка начинает наезжать на первую с началом DetailsSection
+          let translateY = viewportHeight;
+          if (detailsScrolled > 0) {
+            translateY = Math.max(0, viewportHeight - detailsScrolled);
+          }
           (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
         }
       });
-
-      // Update active states for other functionality
-      if (mapRect.top <= headerHeight + 100) {
-        setCurrentSection('map');
-        setSelectedImageNumber(2);
-      } else if (detailsRect.top <= headerHeight + 100) {
-        setCurrentSection('details');
-        setSelectedImageNumber(1);
-      } else if (heroRect.top >= -100) {
-        setSelectedImageNumber(0);
-        setCurrentSection('hero');
-      }
     };
 
     rightSide.addEventListener('scroll', handleScroll);
@@ -122,7 +108,7 @@ const TravelProgram: React.FC = () => {
       />
       <div className="page-container">
         <div className="left-side">
-          <div className="background-image" style={{ zIndex: 2 }}>
+          <div className="background-image" style={{ zIndex: 1 }}>
             <img 
               src={firstPageBg} 
               alt="Leopard in tree" 
@@ -130,7 +116,7 @@ const TravelProgram: React.FC = () => {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </div>
-          <div className="background-image" style={{ zIndex: 1 }}>
+          <div className="background-image" style={{ zIndex: 2 }}>
             <img 
               src={secondPageBg} 
               alt="Safari landscape" 

@@ -105,7 +105,6 @@ body {
   width: 50%;
   height: calc(100vh - var(--header-height));
   opacity: 1;
-  transform-origin: top;
 }
 
 .background-image:nth-child(1) {
@@ -114,9 +113,9 @@ body {
 }
 
 .background-image:nth-child(2) {
-  z-index: 200;
-  transform: translateY(100%);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  transform: translateY(100vh);
+  will-change: transform;
 }
 
 .background-image img {

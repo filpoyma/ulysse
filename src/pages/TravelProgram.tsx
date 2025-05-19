@@ -32,7 +32,7 @@ const TravelProgram: React.FC = () => {
 
   useEffect(() => {
     if (programName) {
-      travelProgramService.getByName(programName);
+      travelProgramService.getByName(programName).catch(console.error);
     }
   }, [programName]);
 
@@ -57,6 +57,7 @@ const TravelProgram: React.FC = () => {
       const heroSection = document.getElementById('hero');
       const detailsSection = document.getElementById('details');
       const mapSection = document.getElementById('map');
+      const backgroundImages = document.querySelectorAll('.background-image');
 
       if (!heroSection || !detailsSection || !mapSection) return;
 
@@ -65,6 +66,24 @@ const TravelProgram: React.FC = () => {
       const mapRect = mapSection.getBoundingClientRect();
       const headerHeight = 80;
 
+      // Get scroll position and viewport height
+      const scrollTop = rightSide.scrollTop;
+      const viewportHeight = window.innerHeight - headerHeight;
+
+      // Update image positions based on scroll
+      backgroundImages.forEach((img, index) => {
+        if (index === 0) {
+          // First image moves with first section
+          const translateY = -scrollTop;
+          (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
+        } else if (index === 1) {
+          // Second image follows first image with stacking effect
+          const translateY = Math.min(0, -scrollTop + viewportHeight);
+          (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
+        }
+      });
+
+      // Update active states for other functionality
       if (mapRect.top <= headerHeight + 100) {
         setCurrentSection('map');
         setSelectedImageNumber(2);
@@ -89,9 +108,8 @@ const TravelProgram: React.FC = () => {
     ? `${ROOT_URL}/${program.bgImages[1].path.replace(/^\//, '')}`
     : 'https://images.pexels.com/photos/4577791/pexels-photo-4577791.jpeg?auto=compress&cs=tinysrgb&w=1920';
 
-  const thirdPageBg = program?.bgImages?.[2]?.path
-    ? `${ROOT_URL}/${program.bgImages[2].path.replace(/^\//, '')}`
-    : 'https://images.pexels.com/photos/4577791/pexels-photo-4577791.jpeg?auto=compress&cs=tinysrgb&w=1920';
+  console.log('First page bg:', firstPageBg);
+  console.log('Second page bg:', secondPageBg);
 
   return (
     <>
@@ -103,15 +121,22 @@ const TravelProgram: React.FC = () => {
         imageNumber={selectedImageNumber}
       />
       <div className="page-container">
-        <div className="left-side" style={{ cursor: 'pointer' }}>
-          <div className={`background-image ${currentSection === 'hero' ? 'active' : ''}`}>
-            <img src={firstPageBg} alt="Leopard in tree" onClick={() => setIsModalOpen(true)} />
+        <div className="left-side">
+          <div className="background-image" style={{ zIndex: 2 }}>
+            <img 
+              src={firstPageBg} 
+              alt="Leopard in tree" 
+              onClick={() => setIsModalOpen(true)}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
-          <div className={`background-image ${currentSection === 'details' ? 'active' : ''}`}>
-            <img src={secondPageBg} alt="Safari landscape" onClick={() => setIsModalOpen(true)} />
-          </div>
-          <div className={`background-image ${currentSection === 'map' ? 'active' : ''}`}>
-            <MapBox />
+          <div className="background-image" style={{ zIndex: 1 }}>
+            <img 
+              src={secondPageBg} 
+              alt="Safari landscape" 
+              onClick={() => setIsModalOpen(true)}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           </div>
         </div>
         <div className="right-side">

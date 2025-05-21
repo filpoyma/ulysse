@@ -2,6 +2,7 @@ import { FC, RefObject } from "react";
 import { Edit, Trash2, Check, X, ChevronDown, ChevronUp } from "lucide-react";
 import styles from "../AdminPanel.module.css";
 import { RestaurantApiModel } from "../../../api/restaurant.api";
+import { CountryAutocomplete } from "../../../components/CountryAutocomplete/CountryAutocomplete";
 
 interface Props {
   restaraunts: RestaurantApiModel[];
@@ -115,12 +116,10 @@ const RestarauntsCollectTable: FC<Props> = ({
                 />
               </td>
               <td>
-                <input
-                  className={styles.hotelCreateInput}
-                  type="text"
+                <CountryAutocomplete
                   value={newRestaraunt.country || ""}
-                  onChange={e => onNewRestarauntChange && onNewRestarauntChange("country", e.target.value)}
-                  placeholder="Страна"
+                  onChange={(value) => onNewRestarauntChange && onNewRestarauntChange("country", value)}
+                  className={styles.hotelCreateInput}
                 />
               </td>
               <td>
@@ -187,12 +186,10 @@ const RestarauntsCollectTable: FC<Props> = ({
                   />
                 </td>
                 <td>
-                  <input
-                    className={styles.hotelCreateInput}
-                    type="text"
+                  <CountryAutocomplete
                     value={editingRestarauntData.country || ""}
-                    onChange={e => onEditRestarauntChange && onEditRestarauntChange("country", e.target.value)}
-                    placeholder="Страна"
+                    onChange={(value) => onEditRestarauntChange && onEditRestarauntChange("country", value)}
+                    className={styles.hotelCreateInput}
                   />
                 </td>
                 <td>

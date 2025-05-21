@@ -18,24 +18,26 @@ const HotelApi = {
   },
 
   getAll(): Promise<{ data: HotelApiModel[] }> {
-    return api.get(this.getUrl(), { timeout: 10000 }).json();
+    return api.get(this.getUrl()).json();
   },
 
   getById(id: string): Promise<{ data: HotelApiModel }> {
-    return api.get(this.getUrl(id), { timeout: 10000 }).json();
+    return api.get(this.getUrl(id)).json();
   },
 
-  create(data: Omit<HotelApiModel, '_id' | 'createdAt' | 'updatedAt'>): Promise<{ data: HotelApiModel }> {
-    return api.post(this.getUrl(), { json: data, timeout: 10000 }).json();
+  create(
+    data: Omit<HotelApiModel, '_id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<{ data: HotelApiModel }> {
+    return api.post(this.getUrl(), { json: data }).json();
   },
 
   update(id: string, data: Partial<HotelApiModel>): Promise<{ data: HotelApiModel }> {
-    return api.put(this.getUrl(id), { json: data, timeout: 10000 }).json();
+    return api.put(this.getUrl(id), { json: data }).json();
   },
 
   delete(id: string): Promise<{ message: string }> {
-    return api.delete(this.getUrl(id), { timeout: 10000 }).json();
+    return api.delete(this.getUrl(id)).json();
   },
 };
 
-export default HotelApi; 
+export default HotelApi;

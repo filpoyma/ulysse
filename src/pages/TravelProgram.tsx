@@ -97,6 +97,7 @@ const TravelProgram: React.FC = () => {
     };
 
     rightSide.addEventListener('scroll', handleScroll);
+    handleScroll();
     return () => rightSide.removeEventListener('scroll', handleScroll);
   }, []);
 

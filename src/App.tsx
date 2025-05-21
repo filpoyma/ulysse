@@ -9,6 +9,8 @@ import { authActions } from "./store/reducers/auth";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { countriesActions } from "./store/reducers/countries/countries.reducer.ts";
+import { countriesService } from "./services/countries.service.ts";
 dayjs.locale("ru");
 dayjs.extend(customParseFormat)
 
@@ -27,7 +29,11 @@ const App = () => {
     dispatch(authActions.setIsLoading(true));
     const validateSession = async () => {
       try {
-        await authService.validateSession();
+        const user = await authService.validateSession();
+  
+        if(user) {
+          countriesService.getAll();
+        }
       } catch (err) {
         console.error("Session validation error:", err);
       } finally {

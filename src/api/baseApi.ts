@@ -35,6 +35,7 @@ const errorInterceptor = async (error: HTTPError) => {
       return baseApi(originalRequest);
     } catch (refreshError) {
       // If refresh fails, logout user
+      console.error('refreshError', refreshError);
       store.dispatch(authActions.setToken(null));
       store.dispatch(authActions.setUser(null));
       store.dispatch(authActions.setIsLoggedIn(false));

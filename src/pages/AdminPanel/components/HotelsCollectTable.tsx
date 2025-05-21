@@ -3,6 +3,7 @@ import { Edit, Trash2, Check, X, ChevronDown, ChevronUp } from "lucide-react";
 import styles from "../AdminPanel.module.css";
 import { HotelApiModel } from "../../../api/hotel.api.ts";
 import dayjs from "dayjs";
+import { CountryAutocomplete } from "../../../components/CountryAutocomplete/CountryAutocomplete";
 
 interface HotelsTableProps {
   hotels: HotelApiModel[];
@@ -117,15 +118,10 @@ const HotelsTable: FC<HotelsTableProps> = ({
                 />
               </td>
               <td>
-                <input
-                  className={styles.hotelCreateInput}
-                  type="text"
+                <CountryAutocomplete
                   value={newHotel.country || ""}
-                  onChange={(e) =>
-                    onNewHotelChange &&
-                    onNewHotelChange("country", e.target.value)
-                  }
-                  placeholder="Страна"
+                  onChange={(value) => onNewHotelChange && onNewHotelChange("country", value)}
+                  className={styles.hotelCreateInput}
                 />
               </td>
               <td>
@@ -189,15 +185,10 @@ const HotelsTable: FC<HotelsTableProps> = ({
                   />
                 </td>
                 <td>
-                  <input
-                    className={styles.hotelCreateInput}
-                    type="text"
+                  <CountryAutocomplete
                     value={editingHotelData.country || ""}
-                    onChange={(e) =>
-                      onEditHotelChange &&
-                      onEditHotelChange("country", e.target.value)
-                    }
-                    placeholder="Страна"
+                    onChange={(value) => onEditHotelChange && onEditHotelChange("country", value)}
+                    className={styles.hotelCreateInput}
                   />
                 </td>
                 <td>

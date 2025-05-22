@@ -18,10 +18,9 @@ const tokenInterceptor = (request: Request) => {
 };
 
 const errorInterceptor = async (error: HTTPError) => {
-  const { response } = error;
 
   // Handle 401 Unauthorized
-  if (response.status === 401) {
+  if (error.response.status === 401) {
     try {
       // Try to refresh token
       const { data } = await baseApi
@@ -34,7 +33,6 @@ const errorInterceptor = async (error: HTTPError) => {
       const originalRequest = error.request;
       return baseApi(originalRequest);
     } catch (refreshError) {
-      // If refresh fails, logout user
       console.error('refreshError', refreshError);
       store.dispatch(authActions.setToken(null));
       store.dispatch(authActions.setUser(null));

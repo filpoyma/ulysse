@@ -1,25 +1,26 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import { ChevronDown, Check, X } from "lucide-react";
-import { IFirstPageData as FirstPageType } from "../types/travelProgram.types";
-import "./FirstPage.css";
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { ChevronDown, Check, X } from 'lucide-react';
+import { IFirstPageData } from '../types/travelProgram.types';
+import './FirstPage.css';
+import { travelProgramService } from '../services/travelProgram.service.ts';
 
-type EditableField = keyof FirstPageType;
+type EditableField = keyof IFirstPageData;
 
 interface FirstPageProps {
-  firstPage: FirstPageType;
+  firstPage: IFirstPageData;
   isLoggedIn: boolean;
-  onUpdate: (values: FirstPageType) => Promise<void>;
   onScrollToDetails: () => void;
+  programName: string | undefined;
 }
 
 const FirstPage: React.FC<FirstPageProps> = ({
   firstPage,
   isLoggedIn,
-  onUpdate,
   onScrollToDetails,
+  programName,
 }) => {
   const [editingField, setEditingField] = useState<EditableField | null>(null);
-  const [editedValues, setEditedValues] = useState<FirstPageType>(firstPage);
+  const [editedValues, setEditedValues] = useState<IFirstPageData>(firstPage);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -32,24 +33,22 @@ const FirstPage: React.FC<FirstPageProps> = ({
     }
   }, [editingField]);
 
-  const handleFieldChange = useCallback(
-    (field: EditableField, value: string) => {
-      setEditedValues((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    },
-    []
-  );
+  const handleFieldChange = useCallback((field: EditableField, value: string) => {
+    setEditedValues(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  }, []);
 
   const handleSave = useCallback(async () => {
     try {
-      await onUpdate(editedValues);
+      if (!programName) return;
+      await travelProgramService.updateFirstPage(programName, editedValues);
       setEditingField(null);
     } catch (error) {
-      console.error("Error updating first page:", error);
+      console.error('Error updating first page:', error);
     }
-  }, [editedValues, onUpdate]);
+  }, [editedValues]);
 
   const handleCancel = useCallback(() => {
     setEditingField(null);
@@ -69,22 +68,14 @@ const FirstPage: React.FC<FirstPageProps> = ({
               ref={inputRef}
               type="text"
               value={editedValues[field]}
-              onChange={(e) => handleFieldChange(field, e.target.value)}
+              onChange={e => handleFieldChange(field, e.target.value)}
               className={`${className} editable`}
             />
             <div className="edit-buttons">
-              <button
-                onClick={handleSave}
-                className="save-button"
-                title="Сохранить"
-              >
+              <button onClick={handleSave} className="save-button" title="Сохранить">
                 <Check size={36} />
               </button>
-              <button
-                onClick={handleCancel}
-                className="cancel-button"
-                title="Отмена"
-              >
+              <button onClick={handleCancel} className="cancel-button" title="Отмена">
                 <X size={36} />
               </button>
             </div>
@@ -106,19 +97,19 @@ const FirstPage: React.FC<FirstPageProps> = ({
       handleSave,
       handleCancel,
       firstPage,
-    ]
+    ],
   );
 
   return (
     <section id="hero" className="content-section">
       <div className="content-wrapper hero-content">
         <div className="hero-text">
-          {renderEditableField("title", "hero-title")}
-          {renderEditableField("subtitle", "hero-subtitle")}
+          {renderEditableField('title', 'hero-title')}
+          {renderEditableField('subtitle', 'hero-subtitle')}
         </div>
       </div>
       <div className="scroll-container">
-        {renderEditableField("footer", "cta-text")}
+        {renderEditableField('footer', 'cta-text')}
         <button onClick={onScrollToDetails} className="scroll-button">
           <ChevronDown className="arrow-down" size={32} />
         </button>

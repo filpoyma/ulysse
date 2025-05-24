@@ -4,36 +4,52 @@ import { Logo } from './Logo';
 import { Link } from 'react-router-dom';
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
-import { selectIsLoggedIn } from '../store/selectors';
 
 interface HeaderProps {
   currentSection: string;
   navRef: React.RefObject<HTMLElement>;
   scrollToDetails: () => void;
+  isLoggedIn: boolean;
 }
 
-const Header = ({ currentSection, navRef, scrollToDetails }: HeaderProps) => {
+const Header = ({ currentSection, navRef, scrollToDetails, isLoggedIn }: HeaderProps) => {
   const name_eng = useSelector((state: RootState) => state.travelProgram.program?.name_eng);
-  const isLoggedIn = useSelector(selectIsLoggedIn)
   return (
     <header className="header">
       <Link to={isLoggedIn ? '/admin' : `/travel-programm/${name_eng}`} className="logo">
-        {isLoggedIn ? (
-          <span className="admin-text">ADMIN</span>
-        ) : (
-          <Logo />
-        )}
+        {isLoggedIn ? <span className="admin-text">ADMIN</span> : <Logo />}
       </Link>
       <nav className="nav" ref={navRef}>
-        <a href="#hero" className={`nav-link ${currentSection === 'hero' ? 'active' : ''}`}>Титульная страница</a>
-        <a href="#details" onClick={scrollToDetails} className={`nav-link ${currentSection === 'details' ? 'active' : ''}`}>Детали маршрута</a>
-        <a href="#" className="nav-link">Карта</a>
-        <a href="#" className="nav-link">День 1</a>
-        <a href="#" className="nav-link">День 2</a>
-        <a href="#" className="nav-link">День 3</a>
-        <a href="#" className="nav-link">День 4</a>
-        <a href="#" className="nav-link">День 5-6</a>
-        <a href="#" className="nav-link">День 7</a>
+        <a href="#hero" className={`nav-link ${currentSection === 'hero' ? 'active' : ''}`}>
+          Титульная страница
+        </a>
+        <a
+          href="#details"
+          onClick={scrollToDetails}
+          className={`nav-link ${currentSection === 'details' ? 'active' : ''}`}>
+          Детали маршрута
+        </a>
+        <a href="#" className="nav-link">
+          Карта
+        </a>
+        <a href="#" className="nav-link">
+          День 1
+        </a>
+        <a href="#" className="nav-link">
+          День 2
+        </a>
+        <a href="#" className="nav-link">
+          День 3
+        </a>
+        <a href="#" className="nav-link">
+          День 4
+        </a>
+        <a href="#" className="nav-link">
+          День 5-6
+        </a>
+        <a href="#" className="nav-link">
+          День 7
+        </a>
       </nav>
       <div className="utilities">
         <Share2 size={20} className="utility-icon" />
@@ -42,6 +58,6 @@ const Header = ({ currentSection, navRef, scrollToDetails }: HeaderProps) => {
       </div>
     </header>
   );
-}
+};
 
 export default Header;

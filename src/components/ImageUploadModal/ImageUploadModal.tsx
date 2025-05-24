@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import './ImageUploadModal.css';
 import { imageService } from '../../services/image.service';
 import { ROOT_URL } from '../../constants/api.constants';
-import { selectIsLoggedIn } from '../../store/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { travelProgramActions } from '../../store/reducers/travelProgram';
 import { RootState } from '../../store';
@@ -14,16 +13,22 @@ interface Props {
   onClose: () => void;
   programName?: string;
   imageNumber: number | null;
+  isLoggedIn: boolean;
 }
 
-const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNumber }) => {
+const ImageUploadModal: React.FC<Props> = ({
+  open,
+  onClose,
+  programName,
+  imageNumber,
+  isLoggedIn,
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<IUploadedImage[]>([]);
 
-  const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
   const program = useSelector((state: RootState) => state.travelProgram.program);
 

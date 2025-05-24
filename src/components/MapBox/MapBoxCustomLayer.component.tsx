@@ -1,8 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { FeatureCollection, LineString } from 'geojson';
 import iconsMap from '../../assets/icons/mapIcons/icons.map.ts';
+import { copyToClipboard } from '../../utils/helpers.ts';
+import styles from './MapBox.module.css';
 
 const createIconEl = (icon: string) => {
   const el = document.createElement('div');
@@ -14,8 +16,8 @@ const createIconEl = (icon: string) => {
 };
 
 const trackData: {
-  cities: {
-    name: string;
+  logistics: {
+    city: string;
     coordinates: [number, number];
     routeType: 'driving' | 'walking' | 'flight';
     markerColor: string;
@@ -23,22 +25,22 @@ const trackData: {
   }[];
   mapCenter: [number, number];
 } = {
-  cities: [
+  logistics: [
     {
-      name: 'Tokyo',
+      city: 'Tokyo',
       coordinates: [139.7671, 35.6812],
       routeType: 'flight',
       markerColor: '#d7263d',
       sourceIcon: iconsMap.startPoint,
     },
     {
-      name: 'Osaka',
+      city: 'Osaka',
       coordinates: [135.5023, 34.6937],
       routeType: 'driving',
       markerColor: '#1b998b',
     },
     {
-      name: 'Kyoto',
+      city: 'Kyoto',
       coordinates: [135.7681, 35.0116],
       routeType: 'driving',
       markerColor: '#f2bb05',
@@ -49,8 +51,11 @@ const trackData: {
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
-const MapWithCustomLayer = () => {
+const MapWithCustomLayer: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const mapRef = useRef(null);
+  const currentZoom = useRef(6);
+
+  console.log('file-MapBoxCustomLayer.component.tsx currentZoom:', currentZoom);
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -59,36 +64,59 @@ const MapWithCustomLayer = () => {
       center: trackData.mapCenter,
       zoom: 6,
     });
+    if (isLoggedIn) {
+      map.getCanvas().style.cursor = 'default';
 
-    map.on('click', e => {
-      const lngLat = e.lngLat; // объект {lng, lat}
-      console.log('Координаты клика:', lngLat.lng, lngLat.lat);
-    });
+      map.on('click', e => {
+        const lngLat = e.lngLat; // объект {lng, lat}
+        console.log('Координаты клика:', lngLat.lng, lngLat.lat);
+        copyToClipboard(`${lngLat.lng},${lngLat.lat}`);
+        const popup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 5,
+        })
+          .setLngLat([lngLat.lng, lngLat.lat])
+          .setHTML(`<div class=${styles.tooltip}>Координаты скопированны</div>`)
+          .addTo(map);
+        setTimeout(() => {
+          popup.remove();
+        }, 500);
+      });
+
+      map.on('zoom', () => {
+        console.log(
+          'file-MapBoxCustomLayer.component.tsx currentZoom.current:',
+          currentZoom.current,
+        );
+        currentZoom.current = map.getZoom();
+      });
+    }
 
     // Добавляем маркеры
-    trackData.cities.forEach(city => {
-      if (city.sourceIcon) {
-        const el = createIconEl(city.sourceIcon);
+    trackData.logistics.forEach(point => {
+      if (point.sourceIcon) {
+        const el = createIconEl(point.sourceIcon);
         new mapboxgl.Marker({ element: el })
-          .setLngLat(city.coordinates)
-          .setPopup(new mapboxgl.Popup().setText(city.name))
+          .setLngLat(point.coordinates)
+          .setPopup(new mapboxgl.Popup().setText(point.city))
           .addTo(map);
       } else {
-        new mapboxgl.Marker({ color: city.markerColor })
-          .setLngLat(city.coordinates)
-          .setPopup(new mapboxgl.Popup().setText(city.name))
+        new mapboxgl.Marker({ color: point.markerColor })
+          .setLngLat(point.coordinates)
+          .setPopup(new mapboxgl.Popup().setText(point.city))
           .addTo(map);
       }
     });
 
     map.on('load', async () => {
       const accessToken = mapboxgl.accessToken;
-      let fullRoute: number[][] = [trackData.cities[0].coordinates];
+      let fullRoute: number[][] = [trackData.logistics[0].coordinates];
 
-      for (let i = 0; i < trackData.cities.length - 1; i++) {
-        const from = trackData.cities[i].coordinates;
-        const to = trackData.cities[i + 1].coordinates;
-        const routeType = trackData.cities[i].routeType;
+      for (let i = 0; i < trackData.logistics.length - 1; i++) {
+        const from = trackData.logistics[i].coordinates;
+        const to = trackData.logistics[i + 1].coordinates;
+        const routeType = trackData.logistics[i].routeType;
 
         if (routeType === 'flight') {
           // Добавляем прямой сегмент
@@ -158,9 +186,9 @@ const MapWithCustomLayer = () => {
     });
 
     return () => map.remove();
-  }, []);
+  }, [isLoggedIn]);
 
   return <div ref={mapRef} style={{ width: '100%', height: '100%' }} />;
 };
 
-export default MapWithCustomLayer;
+export default memo(MapWithCustomLayer);

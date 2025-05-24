@@ -1,7 +1,8 @@
-import { RootState } from "../store";
+import { RootState } from '../store';
 
 export const selectIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
 export const selectIsLoading = (state: RootState) => state.auth.isLoading;
 
-export const selectTravelProgram = (state: RootState) =>
-  state.travelProgram.program;
+export const selectCountries = (state: RootState) => state.countries.data;
+
+export const selectTravelProgram = (state: RootState) => state.travelProgram.program;

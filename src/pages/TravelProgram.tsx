@@ -28,7 +28,6 @@ const TravelProgram: React.FC = () => {
 
   const program = useSelector(selectTravelProgram);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-
   const firstPage: FirstPageType = program?.firstPage || DEFAULT_FIRST_PAGE;
 
   useEffect(() => {
@@ -36,14 +35,6 @@ const TravelProgram: React.FC = () => {
       travelProgramService.getByName(programName).catch(console.error);
     }
   }, [programName]);
-
-  const handleUpdateFirstPage = useCallback(
-    async (values: FirstPageType) => {
-      if (!programName) return;
-      await travelProgramService.updateFirstPage(programName, values);
-    },
-    [programName],
-  );
 
   const scrollToDetails = useCallback(() => {
     detailsRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -111,12 +102,18 @@ const TravelProgram: React.FC = () => {
 
   return (
     <>
-      <Header currentSection={currentSection} navRef={navRef} scrollToDetails={scrollToDetails} />
+      <Header
+        currentSection={currentSection}
+        navRef={navRef}
+        scrollToDetails={scrollToDetails}
+        isLoggedIn={isLoggedIn}
+      />
       <ImageUploadModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         programName={programName}
         imageNumber={selectedImageNumberRef.current}
+        isLoggedIn={isLoggedIn}
       />
       <div className="page-container">
         <div className="left-side">
@@ -137,14 +134,14 @@ const TravelProgram: React.FC = () => {
             />
           </div>
           <div className="background-image" style={{ zIndex: 3 }}>
-            <MapBox />
+            <MapBox isLoggedIn={isLoggedIn} />
           </div>
         </div>
         <div className="right-side">
           <FirstPage
             firstPage={firstPage}
+            programName={programName}
             isLoggedIn={isLoggedIn}
-            onUpdate={handleUpdateFirstPage}
             onScrollToDetails={scrollToDetails}
           />
           <DetailsSection ref={detailsRef} />

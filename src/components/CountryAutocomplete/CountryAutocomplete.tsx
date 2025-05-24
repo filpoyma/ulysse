@@ -2,7 +2,7 @@ import { FC, useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './CountryAutocomplete.module.css';
 import { ICountriesApiModel } from '../../api/countries.api';
-import { RootState } from '../../store';
+import { selectCountries } from '../../store/selectors.ts';
 
 interface Props {
   value: string;
@@ -22,7 +22,7 @@ export const CountryAutocomplete: FC<Props> = ({
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const countries = useSelector((state: RootState) => state.countries.data);
+  const countries = useSelector(selectCountries);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -54,7 +54,7 @@ export const CountryAutocomplete: FC<Props> = ({
       setDropdownPosition({
         top,
         left: rect.left + window.scrollX,
-        width: rect.width
+        width: rect.width,
       });
     }
   };
@@ -64,9 +64,10 @@ export const CountryAutocomplete: FC<Props> = ({
     onChange(inputValue);
 
     if (inputValue.length > 0) {
-      const filteredCountries = countries.filter(country =>
-        country.name_ru.toLowerCase().includes(inputValue.toLowerCase()) ||
-        country.name.toLowerCase().includes(inputValue.toLowerCase())
+      const filteredCountries = countries.filter(
+        country =>
+          country.name_ru.toLowerCase().startsWith(inputValue.toLowerCase()) ||
+          country.name.toLowerCase().startsWith(inputValue.toLowerCase()),
       );
       setSuggestions(filteredCountries);
       setShowSuggestions(true);
@@ -90,7 +91,7 @@ export const CountryAutocomplete: FC<Props> = ({
   };
 
   return (
-    <div className={`${styles.wrapper} ${className}`} ref={wrapperRef}>
+    <div className={styles.wrapper} ref={wrapperRef}>
       <input
         ref={inputRef}
         type="text"
@@ -98,23 +99,21 @@ export const CountryAutocomplete: FC<Props> = ({
         onChange={handleInputChange}
         onFocus={handleFocus}
         placeholder={placeholder}
-        className={styles.input}
+        className={className}
       />
       {showSuggestions && suggestions.length > 0 && (
-        <ul 
+        <ul
           className={styles.suggestions}
           style={{
             top: `${dropdownPosition.top}px`,
             left: `${dropdownPosition.left}px`,
-            width: `${dropdownPosition.width}px`
-          }}
-        >
+            width: `${dropdownPosition.width}px`,
+          }}>
           {suggestions.map((country, index) => (
             <li
               key={index}
               onClick={() => handleSuggestionClick(country)}
-              className={styles.suggestion}
-            >
+              className={styles.suggestion}>
               {country.name_ru}
             </li>
           ))}
@@ -122,4 +121,4 @@ export const CountryAutocomplete: FC<Props> = ({
       )}
     </div>
   );
-}; 
+};

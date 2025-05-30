@@ -16,6 +16,10 @@ declare module '*.module.css' {
 
 interface ImportMetaEnv {
   readonly VITE_MAPBOX_TOKEN: string;
+  readonly VITE_API_URL_DEV: string;
+  readonly VITE_API_URL_PROD: string;
+  readonly VITE_ROOT_URL_DEV: string;
+  readonly VITE_ROOT_URL_PROD: string;
 }
 
 interface ImportMeta {

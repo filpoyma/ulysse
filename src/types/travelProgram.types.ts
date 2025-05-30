@@ -21,13 +21,22 @@ export interface IAccommodation {
   numOfNights: number;
 }
 export interface ILogistics {
-  city: 'Tokyo';
-  coordinates: [139.7671, 35.6812];
-  hotel: 'Aman Tokyo';
-  sourceIcon: 'flightArrivalMarker';
-  routeType: 'flight';
-  time: '1ч 20мин';
-  distance: '186км';
+  _id: string;
+  city: string;
+  coordinates: [number, number];
+  hotel: string;
+  sourceListIcon:
+    | 'flightArrivalMarker'
+    | 'hotelMarker'
+    | 'flightDepartureMarker'
+    | 'parkMarker'
+    | 'photoSpotMarker'
+    | 'sightMarker'
+    | 'restMarker';
+  sourceMapIcon: 'startPoint';
+  routeType: 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';
+  time: string;
+  distance: string;
 }
 
 export interface ITravelProgramResponse {
@@ -63,9 +72,12 @@ export interface ITravelProgramResponse {
       }[];
     };
     accommodation: IAccommodation[];
-    thirdPageMap: {
-      logisti;
-    };
+  };
+  thirdPageMap: {
+    id: string;
+    logistics: ILogistics[];
+    mapCenter: [number, number];
+    zoom: number;
   };
   createdAt: string;
   updatedAt: string;

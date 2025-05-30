@@ -146,7 +146,7 @@ const TravelProgram: React.FC = () => {
           />
           <DetailsSection ref={detailsRef} />
           <div id="map">
-            <MapPage />
+            <MapPage isLoggedIn={isLoggedIn}/>
           </div>
         </div>
       </div>

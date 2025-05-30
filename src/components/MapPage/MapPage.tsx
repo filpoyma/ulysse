@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './MapPage.module.css';
 import IconElipses from '../../assets/icons/mapIcons/list/elipses.svg';
 import { useSelector } from 'react-redux';
@@ -26,25 +26,86 @@ const locationTypeLabels: Record<string, string> = {
   restMarker: 'Ресторан',
 };
 
+// Валидация координат
+const validateCoordinates = (
+  coordinates: string[],
+): { isValid: boolean; error: string | null; fieldNumber: number } => {
+  let fieldNumber = 0;
+  for (const item of coordinates) {
+    const [lng, lat] = item.split(',').map(coord => parseFloat(coord.trim()));
+    console.log(lat, lng);
+    // Проверяем, что значения являются числами
+    if (isNaN(lat) || isNaN(lng)) {
+      return {
+        isValid: false,
+        error: 'Координаты должны быть числами',
+        fieldNumber,
+      };
+    }
+
+    // Проверяем диапазоны координат
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      return {
+        isValid: false,
+        error: 'Некорректные координаты: широта от -90 до 90, долгота от -180 до 180',
+        fieldNumber,
+      };
+    }
+    fieldNumber++;
+  }
+
+  return { isValid: true, error: null, fieldNumber };
+};
+
 const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const logistics = useSelector(selectLogisticsData);
   const program = useSelector(selectTravelProgram);
   const [isEditing, setIsEditing] = useState(false);
   const [editedLogistics, setEditedLogistics] = useState(logistics);
   const [isSaving, setIsSaving] = useState(false);
+  const [coordinateError, setCoordinateError] = useState<{
+    isValid: boolean;
+    error: string | null;
+    fieldNumber: number;
+  } | null>(null);
+  const [coordinates, setCoordinates] = useState(['', '']);
+
+  useEffect(() => {
+    setCoordinates(
+      logistics.map(item => `${item.coordinates[0]}, ${item.coordinates[1]}`),
+    );
+  }, [logistics]);
 
   const handleEdit = () => {
     setIsEditing(true);
     setEditedLogistics(logistics);
+    setCoordinateError(null);
   };
 
   const handleSave = async () => {
     if (!program?._id) return;
 
+    // Валидация координат перед сохранением
+    const validation = validateCoordinates(coordinates);
+    console.log(validation);
+    if (!validation.isValid) {
+      setCoordinateError(validation);
+      return;
+    }
+    console.log('coordinates', coordinates);
+    // Преобразуем текстовые координаты в числа перед валидацией
+    const logisticsWithParsedCoordinates = editedLogistics.map((item, i) => ({
+      ...item,
+      coordinates: coordinates[i].split(',').map(coord => parseFloat(coord.trim())) as [number, number],
+    }));
+    console.log('logisticsWithParsedCoordinates', logisticsWithParsedCoordinates);
+
+
     try {
       setIsSaving(true);
-      await mapService.updateLogistics(program._id, editedLogistics);
+      await mapService.updateLogistics(program._id, logisticsWithParsedCoordinates);
       setIsEditing(false);
+      setCoordinateError(null);
     } catch (error) {
       console.error('Failed to save logistics:', error);
     } finally {
@@ -55,12 +116,19 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const handleCancel = () => {
     setIsEditing(false);
     setEditedLogistics(logistics);
+    setCoordinateError(null);
   };
 
   const handleInputChange = (id: string, field: string, value: string | number[] | RouteType) => {
     setEditedLogistics(prev =>
       prev.map(item => (item._id === id ? { ...item, [field]: value } : item)),
     );
+  };
+
+  const handleCoordinatesChange = (id: number, value: string) => {
+    setCoordinates(prev => prev.map((coord, i) => (i === id ? value : coord)));
+    setCoordinateError(prev => (coordinateError?.fieldNumber === id ? null : prev));
+   
   };
 
   return (
@@ -91,7 +159,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                 </tr>
               </thead>
               <tbody>
-                {editedLogistics.map(item => (
+                {editedLogistics.map((item, i) => (
                   <tr key={item._id}>
                     <td>
                       <input
@@ -101,18 +169,18 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                       />
                     </td>
                     <td>
-                      <input
-                        type="text"
-                        value={`${item.coordinates[0]}, ${item.coordinates[1]}`}
-                        onChange={e => {
-                          const [lat, lng] = e.target.value
-                            .split(',')
-                            .map(coord => parseFloat(coord.trim()));
-                          if (!isNaN(lat) && !isNaN(lng)) {
-                            handleInputChange(item._id, 'coordinates', [lat, lng]);
-                          }
-                        }}
-                      />
+                      <div className={styles.coordinatesInput}>
+                        <input
+                          type="text"
+                          value={coordinates[i]}
+                          onChange={e => handleCoordinatesChange(i, e.target.value)}
+                          placeholder="широта, долгота"
+                          className={coordinateError?.fieldNumber === i ? styles.error : ''}
+                        />
+                        {/*{coordinateError?.fieldNumber === i && (*/}
+                        {/*  <div className={styles.errorMessage}>{coordinateError.error}</div>*/}
+                        {/*)}*/}
+                      </div>
                     </td>
                     <td>
                       <input

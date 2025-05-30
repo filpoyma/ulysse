@@ -289,3 +289,20 @@
     padding: 0;
   }
 }
+
+.coordinatesInput {
+  position: relative;
+  width: 100%;
+}
+
+.coordinatesInput input.error {
+  border-color: #EF4444; /* Цвет рамки при ошибке */
+}
+
+.errorMessage {
+  position: absolute;
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+  white-space: nowrap;
+}

@@ -37,6 +37,7 @@ export interface ILogistics {
   routeType: 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';
   time: string;
   distance: string;
+  markerColor?: string;
 }
 
 export interface ITravelProgramResponse {

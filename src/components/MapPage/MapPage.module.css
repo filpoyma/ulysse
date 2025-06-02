@@ -239,6 +239,17 @@
   height: 100%;
 }
 
+.delIcon {
+  color: orangered;
+  border: 1px solid orangered;
+}
+
+.delIcon:hover {
+  background-color: orangered;
+  border-color: orangered;
+  color: white;
+}
+
 .editTable .del-icon {
   color: orangered;
   border: 1px solid orangered;
@@ -305,4 +316,30 @@
   font-size: 12px;
   margin-top: 4px;
   white-space: nowrap;
+}
+
+.moveButtons {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.moveButton {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+}
+
+.moveButton:hover:not(:disabled) {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.moveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

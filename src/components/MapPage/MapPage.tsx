@@ -4,9 +4,10 @@ import IconElipses from '../../assets/icons/mapIcons/list/elipses.svg';
 import { useSelector } from 'react-redux';
 import { selectLogisticsData, selectTravelProgram } from '../../store/selectors.ts';
 import iconsMapList from '../../assets/icons/mapIcons/list';
-import { X, Check, Edit } from 'lucide-react';
+import { X, Check, Edit, Plus, Trash2, MoveDown, MoveUp } from 'lucide-react';
 import { mapService } from '../../services/map.service';
 import { RouteType } from '../../types/map.types';
+import { ILogistics } from '../../types/travelProgram.types';
 
 const routeTypeLabels: Record<RouteType, string> = {
   driving: 'Автомобиль',
@@ -71,9 +72,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [coordinates, setCoordinates] = useState(['', '']);
 
   useEffect(() => {
-    setCoordinates(
-      logistics.map(item => `${item.coordinates[0]}, ${item.coordinates[1]}`),
-    );
+    setCoordinates(logistics.map(item => `${item.coordinates[0]}, ${item.coordinates[1]}`));
   }, [logistics]);
 
   const handleEdit = () => {
@@ -96,10 +95,12 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     // Преобразуем текстовые координаты в числа перед валидацией
     const logisticsWithParsedCoordinates = editedLogistics.map((item, i) => ({
       ...item,
-      coordinates: coordinates[i].split(',').map(coord => parseFloat(coord.trim())) as [number, number],
+      coordinates: coordinates[i].split(',').map(coord => parseFloat(coord.trim())) as [
+        number,
+        number,
+      ],
     }));
     console.log('logisticsWithParsedCoordinates', logisticsWithParsedCoordinates);
-
 
     try {
       setIsSaving(true);
@@ -119,6 +120,72 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setCoordinateError(null);
   };
 
+  const handleDelete = (index: number) => {
+    setEditedLogistics(prev => prev.filter((_, i) => i !== index));
+    setCoordinates(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleMoveUp = (index: number) => {
+    if (index === 0) return; // Can't move first item up
+
+    setEditedLogistics(prev => {
+      const newLogistics = [...prev];
+      [newLogistics[index - 1], newLogistics[index]] = [
+        newLogistics[index],
+        newLogistics[index - 1],
+      ];
+      return newLogistics;
+    });
+
+    setCoordinates(prev => {
+      const newCoordinates = [...prev];
+      [newCoordinates[index - 1], newCoordinates[index]] = [
+        newCoordinates[index],
+        newCoordinates[index - 1],
+      ];
+      return newCoordinates;
+    });
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index === editedLogistics.length - 1) return; // Can't move last item down
+
+    setEditedLogistics(prev => {
+      const newLogistics = [...prev];
+      [newLogistics[index], newLogistics[index + 1]] = [
+        newLogistics[index + 1],
+        newLogistics[index],
+      ];
+      return newLogistics;
+    });
+
+    setCoordinates(prev => {
+      const newCoordinates = [...prev];
+      [newCoordinates[index], newCoordinates[index + 1]] = [
+        newCoordinates[index + 1],
+        newCoordinates[index],
+      ];
+      return newCoordinates;
+    });
+  };
+
+  const handleAddNewPoint = () => {
+    const newLogisticsItem: ILogistics = {
+      _id: `temp_${Date.now()}`, // Temporary ID for new item
+      city: 'City Name',
+      coordinates: [0, 0] as [number, number],
+      hotel: 'Hotel Name',
+      routeType: 'train' as RouteType,
+      sourceListIcon: 'hotelMarker' as const,
+      sourceMapIcon: 'startPoint' as const,
+      time: '0ч 00мин',
+      distance: '0км',
+    };
+
+    setEditedLogistics(prev => [...prev, newLogisticsItem]);
+    setCoordinates(prev => [...prev, '0, 0']);
+  };
+
   const handleInputChange = (id: string, field: string, value: string | number[] | RouteType) => {
     setEditedLogistics(prev =>
       prev.map(item => (item._id === id ? { ...item, [field]: value } : item)),
@@ -128,7 +195,6 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const handleCoordinatesChange = (id: number, value: string) => {
     setCoordinates(prev => prev.map((coord, i) => (i === id ? value : coord)));
     setCoordinateError(prev => (coordinateError?.fieldNumber === id ? null : prev));
-   
   };
 
   return (
@@ -149,6 +215,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             <table>
               <thead>
                 <tr>
+                  <th>Действия</th>
                   <th>Город</th>
                   <th>Координаты</th>
                   <th>Отель</th>
@@ -161,6 +228,28 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
               <tbody>
                 {editedLogistics.map((item, i) => (
                   <tr key={item._id}>
+                    <td>
+                      <div className={styles.moveButtons}>
+                        <button
+                          className={styles.editIcon}
+                          onClick={() => handleMoveUp(i)}
+                          disabled={i === 0}>
+                          <MoveUp size={16} />
+                        </button>
+                        <button
+                          className={`${styles.editIcon} ${styles.delIcon}`}
+                          onClick={() => handleDelete(i)}
+                          disabled={isSaving}>
+                          <Trash2 size={16} />
+                        </button>
+                        <button
+                          className={styles.editIcon}
+                          onClick={() => handleMoveDown(i)}
+                          disabled={i === editedLogistics.length - 1}>
+                          <MoveDown size={16} />
+                        </button>
+                      </div>
+                    </td>
                     <td>
                       <input
                         type="text"
@@ -177,9 +266,6 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                           placeholder="широта, долгота"
                           className={coordinateError?.fieldNumber === i ? styles.error : ''}
                         />
-                        {/*{coordinateError?.fieldNumber === i && (*/}
-                        {/*  <div className={styles.errorMessage}>{coordinateError.error}</div>*/}
-                        {/*)}*/}
                       </div>
                     </td>
                     <td>
@@ -237,6 +323,9 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
             </table>
           </div>
           <div className={styles.editControls}>
+            <button className={styles.editIcon} onClick={handleAddNewPoint} disabled={isSaving}>
+              <Plus size={16} />
+            </button>
             <button className={styles.editIcon} onClick={handleCancel} disabled={isSaving}>
               <X size={16} />
             </button>

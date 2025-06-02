@@ -1,5 +1,5 @@
 import { useEffect, useRef, memo, FC } from 'react';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { LngLat } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { FeatureCollection, LineString } from 'geojson';
 import iconsMap from '../../assets/icons/mapIcons/map/icons.map.ts';
@@ -21,57 +21,59 @@ const getRouteType = (type: string) => {
   return 'driving';
 };
 
-const trackData: {
-  logistics: {
-    city: string;
-    coordinates: [number, number];
-    routeType: 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';
-    markerColor?: string;
-    sourceMapIcon?: 'startPoint';
-    // hotel: string;
-    // time: string;
-    // distance: string;
-  }[];
-  mapCenter: [number, number];
-  zoom: number;
-} = {
-  logistics: [
-    {
-      city: 'Tokyo',
-      coordinates: [139.7671, 35.6812],
-      routeType: 'flight',
-      markerColor: '#d7263d',
-      sourceMapIcon: 'startPoint',
-    },
-    {
-      city: 'Osaka',
-      coordinates: [135.5023, 34.6937],
-      routeType: 'driving',
-      markerColor: '#1b998b',
-      sourceMapIcon: 'startPoint',
-    },
-    {
-      city: 'Kyoto',
-      coordinates: [135.7681, 35.0116],
-      routeType: 'flight',
-      markerColor: '#f2bb05',
-      sourceMapIcon: 'startPoint',
-    },
-    {
-      city: 'Tokyo',
-      coordinates: [139.7671, 35.6812],
-    },
-  ],
-  mapCenter: [139.7671, 35.6812],
-  zoom: 6,
-};
+// const trackData: {
+//   logistics: {
+//     city: string;
+//     coordinates: [number, number];
+//     routeType: 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';
+//     markerColor?: string;
+//     sourceMapIcon?: 'startPoint';
+//     // hotel: string;
+//     // time: string;
+//     // distance: string;
+//   }[];
+//   mapCenter: [number, number];
+//   zoom: number;
+// } = {
+//   logistics: [
+//     {
+//       city: 'Tokyo',
+//       coordinates: [139.7671, 35.6812],
+//       routeType: 'flight',
+//       markerColor: '#d7263d',
+//       sourceMapIcon: 'startPoint',
+//     },
+//     {
+//       city: 'Osaka',
+//       coordinates: [135.5023, 34.6937],
+//       routeType: 'driving',
+//       markerColor: '#1b998b',
+//       sourceMapIcon: 'startPoint',
+//     },
+//     {
+//       city: 'Kyoto',
+//       coordinates: [135.7681, 35.0116],
+//       routeType: 'flight',
+//       markerColor: '#f2bb05',
+//       sourceMapIcon: 'startPoint',
+//     },
+//     {
+//       city: 'Tokyo',
+//       coordinates: [139.7671, 35.6812],
+//     },
+//   ],
+//   mapCenter: [139.7671, 35.6812],
+//   zoom: 6,
+// };
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const mapRef = useRef(null);
-  const currentZoom = useRef(6);
   const trackData = useSelector(selectMapData);
+  const setScreenPosition = (mapCenter: LngLat, zoom: number) => {
+    console.log('file-MapBoxCustomLayer.component.tsx mapCenter, zoom:', mapCenter, zoom);
+  };
 
   useEffect(() => {
     if (!trackData) return;
@@ -89,9 +91,10 @@ const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
         copyToClipboardWithTooltip(map, lngLat);
       });
 
-      map.on('zoom', () => {
-        currentZoom.current = map.getZoom();
+      map.on('moveend', () => {
+        setScreenPosition(map.getCenter(), map.getZoom());
       });
+
     }
 
     // Добавляем маркеры

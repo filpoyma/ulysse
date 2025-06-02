@@ -170,8 +170,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   };
 
   const handleAddNewPoint = () => {
-    const newLogisticsItem: ILogistics = {
-      _id: `temp_${Date.now()}`, // Temporary ID for new item
+    const newLogisticsItem: Omit<ILogistics, '_id'> = {
       city: 'City Name',
       coordinates: [0, 0] as [number, number],
       hotel: 'Hotel Name',
@@ -182,7 +181,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       distance: '0км',
     };
 
-    setEditedLogistics(prev => [...prev, newLogisticsItem]);
+    setEditedLogistics(prev => [...prev, newLogisticsItem as ILogistics]);
     setCoordinates(prev => [...prev, '0, 0']);
   };
 

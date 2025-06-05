@@ -56,6 +56,13 @@ const TravelProgram: React.FC = () => {
     const leftSide = document.querySelector(`.${styles.leftSide}`);
     if (!rightSide || !leftSide) return;
 
+    const resetImageStyles = () => {
+      const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
+      backgroundImages.forEach(img => {
+        (img as HTMLElement).style.transform = '';
+      });
+    };
+
     const handleScroll = () => {
       const detailsSection = document.getElementById('details');
       const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
@@ -65,6 +72,7 @@ const TravelProgram: React.FC = () => {
 
       const headerHeight = 80;
       const isMobile = window.innerWidth <= 768;
+      console.log('file-TravelProgram.tsx isMobile1:', isMobile);
       const scrollTop = isMobile ? window.scrollY : rightSide.scrollTop;
       const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
 
@@ -107,6 +115,10 @@ const TravelProgram: React.FC = () => {
 
     const handleResize = () => {
       const isMobile = window.innerWidth <= 768;
+
+      // Сбрасываем стили при изменении размера окна
+      //resetImageStyles();
+      console.log('file-TravelProgram.tsx isMobile2:', isMobile);
       if (isMobile) {
         window.addEventListener('scroll', handleScroll);
         rightSide.removeEventListener('scroll', handleScroll);
@@ -114,12 +126,14 @@ const TravelProgram: React.FC = () => {
         rightSide.addEventListener('scroll', handleScroll);
         window.removeEventListener('scroll', handleScroll);
       }
-      handleScroll();
+
+      // Даем время на перерисовку DOM перед применением новых стилей
+      setTimeout(handleScroll, 100);
     };
 
     handleResize();
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       rightSide.removeEventListener('scroll', handleScroll);

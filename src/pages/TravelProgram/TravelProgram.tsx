@@ -12,6 +12,7 @@ import { ROOT_URL } from '../../constants/api.constants.ts';
 import { IFirstPageData as FirstPageType } from '../../types/travelProgram.types.ts';
 import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
 import styles from './TravelProgram.module.css';
+import useIsMobile from '../../hooks/useIsMobile.tsx';
 
 const DEFAULT_FIRST_PAGE: FirstPageType = {
   title: '',
@@ -26,7 +27,7 @@ const TravelProgram: React.FC = () => {
   const [currentSection, setCurrentSection] = useState('hero');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const selectedImageNumberRef = useRef<number | null>(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
 
   const program = useSelector(selectTravelProgram);
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -51,102 +52,111 @@ const TravelProgram: React.FC = () => {
     setCurrentSection('map');
   }, []);
 
-  useEffect(() => {
+  const handleScroll = useCallback(() => {
     const rightSide = document.querySelector(`.${styles.rightSide}`);
     const leftSide = document.querySelector(`.${styles.leftSide}`);
-    if (!rightSide || !leftSide) return;
+    if (!rightSide || !leftSide || isMobile) return;
+    
+    const detailsSection = document.getElementById('details');
+    const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
+    const mapSection = document.getElementById('map');
 
-    const resetImageTransforms = () => {
-      const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
-      backgroundImages.forEach(img => {
-        (img as HTMLElement).style.transform = '';
-      });
-    };
+    if (!detailsSection) return;
 
-    const handleScroll = () => {
-      const isMobile = window.innerWidth <= 768;
-      if (isMobile) return;
-      const detailsSection = document.getElementById('details');
-      const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
-      const mapSection = document.getElementById('map');
-      console.log('file-TravelProgram.tsx detailsSection:', detailsSection);
-      if (!detailsSection) return;
+    const headerHeight = 80;
+    const scrollTop = rightSide.scrollTop;
+    const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
 
-      const headerHeight = 80;
-      const scrollTop = isMobile ? window.scrollY : rightSide.scrollTop;
-      const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
+    const detailsSectionStart = detailsSection.offsetTop - leftSideHeight;
+    const detailsScrolled = scrollTop + headerHeight - detailsSectionStart;
 
-      const detailsSectionStart = detailsSection.offsetTop - leftSideHeight;
-      const detailsScrolled = scrollTop + headerHeight - detailsSectionStart;
+    const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
+    const mapScrolled = scrollTop + headerHeight - mapSectionStart;
 
-      const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
-      const mapScrolled = scrollTop + headerHeight - mapSectionStart;
+    if (mapScrolled > 0) selectedImageNumberRef.current = null;
+    else if (detailsScrolled > 0) selectedImageNumberRef.current = 1;
+    else selectedImageNumberRef.current = 0;
 
-      if (mapScrolled > 0) selectedImageNumberRef.current = null;
-      else if (detailsScrolled > 0) selectedImageNumberRef.current = 1;
-      else selectedImageNumberRef.current = 0;
+    const firstImage = backgroundImages[0];
+    const secondImage = backgroundImages[1];
+    const thirdImage = backgroundImages[2];
 
-      if (!isMobile) {
-        const firstImage = backgroundImages[0];
-        const secondImage = backgroundImages[1];
-        const thirdImage = backgroundImages[2];
+    if (firstImage) {
+      (firstImage as HTMLElement).style.transform = `translateY(0)`;
+    }
 
-        if (firstImage) {
-          (firstImage as HTMLElement).style.transform = `translateY(0)`;
-        }
-
-        if (secondImage) {
-          let translateY = leftSideHeight;
-          if (detailsScrolled > 0) {
-            translateY = Math.max(0, leftSideHeight - detailsScrolled);
-          }
-          (secondImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
-        }
-
-        if (thirdImage) {
-          let translateY = leftSideHeight;
-          if (mapScrolled > 0) {
-            translateY = Math.max(0, leftSideHeight - mapScrolled);
-          }
-          (thirdImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
-        }
+    if (secondImage) {
+      let translateY = leftSideHeight;
+      if (detailsScrolled > 0) {
+        translateY = Math.max(0, leftSideHeight - detailsScrolled);
       }
-    };
+      (secondImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
+    }
 
-    const handleResize = () => {
-      const isMobile = window.innerWidth <= 768;
-
-      // Сбрасываем трансформации при изменении размера окна
-      resetImageTransforms();
-
-      if (isMobile) {
-        window.addEventListener('scroll', handleScroll);
-        rightSide.removeEventListener('scroll', handleScroll);
-      } else {
-        rightSide.addEventListener('scroll', handleScroll);
-        window.removeEventListener('scroll', handleScroll);
+    if (thirdImage) {
+      let translateY = leftSideHeight;
+      if (mapScrolled > 0) {
+        translateY = Math.max(0, leftSideHeight - mapScrolled);
       }
+      (thirdImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
+    }
+  }, [isMobile]);
 
-      // Даем время на перерисовку DOM перед применением новых трансформаций
+  const handleWindowScroll = useCallback(() => {
+    if (!isMobile) return;
+    
+    const detailsSection = document.getElementById('details');
+    const mapSection = document.getElementById('map');
+    const leftSide = document.querySelector(`.${styles.leftSide}`);
+
+    if (!detailsSection || !leftSide) return;
+
+    const headerHeight = 80;
+    const scrollTop = window.scrollY;
+    const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
+
+    const detailsSectionStart = detailsSection.offsetTop - leftSideHeight;
+    const detailsScrolled = scrollTop + headerHeight - detailsSectionStart;
+
+    const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
+    const mapScrolled = scrollTop + headerHeight - mapSectionStart;
+
+    if (mapScrolled > 0) selectedImageNumberRef.current = null;
+    else if (detailsScrolled > 0) selectedImageNumberRef.current = 1;
+    else selectedImageNumberRef.current = 0;
+  }, [isMobile]);
+
+  const handleResize = useCallback(() => {
+    const rightSide = document.querySelector(`.${styles.rightSide}`);
+    if (!rightSide) return;
+
+    if (isMobile) {
+      window.addEventListener('scroll', handleWindowScroll);
+    } else {
+      rightSide.addEventListener('scroll', handleScroll);
       setTimeout(handleScroll, 100);
-    };
+    }
+  }, [isMobile, handleScroll, handleWindowScroll]);
 
+  useEffect(() => {
+    const rightSide = document.querySelector(`.${styles.rightSide}`);
+    if (!rightSide) return;
+
+    // Удаляем все обработчики
+    window.removeEventListener('scroll', handleWindowScroll);
+    rightSide.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('resize', handleResize);
+
+    // Добавляем нужные обработчики
     handleResize();
     window.addEventListener('resize', handleResize);
-
+    
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleWindowScroll);
       rightSide.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [handleResize, handleScroll, handleWindowScroll]);
 
   const firstPageBg = program?.bgImages?.[0]?.path
     ? `${ROOT_URL}/${program.bgImages[0].path.replace(/^\//, '')}`

@@ -1,10 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { ChevronDown, Check, X } from 'lucide-react';
 import { IFirstPageData } from '../types/travelProgram.types';
-import './FirstPage.css';
 import { travelProgramService } from '../services/travelProgram.service.ts';
-
-type EditableField = keyof IFirstPageData;
+import styles from './FirstPage/FirstPage.module.css';
 
 interface FirstPageProps {
   firstPage: IFirstPageData;
@@ -19,21 +17,21 @@ const FirstPage: React.FC<FirstPageProps> = ({
   onScrollToDetails,
   programName,
 }) => {
-  const [editingField, setEditingField] = useState<EditableField | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [editedValues, setEditedValues] = useState<IFirstPageData>(firstPage);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setEditedValues(firstPage);
   }, [firstPage]);
 
   useEffect(() => {
-    if (editingField && inputRef.current) {
-      inputRef.current.focus();
+    if (isEditing && titleInputRef.current) {
+      titleInputRef.current.focus();
     }
-  }, [editingField]);
+  }, [isEditing]);
 
-  const handleFieldChange = useCallback((field: EditableField, value: string) => {
+  const handleFieldChange = useCallback((field: keyof IFirstPageData, value: string) => {
     setEditedValues(prev => ({
       ...prev,
       [field]: value,
@@ -44,74 +42,66 @@ const FirstPage: React.FC<FirstPageProps> = ({
     try {
       if (!programName) return;
       await travelProgramService.updateFirstPage(programName, editedValues);
-      setEditingField(null);
+      setIsEditing(false);
     } catch (error) {
       console.error('Error updating first page:', error);
     }
-  }, [editedValues]);
+  }, [editedValues, programName]);
 
   const handleCancel = useCallback(() => {
-    setEditingField(null);
+    setIsEditing(false);
     setEditedValues(firstPage);
   }, [firstPage]);
 
   const renderEditableField = useCallback(
-    (field: EditableField, className: string) => {
+    (field: keyof IFirstPageData, className: string) => {
       if (!isLoggedIn) {
-        return <div className={className}>{firstPage[field]}</div>;
+        return <div className={styles[className]}>{firstPage[field]}</div>;
       }
 
-      if (editingField === field) {
+      if (isEditing) {
         return (
-          <div className={`${className}-edit`}>
-            <input
-              ref={inputRef}
-              type="text"
-              value={editedValues[field]}
-              onChange={e => handleFieldChange(field, e.target.value)}
-              className={`${className} editable`}
-            />
-            <div className="edit-buttons">
-              <button onClick={handleSave} className="save-button" title="Сохранить">
-                <Check size={36} />
-              </button>
-              <button onClick={handleCancel} className="cancel-button" title="Отмена">
-                <X size={36} />
-              </button>
-            </div>
-          </div>
+          <input
+            ref={field === 'title' ? titleInputRef : null}
+            type="text"
+            value={editedValues[field]}
+            onChange={e => handleFieldChange(field, e.target.value)}
+            className={`${styles[className]} ${styles.editable}`}
+          />
         );
       }
 
       return (
-        <div className={className} onClick={() => setEditingField(field)}>
+        <div className={styles[className]} onClick={() => setIsEditing(true)}>
           {firstPage[field]}
         </div>
       );
     },
-    [
-      isLoggedIn,
-      editingField,
-      editedValues,
-      handleFieldChange,
-      handleSave,
-      handleCancel,
-      firstPage,
-    ],
+    [isLoggedIn, isEditing, editedValues, handleFieldChange, firstPage],
   );
 
   return (
-    <section id="hero" className="content-section">
-      <div className="content-wrapper hero-content">
-        <div className="hero-text">
-          {renderEditableField('title', 'hero-title')}
-          {renderEditableField('subtitle', 'hero-subtitle')}
+    <section id="hero" className={styles.contentSection}>
+      <div className={`${styles.contentWrapper} ${styles.heroContent}`}>
+        <div className={styles.heroText}>
+          {renderEditableField('title', 'heroTitle')}
+          {renderEditableField('subtitle', 'heroSubtitle')}
         </div>
       </div>
-      <div className="scroll-container">
-        {renderEditableField('footer', 'cta-text')}
-        <button onClick={onScrollToDetails} className="scroll-button">
-          <ChevronDown className="arrow-down" size={32} />
+      <div className={styles.scrollContainer}>
+        {renderEditableField('footer', 'ctaText')}
+        {isEditing && (
+          <div className={styles.editButtons}>
+            <button onClick={handleSave} className={styles.saveButton} title="Сохранить">
+              <Check size={36} />
+            </button>
+            <button onClick={handleCancel} className={styles.cancelButton} title="Отмена">
+              <X size={36} />
+            </button>
+          </div>
+        )}
+        <button onClick={onScrollToDetails} className={styles.scrollButton}>
+          <ChevronDown className={styles.arrowDown} size={32} />
         </button>
       </div>
     </section>
@@ -119,3 +109,4 @@ const FirstPage: React.FC<FirstPageProps> = ({
 };
 
 export default FirstPage;
+

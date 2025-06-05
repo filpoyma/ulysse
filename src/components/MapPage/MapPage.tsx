@@ -6,10 +6,9 @@ import { selectLogisticsData, selectTravelProgram } from '../../store/selectors.
 import iconsMapList from '../../assets/icons/mapIcons/list';
 import { X, Check, Edit, Plus, Trash2, MoveDown, MoveUp } from 'lucide-react';
 import { mapService } from '../../services/map.service';
-import { RouteType } from '../../types/map.types';
-import { ILogistics } from '../../types/travelProgram.types';
+import { ILogistics, TRouteType, TSourceListIcon } from '../../types/travelProgram.types';
 
-const routeTypeLabels: Record<RouteType, string> = {
+const routeTypeLabels: Record<string, string> = {
   driving: 'Автомобиль',
   helicopter: 'Вертолет',
   flight: 'Самолет',
@@ -70,6 +69,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     fieldNumber: number;
   } | null>(null);
   const [coordinates, setCoordinates] = useState(['', '']);
+  const [isNewPoint, setIsNewPoint] = useState(false);
 
   useEffect(() => {
     setCoordinates(logistics.map(item => `${item.coordinates[0]}, ${item.coordinates[1]}`));
@@ -91,11 +91,11 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       setCoordinateError(validation);
       return;
     }
-    console.log('coordinates', coordinates);
+
     // Преобразуем текстовые координаты в числа перед валидацией
     const logisticsWithParsedCoordinates = editedLogistics.map((item, i) => ({
       ...item,
-      coordinates: coordinates[i].split(',').map(coord => parseFloat(coord.trim())) as [
+      coordinates: coordinates[i]?.split(',').map(coord => parseFloat(coord.trim())) as [
         number,
         number,
       ],
@@ -112,12 +112,14 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     } finally {
       setIsSaving(false);
     }
+    setIsNewPoint(false);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
     setEditedLogistics(logistics);
     setCoordinateError(null);
+    setIsNewPoint(false);
   };
 
   const handleDelete = (index: number) => {
@@ -170,22 +172,23 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   };
 
   const handleAddNewPoint = () => {
+    setIsNewPoint(true);
     const newLogisticsItem: Omit<ILogistics, '_id'> = {
-      city: 'City Name',
+      city: '',
       coordinates: [0, 0] as [number, number],
-      hotel: 'Hotel Name',
-      routeType: 'train' as RouteType,
-      sourceListIcon: 'hotelMarker' as const,
+      hotel: '',
+      routeType: '' as TRouteType,
+      sourceListIcon: '' as TSourceListIcon,
       sourceMapIcon: 'startPoint' as const,
-      time: '0ч 00мин',
-      distance: '0км',
+      time: '',
+      distance: '',
     };
 
     setEditedLogistics(prev => [...prev, newLogisticsItem as ILogistics]);
     setCoordinates(prev => [...prev, '0, 0']);
   };
 
-  const handleInputChange = (id: string, field: string, value: string | number[] | RouteType) => {
+  const handleInputChange = (id: string, field: string, value: string | number[] | TRouteType) => {
     setEditedLogistics(prev =>
       prev.map(item => (item._id === id ? { ...item, [field]: value } : item)),
     );
@@ -195,9 +198,9 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setCoordinates(prev => prev.map((coord, i) => (i === id ? value : coord)));
     setCoordinateError(prev => (coordinateError?.fieldNumber === id ? null : prev));
   };
-
+  console.log('coordinates', coordinates);
   return (
-    <div className={styles.container}>
+    <div className={styles.container} id="map">
       <div className={styles.header}>КАРТА / ЛОГИСТИКА ПУТЕШЕСТВИЯ</div>
 
       {isLoggedIn && (
@@ -211,123 +214,107 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       {isEditing ? (
         <>
           <div className={styles.editTable}>
-            <table>
-              <thead>
-                <tr>
-                  <th>Действия</th>
-                  <th>Город</th>
-                  <th>Координаты</th>
-                  <th>Отель</th>
-                  <th>Тип маршрута</th>
-                  <th>Локация</th>
-                  <th>Время в пути</th>
-                  <th>Расстояние</th>
-                </tr>
-              </thead>
-              <tbody>
-                {editedLogistics.map((item, i) => (
-                  <tr key={item._id}>
-                    <td>
-                      <div className={styles.moveButtons}>
-                        <button
-                          className={styles.editIcon}
-                          onClick={() => handleMoveUp(i)}
-                          disabled={i === 0}>
-                          <MoveUp size={16} />
-                        </button>
-                        <button
-                          className={`${styles.editIcon} ${styles.delIcon}`}
-                          onClick={() => handleDelete(i)}
-                          disabled={isSaving}>
-                          <Trash2 size={16} />
-                        </button>
-                        <button
-                          className={styles.editIcon}
-                          onClick={() => handleMoveDown(i)}
-                          disabled={i === editedLogistics.length - 1}>
-                          <MoveDown size={16} />
-                        </button>
-                      </div>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={item.city}
-                        onChange={e => handleInputChange(item._id, 'city', e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <div className={styles.coordinatesInput}>
-                        <input
-                          type="text"
-                          value={coordinates[i]}
-                          onChange={e => handleCoordinatesChange(i, e.target.value)}
-                          placeholder="широта, долгота"
-                          className={coordinateError?.fieldNumber === i ? styles.error : ''}
-                        />
-                      </div>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={item.hotel}
-                        onChange={e => handleInputChange(item._id, 'hotel', e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <select
-                        value={item.routeType || 'train'}
-                        onChange={e =>
-                          handleInputChange(item._id, 'routeType', e.target.value as RouteType)
-                        }
-                        className={styles.select}>
-                        {Object.entries(routeTypeLabels).map(([value, label]) => (
-                          <option key={value} value={value}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <select
-                        value={item.sourceListIcon || 'hotelMarker'}
-                        onChange={e =>
-                          handleInputChange(item._id, 'sourceListIcon', e.target.value)
-                        }
-                        className={styles.select}>
-                        {Object.entries(locationTypeLabels).map(([value, label]) => (
-                          <option key={value} value={value}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={item.time}
-                        onChange={e => handleInputChange(item._id, 'time', e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={item.distance}
-                        onChange={e => handleInputChange(item._id, 'distance', e.target.value)}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {editedLogistics.map((item, i) => (
+              <div key={item._id} className={styles.routeBlock}>
+                {/* Первая строка: точка */}
+                <div className={styles.routeRow}>
+                  <input
+                    type="text"
+                    value={coordinates[i] === '0, 0' ? '' : coordinates[i]}
+                    onChange={e => handleCoordinatesChange(i, e.target.value)}
+                    placeholder="Координаты"
+                    className={coordinateError?.fieldNumber === i ? styles.error : styles.input}
+                  />
+                  <select
+                    value={item.sourceListIcon}
+                    onChange={e => handleInputChange(item._id, 'sourceListIcon', e.target.value)}
+                    className={styles.select}
+                    style={!item.sourceListIcon ? { opacity: 0.7 } : {}}>
+                    {!item.sourceListIcon && <option value={''}>Маркер</option>}
+                    {Object.entries(locationTypeLabels).map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={item.city}
+                    onChange={e => handleInputChange(item._id, 'city', e.target.value)}
+                    placeholder="Место"
+                    className={styles.input}
+                  />
+                  <input
+                    type="text"
+                    value={item.hotel}
+                    onChange={e => handleInputChange(item._id, 'hotel', e.target.value)}
+                    placeholder="Отель"
+                    className={styles.input}
+                  />
+                </div>
+                {/* Вторая строка: транспорт */}
+                <div className={styles.routeRow}>
+                  <div className={styles.moveButtons}>
+                    <button
+                      className={styles.iconBtn}
+                      onClick={() => handleMoveUp(i)}
+                      disabled={i === 0 || isSaving}>
+                      <MoveUp size={16} />
+                    </button>
+                    <button
+                      className={`${styles.iconBtn} ${styles.delIcon}`}
+                      onClick={() => handleDelete(i)}
+                      disabled={isSaving}>
+                      <Trash2 size={16} />
+                    </button>
+                    <button
+                      className={styles.iconBtn}
+                      onClick={() => handleMoveDown(i)}
+                      disabled={i === editedLogistics.length - 1 || isSaving}>
+                      <MoveDown size={16} />
+                    </button>
+                  </div>
+                  <select
+                    value={item.routeType}
+                    onChange={e =>
+                      handleInputChange(item._id, 'routeType', e.target.value as TRouteType)
+                    }
+                    className={styles.select}
+                    style={!item.routeType ? { opacity: 0.7 } : {}}>
+                    {!item.routeType && <option value={''}>Маршрут</option>}
+                    {Object.entries(routeTypeLabels).map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={item.time}
+                    onChange={e => handleInputChange(item._id, 'time', e.target.value)}
+                    placeholder="Час : Мин"
+                    className={styles.input}
+                  />
+                  <input
+                    type="text"
+                    value={item.distance}
+                    onChange={e => handleInputChange(item._id, 'distance', e.target.value)}
+                    placeholder="Км"
+                    className={styles.input}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
           <div className={styles.editControls}>
-            <button className={styles.editIcon} onClick={handleAddNewPoint} disabled={isSaving}>
-              <Plus size={16} />
-            </button>
             <button className={styles.editIcon} onClick={handleCancel} disabled={isSaving}>
               <X size={16} />
             </button>
+            {!isNewPoint && (
+              <button className={styles.editIcon} onClick={handleAddNewPoint} disabled={isSaving}>
+                <Plus size={16} />
+              </button>
+            )}
             <button className={styles.editIcon} onClick={handleSave} disabled={isSaving}>
               {isSaving ? <div className={styles.spinner} /> : <Check size={16} />}
             </button>

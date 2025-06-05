@@ -20,6 +20,7 @@ interface ImportMetaEnv {
   readonly VITE_API_URL_PROD: string;
   readonly VITE_ROOT_URL_DEV: string;
   readonly VITE_ROOT_URL_PROD: string;
+  readonly VITE_ENVIRONMENT: string;
 }
 
 interface ImportMeta {

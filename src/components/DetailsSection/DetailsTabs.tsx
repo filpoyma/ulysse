@@ -1,4 +1,3 @@
-import React from 'react';
 import { Map, Plane, Home } from 'lucide-react';
 
 interface DetailsTabsProps {
@@ -9,24 +8,21 @@ interface DetailsTabsProps {
 export function DetailsTabs({ activeTab, onTabChange }: DetailsTabsProps) {
   return (
     <div className="details-tabs">
-      <button 
+      <button
         className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
-        onClick={() => onTabChange('overview')}
-      >
+        onClick={() => onTabChange('overview')}>
         <Map size={24} />
         <span>Обзор</span>
       </button>
-      <button 
+      <button
         className={`tab ${activeTab === 'flights' ? 'active' : ''}`}
-        onClick={() => onTabChange('flights')}
-      >
+        onClick={() => onTabChange('flights')}>
         <Plane size={24} />
         <span>Рейсы</span>
       </button>
-      <button 
+      <button
         className={`tab ${activeTab === 'accommodation' ? 'active' : ''}`}
-        onClick={() => onTabChange('accommodation')}
-      >
+        onClick={() => onTabChange('accommodation')}>
         <Home size={24} />
         <span>Проживание</span>
       </button>

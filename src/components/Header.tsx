@@ -9,10 +9,19 @@ interface HeaderProps {
   currentSection: string;
   navRef: React.RefObject<HTMLElement>;
   scrollToDetails: () => void;
+  scrollToMap: () => void;
+  scrollToHero: () => void;
   isLoggedIn: boolean;
 }
 
-const Header = ({ currentSection, navRef, scrollToDetails, isLoggedIn }: HeaderProps) => {
+const Header = ({
+  currentSection,
+  navRef,
+  scrollToDetails,
+  scrollToMap,
+  scrollToHero,
+  isLoggedIn,
+}: HeaderProps) => {
   const name_eng = useSelector((state: RootState) => state.travelProgram.program?.name_eng);
   return (
     <header className="header">
@@ -20,7 +29,10 @@ const Header = ({ currentSection, navRef, scrollToDetails, isLoggedIn }: HeaderP
         {isLoggedIn ? <span className="admin-text">ADMIN</span> : <Logo />}
       </Link>
       <nav className="nav" ref={navRef}>
-        <a href="#hero" className={`nav-link ${currentSection === 'hero' ? 'active' : ''}`}>
+        <a
+          href="#hero"
+          className={`nav-link ${currentSection === 'hero' ? 'active' : ''}`}
+          onClick={scrollToHero}>
           Титульная страница
         </a>
         <a
@@ -29,7 +41,10 @@ const Header = ({ currentSection, navRef, scrollToDetails, isLoggedIn }: HeaderP
           className={`nav-link ${currentSection === 'details' ? 'active' : ''}`}>
           Детали маршрута
         </a>
-        <a href="#" className="nav-link">
+        <a
+          href="#map"
+          onClick={scrollToMap}
+          className={`nav-link ${currentSection === 'map' ? 'active' : ''}`}>
           Карта
         </a>
         <a href="#" className="nav-link">

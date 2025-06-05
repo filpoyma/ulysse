@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import styles from './index.module.css';
 
 interface DayCellProps {

@@ -36,9 +36,18 @@ const TravelProgram: React.FC = () => {
     }
   }, [programName]);
 
+  const scrollToHero = useCallback(() => {
+    // detailsRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setCurrentSection('hero');
+  }, []);
+
   const scrollToDetails = useCallback(() => {
     detailsRef.current?.scrollIntoView({ behavior: 'smooth' });
     setCurrentSection('details');
+  }, []);
+
+  const scrollToMap = useCallback(() => {
+    setCurrentSection('map');
   }, []);
 
   useEffect(() => {
@@ -106,6 +115,8 @@ const TravelProgram: React.FC = () => {
         currentSection={currentSection}
         navRef={navRef}
         scrollToDetails={scrollToDetails}
+        scrollToMap={scrollToMap}
+        scrollToHero={scrollToHero}
         isLoggedIn={isLoggedIn}
       />
       <ImageUploadModal
@@ -122,7 +133,7 @@ const TravelProgram: React.FC = () => {
               src={firstPageBg}
               alt="Leopard in tree"
               onClick={() => setIsModalOpen(true)}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              className="left-side-bg-image"
             />
           </div>
           <div className="background-image" style={{ zIndex: 2 }}>
@@ -130,7 +141,7 @@ const TravelProgram: React.FC = () => {
               src={secondPageBg}
               alt="Safari landscape"
               onClick={() => setIsModalOpen(true)}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              className="left-side-bg-image"
             />
           </div>
           <div className="background-image" style={{ zIndex: 3 }}>
@@ -145,9 +156,7 @@ const TravelProgram: React.FC = () => {
             onScrollToDetails={scrollToDetails}
           />
           <DetailsSection ref={detailsRef} />
-          <div id="map">
-            <MapPage isLoggedIn={isLoggedIn}/>
-          </div>
+          <MapPage isLoggedIn={isLoggedIn} />
         </div>
       </div>
     </>

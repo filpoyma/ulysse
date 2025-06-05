@@ -28,16 +28,22 @@ const errorInterceptor = async (error: HTTPError) => {
         .json<{ data: { accessToken: string } }>();
       store.dispatch(authActions.setToken(data.accessToken));
 
-      // Retry original request
-      error.request.headers.set('Authorization', `Bearer ${data.accessToken}`);
-      const originalRequest = error.request;
-      return baseApi(originalRequest);
+      // Получаем параметры оригинального запроса
+      const original = error.request;
+      const method = original.method;
+      const url = original.url;
+      const headers = new Headers(original.headers);
+      headers.set('Authorization', `Bearer ${data.accessToken}`);
+
+      let body: BodyInit | undefined = undefined;
+      if (error.options && error.options.body) body = error.options.body;
+      return ky(url, { method, headers, body });
     } catch (refreshError) {
       console.error('refreshError', refreshError);
       store.dispatch(authActions.setToken(null));
       store.dispatch(authActions.setUser(null));
       store.dispatch(authActions.setIsLoggedIn(false));
-      throw error;
+      return refreshError;
     }
   }
 

@@ -30,6 +30,7 @@ const { reducer: authReducer, actions: authActions } = createSlice({
       state.isLoading = action.payload;
     },
     setToken(state: IAuthState, action: PayloadAction<string | null>) {
+      console.log('file-auth.reducer.ts SETTOKEN  action.payload:',  action.payload);
       state.token = action.payload;
     },
     setUser(state: IAuthState, action: PayloadAction<IUser | null>) {

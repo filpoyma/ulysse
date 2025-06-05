@@ -19,22 +19,20 @@ export interface IAccommodation {
   hotelName: string;
   details: string;
   numOfNights: number;
+  
 }
+
+export type TRouteType = 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';
+export type TSourceListIcon = 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';
+
 export interface ILogistics {
   _id: string;
   city: string;
   coordinates: [number, number];
   hotel: string;
-  sourceListIcon:
-    | 'flightArrivalMarker'
-    | 'hotelMarker'
-    | 'flightDepartureMarker'
-    | 'parkMarker'
-    | 'photoSpotMarker'
-    | 'sightMarker'
-    | 'restMarker';
+  sourceListIcon: TSourceListIcon;
   sourceMapIcon: 'startPoint';
-  routeType: 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';
+  routeType: TRouteType;
   time: string;
   distance: string;
   markerColor?: string;

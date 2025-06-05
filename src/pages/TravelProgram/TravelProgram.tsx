@@ -1,16 +1,16 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import Header from '../components/Header';
-import { DetailsSection } from '../components/DetailsSection';
-import ImageUploadModal from '../components/ImageUploadModal/ImageUploadModal';
-import FirstPage from '../components/FirstPage';
-import MapBox from '../components/MapBox/MapBoxCustomLayer.component';
-import MapPage from '../components/MapPage/MapPage';
+import Header from '../../components/Header/Header.tsx';
+import { DetailsSection } from '../../components/DetailsSection';
+import ImageUploadModal from '../../components/ImageUploadModal/ImageUploadModal.tsx';
+import FirstPage from '../../components/FirstPage/FirstPage.tsx';
+import MapBox from '../../components/MapBox/MapBoxCustomLayer.component.tsx';
+import MapPage from '../../components/MapPage/MapPage.tsx';
 import { useSelector } from 'react-redux';
-import { travelProgramService } from '../services/travelProgram.service';
-import { ROOT_URL } from '../constants/api.constants';
-import { IFirstPageData as FirstPageType } from '../types/travelProgram.types';
-import { selectIsLoggedIn, selectTravelProgram } from '../store/selectors.ts';
+import { travelProgramService } from '../../services/travelProgram.service.ts';
+import { ROOT_URL } from '../../constants/api.constants.ts';
+import { IFirstPageData as FirstPageType } from '../../types/travelProgram.types.ts';
+import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
 import styles from './TravelProgram.module.css';
 
 const DEFAULT_FIRST_PAGE: FirstPageType = {

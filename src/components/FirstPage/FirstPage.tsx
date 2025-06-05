@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { ChevronDown, Check, X } from 'lucide-react';
-import { IFirstPageData } from '../types/travelProgram.types';
-import { travelProgramService } from '../services/travelProgram.service.ts';
-import styles from './FirstPage/FirstPage.module.css';
+import { IFirstPageData } from '../../types/travelProgram.types.ts';
+import { travelProgramService } from '../../services/travelProgram.service.ts';
+import styles from './FirstPage.module.css';
 
 interface FirstPageProps {
   firstPage: IFirstPageData;
@@ -109,4 +109,3 @@ const FirstPage: React.FC<FirstPageProps> = ({
 };
 
 export default FirstPage;
-

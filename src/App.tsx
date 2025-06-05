@@ -13,7 +13,7 @@ import { countriesService } from './services/countries.service.ts';
 dayjs.locale('ru');
 dayjs.extend(customParseFormat);
 
-const TravelProgram = React.lazy(() => import('./pages/TravelProgram'));
+const TravelProgram = React.lazy(() => import('./pages/TravelProgram/TravelProgram.tsx'));
 const AdminLogin = React.lazy(() => import('./pages/AdminLogin/AdminSignIn.tsx'));
 const AdminRegister = React.lazy(() => import('./pages/AdminLogin/AdminSighUp.tsx'));
 
@@ -25,10 +25,7 @@ const App = () => {
     const validateSession = async () => {
       try {
         const user = await authService.validateSession();
-
-        if (user) {
-          countriesService.getAll();
-        }
+        if (user) await countriesService.getAll();
       } catch (err) {
         console.error('Session validation error:', err);
       } finally {

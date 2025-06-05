@@ -1,10 +1,10 @@
 import React from 'react';
 import { Share2, Sun, Menu } from 'lucide-react';
-import { Logo } from './Logo';
+import { Logo } from '../../assets/icons/Logo.tsx';
 import { Link } from 'react-router-dom';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import { useSelector } from 'react-redux';
-import styles from '../components/Header/Header.module.css';
+import styles from './Header.module.css';
 
 interface HeaderProps {
   currentSection: string;
@@ -39,7 +39,9 @@ const Header = ({
         <a
           href="#details"
           onClick={scrollToDetails}
-          className={`${styles.navLink} ${currentSection === 'details' ? styles.navLinkActive : ''}`}>
+          className={`${styles.navLink} ${
+            currentSection === 'details' ? styles.navLinkActive : ''
+          }`}>
           Детали маршрута
         </a>
         <a

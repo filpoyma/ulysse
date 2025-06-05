@@ -11,6 +11,7 @@ import { travelProgramService } from '../services/travelProgram.service';
 import { ROOT_URL } from '../constants/api.constants';
 import { IFirstPageData as FirstPageType } from '../types/travelProgram.types';
 import { selectIsLoggedIn, selectTravelProgram } from '../store/selectors.ts';
+import styles from './TravelProgram.module.css';
 
 const DEFAULT_FIRST_PAGE: FirstPageType = {
   title: '',
@@ -37,7 +38,6 @@ const TravelProgram: React.FC = () => {
   }, [programName]);
 
   const scrollToHero = useCallback(() => {
-    // detailsRef.current?.scrollIntoView({ behavior: 'smooth' });
     setCurrentSection('hero');
   }, []);
 
@@ -51,13 +51,13 @@ const TravelProgram: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const rightSide = document.querySelector('.right-side');
-    const leftSide = document.querySelector('.left-side');
+    const rightSide = document.querySelector(`.${styles.rightSide}`);
+    const leftSide = document.querySelector(`.${styles.leftSide}`);
     if (!rightSide || !leftSide) return;
 
     const handleScroll = () => {
       const detailsSection = document.getElementById('details');
-      const backgroundImages = document.querySelectorAll('.background-image');
+      const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
       const mapSection = document.getElementById('map');
 
       if (!detailsSection) return;
@@ -86,7 +86,6 @@ const TravelProgram: React.FC = () => {
           }
           (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
         } else if (index === 2) {
-          // MapBox: аналогичная логика для третьей картинки
           let translateY = leftSideHeight;
           if (mapScrolled > 0) {
             translateY = Math.max(0, leftSideHeight - mapScrolled);
@@ -126,29 +125,29 @@ const TravelProgram: React.FC = () => {
         imageNumber={selectedImageNumberRef.current}
         isLoggedIn={isLoggedIn}
       />
-      <div className="page-container">
-        <div className="left-side">
-          <div className="background-image" style={{ zIndex: 1 }}>
+      <div className={styles.pageContainer}>
+        <div className={styles.leftSide}>
+          <div className={styles.backgroundImage} style={{ zIndex: 1 }}>
             <img
               src={firstPageBg}
               alt="Leopard in tree"
               onClick={() => setIsModalOpen(true)}
-              className="left-side-bg-image"
+              className={styles.leftSideBgImage}
             />
           </div>
-          <div className="background-image" style={{ zIndex: 2 }}>
+          <div className={styles.backgroundImage} style={{ zIndex: 2 }}>
             <img
               src={secondPageBg}
               alt="Safari landscape"
               onClick={() => setIsModalOpen(true)}
-              className="left-side-bg-image"
+              className={styles.leftSideBgImage}
             />
           </div>
-          <div className="background-image" style={{ zIndex: 3 }}>
+          <div className={styles.backgroundImage} style={{ zIndex: 3 }}>
             <MapBox isLoggedIn={isLoggedIn} />
           </div>
         </div>
-        <div className="right-side">
+        <div className={styles.rightSide}>
           <FirstPage
             firstPage={firstPage}
             programName={programName}

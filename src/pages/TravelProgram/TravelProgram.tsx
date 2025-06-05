@@ -26,6 +26,7 @@ const TravelProgram: React.FC = () => {
   const [currentSection, setCurrentSection] = useState('hero');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const selectedImageNumberRef = useRef<number | null>(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const program = useSelector(selectTravelProgram);
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -120,6 +121,13 @@ const TravelProgram: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const firstPageBg = program?.bgImages?.[0]?.path
     ? `${ROOT_URL}/${program.bgImages[0].path.replace(/^\//, '')}`
     : 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg?auto=compress&cs=tinysrgb&w=1920';
@@ -145,8 +153,8 @@ const TravelProgram: React.FC = () => {
         imageNumber={selectedImageNumberRef.current}
         isLoggedIn={isLoggedIn}
       />
-      <div className={styles.pageContainer}>
-        <div className={styles.leftSide}>
+      {isMobile ? (
+        <div className={styles.pageContainer}>
           <div className={styles.backgroundImage}>
             <img
               src={firstPageBg}
@@ -155,6 +163,14 @@ const TravelProgram: React.FC = () => {
               className={styles.leftSideBgImage}
             />
           </div>
+          <section>
+            <FirstPage
+              firstPage={firstPage}
+              programName={programName}
+              isLoggedIn={isLoggedIn}
+              onScrollToDetails={scrollToDetails}
+            />
+          </section>
           <div className={styles.backgroundImage}>
             <img
               src={secondPageBg}
@@ -163,21 +179,51 @@ const TravelProgram: React.FC = () => {
               className={styles.leftSideBgImage}
             />
           </div>
+          <section>
+            <DetailsSection ref={detailsRef} />
+          </section>
           <div className={styles.backgroundImage}>
             <MapBox isLoggedIn={isLoggedIn} />
           </div>
+          <section>
+            <MapPage isLoggedIn={isLoggedIn} />
+          </section>
         </div>
-        <div className={styles.rightSide}>
-          <FirstPage
-            firstPage={firstPage}
-            programName={programName}
-            isLoggedIn={isLoggedIn}
-            onScrollToDetails={scrollToDetails}
-          />
-          <DetailsSection ref={detailsRef} />
-          <MapPage isLoggedIn={isLoggedIn} />
+      ) : (
+        <div className={styles.pageContainer}>
+          <div className={styles.leftSide}>
+            <div className={styles.backgroundImage}>
+              <img
+                src={firstPageBg}
+                alt="First page background"
+                onClick={() => setIsModalOpen(true)}
+                className={styles.leftSideBgImage}
+              />
+            </div>
+            <div className={styles.backgroundImage}>
+              <img
+                src={secondPageBg}
+                alt="Second page background"
+                onClick={() => setIsModalOpen(true)}
+                className={styles.leftSideBgImage}
+              />
+            </div>
+            <div className={styles.backgroundImage}>
+              <MapBox isLoggedIn={isLoggedIn} />
+            </div>
+          </div>
+          <div className={styles.rightSide}>
+            <FirstPage
+              firstPage={firstPage}
+              programName={programName}
+              isLoggedIn={isLoggedIn}
+              onScrollToDetails={scrollToDetails}
+            />
+            <DetailsSection ref={detailsRef} />
+            <MapPage isLoggedIn={isLoggedIn} />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

@@ -75,6 +75,8 @@ const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     console.log('file-MapBoxCustomLayer.component.tsx mapCenter, zoom:', mapCenter, zoom);
   };
 
+
+
   useEffect(() => {
     if (!trackData) return;
     const map = new mapboxgl.Map({
@@ -94,7 +96,6 @@ const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       map.on('moveend', () => {
         setScreenPosition(map.getCenter(), map.getZoom());
       });
-
     }
 
     // Добавляем маркеры

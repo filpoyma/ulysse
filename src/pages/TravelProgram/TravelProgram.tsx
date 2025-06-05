@@ -1,18 +1,16 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../../components/Header/Header.tsx';
-import { DetailsSection } from '../../components/DetailsSection';
 import ImageUploadModal from '../../components/ImageUploadModal/ImageUploadModal.tsx';
-import FirstPage from '../../components/FirstPage/FirstPage.tsx';
-import MapBox from '../../components/MapBox/MapBoxCustomLayer.component.tsx';
-import MapPage from '../../components/MapPage/MapPage.tsx';
 import { useSelector } from 'react-redux';
 import { travelProgramService } from '../../services/travelProgram.service.ts';
 import { ROOT_URL } from '../../constants/api.constants.ts';
 import { IFirstPageData as FirstPageType } from '../../types/travelProgram.types.ts';
 import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
-import styles from './TravelProgram.module.css';
 import useIsMobile from '../../hooks/useIsMobile.tsx';
+import styles from './TravelProgram.module.css';
+import MobileLayout from './components/MobileLayout';
+import DesktopLayout from './components/DesktopLayout';
 
 const DEFAULT_FIRST_PAGE: FirstPageType = {
   title: '',
@@ -184,75 +182,27 @@ const TravelProgram: React.FC = () => {
         isLoggedIn={isLoggedIn}
       />
       {isMobile ? (
-        <div className={styles.pageContainer}>
-          <div className={styles.backgroundImage}>
-            <img
-              src={firstPageBg}
-              alt="First page background"
-              onClick={() => setIsModalOpen(true)}
-              className={styles.leftSideBgImage}
-            />
-          </div>
-          <section>
-            <FirstPage
-              firstPage={firstPage}
-              programName={programName}
-              isLoggedIn={isLoggedIn}
-              onScrollToDetails={scrollToDetails}
-            />
-          </section>
-          <div className={styles.backgroundImage}>
-            <img
-              src={secondPageBg}
-              alt="Second page background"
-              onClick={() => setIsModalOpen(true)}
-              className={styles.leftSideBgImage}
-            />
-          </div>
-          <section>
-            <DetailsSection ref={detailsRef} />
-          </section>
-          <div className={styles.backgroundImage}>
-            <MapBox isLoggedIn={isLoggedIn} />
-          </div>
-          <section>
-            <MapPage isLoggedIn={isLoggedIn} />
-          </section>
-        </div>
+        <MobileLayout
+          firstPageBg={firstPageBg}
+          secondPageBg={secondPageBg}
+          firstPage={firstPage}
+          programName={programName}
+          isLoggedIn={isLoggedIn}
+          onScrollToDetails={scrollToDetails}
+          setIsModalOpen={setIsModalOpen}
+          detailsRef={detailsRef}
+        />
       ) : (
-        <div className={styles.pageContainer}>
-          <div className={styles.leftSide}>
-            <div className={styles.backgroundImage}>
-              <img
-                src={firstPageBg}
-                alt="First page background"
-                onClick={() => setIsModalOpen(true)}
-                className={styles.leftSideBgImage}
-              />
-            </div>
-            <div className={styles.backgroundImage}>
-              <img
-                src={secondPageBg}
-                alt="Second page background"
-                onClick={() => setIsModalOpen(true)}
-                className={styles.leftSideBgImage}
-              />
-            </div>
-            <div className={styles.backgroundImage}>
-              <MapBox isLoggedIn={isLoggedIn} />
-            </div>
-          </div>
-          <div className={styles.rightSide}>
-            <FirstPage
-              firstPage={firstPage}
-              programName={programName}
-              isLoggedIn={isLoggedIn}
-              onScrollToDetails={scrollToDetails}
-            />
-            <DetailsSection ref={detailsRef} />
-            <MapPage isLoggedIn={isLoggedIn} />
-          </div>
-        </div>
+        <DesktopLayout
+          firstPageBg={firstPageBg}
+          secondPageBg={secondPageBg}
+          firstPage={firstPage}
+          programName={programName}
+          isLoggedIn={isLoggedIn}
+          onScrollToDetails={scrollToDetails}
+          setIsModalOpen={setIsModalOpen}
+          detailsRef={detailsRef}
+        />
       )}
     </>
   );

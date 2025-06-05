@@ -63,7 +63,8 @@ const TravelProgram: React.FC = () => {
       if (!detailsSection) return;
 
       const headerHeight = 80;
-      const scrollTop = rightSide.scrollTop;
+      const isMobile = window.innerWidth <= 768;
+      const scrollTop = isMobile ? window.scrollY : rightSide.scrollTop;
       const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
 
       const detailsSectionStart = detailsSection.offsetTop - leftSideHeight;
@@ -76,28 +77,47 @@ const TravelProgram: React.FC = () => {
       else if (detailsScrolled > 0) selectedImageNumberRef.current = 1;
       else selectedImageNumberRef.current = 0;
 
-      backgroundImages.forEach((img, index) => {
-        if (index === 0) {
-          (img as HTMLElement).style.transform = `translateY(0)`;
-        } else if (index === 1) {
-          let translateY = leftSideHeight;
-          if (detailsScrolled > 0) {
-            translateY = Math.max(0, leftSideHeight - detailsScrolled);
+      if (!isMobile) {
+        backgroundImages.forEach((img, index) => {
+          if (index === 0) {
+            (img as HTMLElement).style.transform = `translateY(0)`;
+          } else if (index === 1) {
+            let translateY = leftSideHeight;
+            if (detailsScrolled > 0) {
+              translateY = Math.max(0, leftSideHeight - detailsScrolled);
+            }
+            (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
+          } else if (index === 2) {
+            let translateY = leftSideHeight;
+            if (mapScrolled > 0) {
+              translateY = Math.max(0, leftSideHeight - mapScrolled);
+            }
+            (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
           }
-          (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
-        } else if (index === 2) {
-          let translateY = leftSideHeight;
-          if (mapScrolled > 0) {
-            translateY = Math.max(0, leftSideHeight - mapScrolled);
-          }
-          (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
-        }
-      });
+        });
+      }
     };
 
-    rightSide.addEventListener('scroll', handleScroll);
-    handleScroll();
-    return () => rightSide.removeEventListener('scroll', handleScroll);
+    const handleResize = () => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        window.addEventListener('scroll', handleScroll);
+        rightSide.removeEventListener('scroll', handleScroll);
+      } else {
+        rightSide.addEventListener('scroll', handleScroll);
+        window.removeEventListener('scroll', handleScroll);
+      }
+      handleScroll();
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      rightSide.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const firstPageBg = program?.bgImages?.[0]?.path
@@ -127,23 +147,23 @@ const TravelProgram: React.FC = () => {
       />
       <div className={styles.pageContainer}>
         <div className={styles.leftSide}>
-          <div className={styles.backgroundImage} style={{ zIndex: 1 }}>
+          <div className={styles.backgroundImage}>
             <img
               src={firstPageBg}
-              alt="Leopard in tree"
+              alt="First page background"
               onClick={() => setIsModalOpen(true)}
               className={styles.leftSideBgImage}
             />
           </div>
-          <div className={styles.backgroundImage} style={{ zIndex: 2 }}>
+          <div className={styles.backgroundImage}>
             <img
               src={secondPageBg}
-              alt="Safari landscape"
+              alt="Second page background"
               onClick={() => setIsModalOpen(true)}
               className={styles.leftSideBgImage}
             />
           </div>
-          <div className={styles.backgroundImage} style={{ zIndex: 3 }}>
+          <div className={styles.backgroundImage}>
             <MapBox isLoggedIn={isLoggedIn} />
           </div>
         </div>

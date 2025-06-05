@@ -79,23 +79,29 @@ const TravelProgram: React.FC = () => {
       else selectedImageNumberRef.current = 0;
 
       if (!isMobile) {
-        backgroundImages.forEach((img, index) => {
-          if (index === 0) {
-            (img as HTMLElement).style.transform = `translateY(0)`;
-          } else if (index === 1) {
-            let translateY = leftSideHeight;
-            if (detailsScrolled > 0) {
-              translateY = Math.max(0, leftSideHeight - detailsScrolled);
-            }
-            (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
-          } else if (index === 2) {
-            let translateY = leftSideHeight;
-            if (mapScrolled > 0) {
-              translateY = Math.max(0, leftSideHeight - mapScrolled);
-            }
-            (img as HTMLElement).style.transform = `translateY(${translateY}px)`;
+        const firstImage = backgroundImages[0];
+        const secondImage = backgroundImages[1];
+        const thirdImage = backgroundImages[2];
+
+        if (firstImage) {
+          (firstImage as HTMLElement).style.transform = `translateY(0)`;
+        }
+
+        if (secondImage) {
+          let translateY = leftSideHeight;
+          if (detailsScrolled > 0) {
+            translateY = Math.max(0, leftSideHeight - detailsScrolled);
           }
-        });
+          (secondImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
+        }
+
+        if (thirdImage) {
+          let translateY = leftSideHeight;
+          if (mapScrolled > 0) {
+            translateY = Math.max(0, leftSideHeight - mapScrolled);
+          }
+          (thirdImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
+        }
       }
     };
 

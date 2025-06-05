@@ -50,6 +50,24 @@ const TravelProgram: React.FC = () => {
     setCurrentSection('map');
   }, []);
 
+  const scrollToDay = useCallback(() => {
+    const daySection = document.getElementById('day');
+    if (daySection) {
+      if (isMobile) {
+        daySection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        const rightSide = document.querySelector(`.${styles.rightSide}`);
+        if (rightSide) {
+          rightSide.scrollTo({
+            top: daySection.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }
+    setCurrentSection('day');
+  }, [isMobile]);
+
   const handleScroll = useCallback(() => {
     const rightSide = document.querySelector(`.${styles.rightSide}`);
     const leftSide = document.querySelector(`.${styles.leftSide}`);
@@ -58,6 +76,7 @@ const TravelProgram: React.FC = () => {
     const detailsSection = document.getElementById('details');
     const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
     const mapSection = document.getElementById('map');
+    const daySection = document.getElementById('day');
 
     if (!detailsSection) return;
 
@@ -71,13 +90,27 @@ const TravelProgram: React.FC = () => {
     const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
     const mapScrolled = scrollTop + headerHeight - mapSectionStart;
 
-    if (mapScrolled > 0) selectedImageNumberRef.current = null;
-    else if (detailsScrolled > 0) selectedImageNumberRef.current = 1;
-    else selectedImageNumberRef.current = 0;
+    const daySectionStart = (daySection as HTMLElement).offsetTop - leftSideHeight;
+    const dayScrolled = scrollTop + headerHeight - daySectionStart;
+
+    if (dayScrolled > 0) {
+      selectedImageNumberRef.current = 3;
+      setCurrentSection('day');
+    } else if (mapScrolled > 0) {
+      selectedImageNumberRef.current = 2;
+      setCurrentSection('map');
+    } else if (detailsScrolled > 0) {
+      selectedImageNumberRef.current = 1;
+      setCurrentSection('details');
+    } else {
+      selectedImageNumberRef.current = 0;
+      setCurrentSection('hero');
+    }
 
     const firstImage = backgroundImages[0];
     const secondImage = backgroundImages[1];
     const thirdImage = backgroundImages[2];
+    const fourthImage = backgroundImages[3];
 
     if (firstImage) {
       (firstImage as HTMLElement).style.transform = `translateY(0)`;
@@ -98,6 +131,14 @@ const TravelProgram: React.FC = () => {
       }
       (thirdImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
     }
+
+    if (fourthImage) {
+      let translateY = leftSideHeight;
+      if (dayScrolled > 0) {
+        translateY = Math.max(0, leftSideHeight - dayScrolled);
+      }
+      (fourthImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
+    }
   }, [isMobile]);
 
   const handleWindowScroll = useCallback(() => {
@@ -105,6 +146,7 @@ const TravelProgram: React.FC = () => {
     
     const detailsSection = document.getElementById('details');
     const mapSection = document.getElementById('map');
+    const daySection = document.getElementById('day');
     const leftSide = document.querySelector(`.${styles.leftSide}`);
 
     if (!detailsSection || !leftSide) return;
@@ -119,9 +161,22 @@ const TravelProgram: React.FC = () => {
     const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
     const mapScrolled = scrollTop + headerHeight - mapSectionStart;
 
-    if (mapScrolled > 0) selectedImageNumberRef.current = null;
-    else if (detailsScrolled > 0) selectedImageNumberRef.current = 1;
-    else selectedImageNumberRef.current = 0;
+    const daySectionStart = (daySection as HTMLElement).offsetTop - leftSideHeight;
+    const dayScrolled = scrollTop + headerHeight - daySectionStart;
+
+    if (dayScrolled > 0) {
+      selectedImageNumberRef.current = 3;
+      setCurrentSection('day');
+    } else if (mapScrolled > 0) {
+      selectedImageNumberRef.current = 2;
+      setCurrentSection('map');
+    } else if (detailsScrolled > 0) {
+      selectedImageNumberRef.current = 1;
+      setCurrentSection('details');
+    } else {
+      selectedImageNumberRef.current = 0;
+      setCurrentSection('hero');
+    }
   }, [isMobile]);
 
   const handleResize = useCallback(() => {
@@ -172,6 +227,7 @@ const TravelProgram: React.FC = () => {
         scrollToDetails={scrollToDetails}
         scrollToMap={scrollToMap}
         scrollToHero={scrollToHero}
+        scrollToDay={scrollToDay}
         isLoggedIn={isLoggedIn}
       />
       <ImageUploadModal
@@ -189,6 +245,7 @@ const TravelProgram: React.FC = () => {
           programName={programName}
           isLoggedIn={isLoggedIn}
           onScrollToDetails={scrollToDetails}
+          onScrollToDay={scrollToDay}
           setIsModalOpen={setIsModalOpen}
           detailsRef={detailsRef}
         />
@@ -200,6 +257,7 @@ const TravelProgram: React.FC = () => {
           programName={programName}
           isLoggedIn={isLoggedIn}
           onScrollToDetails={scrollToDetails}
+          onScrollToDay={scrollToDay}
           setIsModalOpen={setIsModalOpen}
           detailsRef={detailsRef}
         />

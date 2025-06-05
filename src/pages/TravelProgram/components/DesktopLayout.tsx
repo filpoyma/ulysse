@@ -4,6 +4,7 @@ import FirstPage from '../../../components/FirstPage/FirstPage';
 import { DetailsSection } from '../../../components/DetailsSection';
 import MapBox from '../../../components/MapBox/MapBoxCustomLayer.component';
 import MapPage from '../../../components/MapPage/MapPage';
+import DaySection from '../../../components/DaySection/DaySection';
 import styles from '../TravelProgram.module.css';
 
 interface DesktopLayoutProps {
@@ -13,6 +14,7 @@ interface DesktopLayoutProps {
   programName: string | undefined;
   isLoggedIn: boolean;
   onScrollToDetails: () => void;
+  onScrollToDay: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
   detailsRef: React.RefObject<HTMLElement>;
 }
@@ -24,6 +26,7 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   programName,
   isLoggedIn,
   onScrollToDetails,
+  onScrollToDay,
   setIsModalOpen,
   detailsRef,
 }) => (
@@ -48,6 +51,14 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
       <div className={styles.backgroundImage}>
         <MapBox isLoggedIn={isLoggedIn} />
       </div>
+      <div className={styles.backgroundImage}>
+        <img
+          src={secondPageBg}
+          alt="Day section background"
+          onClick={() => setIsModalOpen(true)}
+          className={styles.leftSideBgImage}
+        />
+      </div>
     </div>
     <div className={styles.rightSide}>
       <FirstPage
@@ -58,6 +69,7 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
       />
       <DetailsSection ref={detailsRef} />
       <MapPage isLoggedIn={isLoggedIn} />
+      <DaySection />
     </div>
   </div>
 );

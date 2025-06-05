@@ -4,6 +4,7 @@ import FirstPage from '../../../components/FirstPage/FirstPage';
 import { DetailsSection } from '../../../components/DetailsSection';
 import MapBox from '../../../components/MapBox/MapBoxCustomLayer.component';
 import MapPage from '../../../components/MapPage/MapPage';
+import DaySection from '../../../components/DaySection/DaySection';
 import styles from '../TravelProgram.module.css';
 
 interface MobileLayoutProps {
@@ -13,6 +14,7 @@ interface MobileLayoutProps {
   programName: string | undefined;
   isLoggedIn: boolean;
   onScrollToDetails: () => void;
+  onScrollToDay: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
   detailsRef: React.RefObject<HTMLElement>;
 }
@@ -24,6 +26,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   programName,
   isLoggedIn,
   onScrollToDetails,
+  onScrollToDay,
   setIsModalOpen,
   detailsRef,
 }) => (
@@ -60,6 +63,17 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
     </div>
     <section>
       <MapPage isLoggedIn={isLoggedIn} />
+    </section>
+    <div className={styles.backgroundImage}>
+      <img
+        src={secondPageBg}
+        alt="Day section background"
+        onClick={() => setIsModalOpen(true)}
+        className={styles.leftSideBgImage}
+      />
+    </div>
+    <section>
+      <DaySection />
     </section>
   </div>
 );

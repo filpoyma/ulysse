@@ -12,6 +12,7 @@ interface HeaderProps {
   scrollToDetails: () => void;
   scrollToMap: () => void;
   scrollToHero: () => void;
+  scrollToDay: () => void;
   isLoggedIn: boolean;
 }
 
@@ -21,6 +22,7 @@ const Header = ({
   scrollToDetails,
   scrollToMap,
   scrollToHero,
+  scrollToDay,
   isLoggedIn,
 }: HeaderProps) => {
   const name_eng = useSelector((state: RootState) => state.travelProgram.program?.name_eng);
@@ -50,7 +52,10 @@ const Header = ({
           className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>
           Карта
         </a>
-        <a href="#" className={styles.navLink}>
+        <a
+          href="#day"
+          onClick={scrollToDay}
+          className={`${styles.navLink} ${currentSection === 'day' ? styles.navLinkActive : ''}`}>
           День 1
         </a>
         <a href="#" className={styles.navLink}>

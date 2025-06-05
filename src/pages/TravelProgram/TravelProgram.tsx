@@ -56,7 +56,7 @@ const TravelProgram: React.FC = () => {
     const leftSide = document.querySelector(`.${styles.leftSide}`);
     if (!rightSide || !leftSide) return;
 
-    const resetImageStyles = () => {
+    const resetImageTransforms = () => {
       const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
       backgroundImages.forEach(img => {
         (img as HTMLElement).style.transform = '';
@@ -64,15 +64,15 @@ const TravelProgram: React.FC = () => {
     };
 
     const handleScroll = () => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) return;
       const detailsSection = document.getElementById('details');
       const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
       const mapSection = document.getElementById('map');
-
+      console.log('file-TravelProgram.tsx detailsSection:', detailsSection);
       if (!detailsSection) return;
 
       const headerHeight = 80;
-      const isMobile = window.innerWidth <= 768;
-      console.log('file-TravelProgram.tsx isMobile1:', isMobile);
       const scrollTop = isMobile ? window.scrollY : rightSide.scrollTop;
       const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
 
@@ -116,9 +116,9 @@ const TravelProgram: React.FC = () => {
     const handleResize = () => {
       const isMobile = window.innerWidth <= 768;
 
-      // Сбрасываем стили при изменении размера окна
-      //resetImageStyles();
-      console.log('file-TravelProgram.tsx isMobile2:', isMobile);
+      // Сбрасываем трансформации при изменении размера окна
+      resetImageTransforms();
+
       if (isMobile) {
         window.addEventListener('scroll', handleScroll);
         rightSide.removeEventListener('scroll', handleScroll);
@@ -127,7 +127,7 @@ const TravelProgram: React.FC = () => {
         window.removeEventListener('scroll', handleScroll);
       }
 
-      // Даем время на перерисовку DOM перед применением новых стилей
+      // Даем время на перерисовку DOM перед применением новых трансформаций
       setTimeout(handleScroll, 100);
     };
 

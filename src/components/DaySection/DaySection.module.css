@@ -1,16 +1,147 @@
 .container {
-  min-height: 100vh;
+  min-height: 90vh;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #f5f5f5;
-  padding: 2rem;
+  background:inherit;
+  margin-bottom: 24px;
 }
 
-.container h2 {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 2rem;
-} 
+.header {
+  display: flex;
+  text-align: center;
+  font-family: 'Guild A Banner', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 26px;
+  color: var(--table-title-text-color);
+
+  border-bottom: 1px solid var(--table-text-color);
+  padding-bottom: 24px;
+  padding-top: 24px;
+  margin-left: 8px;
+  margin-right: 8px;
+  justify-content: center;
+}
+
+.content {
+padding-top: 42px;
+  padding-left: 84px;
+  padding-right: 108px;
+}
+
+.title {
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 100%;
+
+}
+
+.night {
+  border-left: 4px solid rgba(44, 42, 41, 0.2);
+  height: 26px;
+  margin-top: 12px;
+;
+}
+
+.night p {
+padding-left: 10px;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+
+}
+
+.description a{
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--text-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.description {
+  margin-top: 31px;
+  margin-bottom: 5px;
+
+}
+
+.infoContainer {
+  margin-top: 60px;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  gap: 20px
+
+}
+.content ul {
+ padding-left: 72px;
+  padding-top: 14px;
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 18px;
+
+
+}
+
+/* Стили для блока расписания дня */
+.scheduleBlock {
+  margin-top: 48px;
+  padding-left: 54px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.scheduleItem {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  margin-left: 24px;
+}
+
+.scheduleItem::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border: 2px solid rgba(44, 42, 41, 0.2);
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 9px;
+  z-index: 1;
+}
+
+.scheduleTime {
+  min-width: 80px;
+  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2C2A29;
+  margin-right: 24px;
+  margin-top: 2px;
+}
+
+.scheduleTitle {
+  font-family: Inter;
+  font-weight: 700;
+  font-size: 19px;
+
+
+  color: var(--table-title-text-color);
+  margin-bottom: 4px;
+  margin-left: 24px;
+}
+
+.scheduleDesc {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--text-color);
+  margin-bottom: 2px;
+  margin-left: 24px;
+}

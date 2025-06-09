@@ -1,14 +1,5 @@
 import api from './baseApi';
-
-export interface HotelApiModel {
-  _id?: string;
-  name: string;
-  country: string;
-  type: string;
-  region: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import { IHotel } from '../types/hotel.types.ts';
 
 const HotelApi = {
   basePath: 'hotels',
@@ -17,21 +8,19 @@ const HotelApi = {
     return path ? `${this.basePath}/${path}` : this.basePath;
   },
 
-  getAll(): Promise<{ data: HotelApiModel[] }> {
+  getAll(): Promise<{ data: IHotel[] }> {
     return api.get(this.getUrl()).json();
   },
 
-  getById(id: string): Promise<{ data: HotelApiModel }> {
+  getById(id: string): Promise<{ data: IHotel }> {
     return api.get(this.getUrl(id)).json();
   },
 
-  create(
-    data: Omit<HotelApiModel, '_id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<{ data: HotelApiModel }> {
+  create(data: Omit<IHotel, '_id' | 'createdAt' | 'updatedAt'>): Promise<{ data: IHotel }> {
     return api.post(this.getUrl(), { json: data }).json();
   },
 
-  update(id: string, data: Partial<HotelApiModel>): Promise<{ data: HotelApiModel }> {
+  update(id: string, data: Partial<IHotel>): Promise<{ data: IHotel }> {
     return api.put(this.getUrl(id), { json: data }).json();
   },
 

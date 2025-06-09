@@ -38,20 +38,20 @@ const TravelProgram: React.FC = () => {
   }, [programName]);
 
   const scrollToHero = useCallback(() => {
-    setCurrentSection('hero');
+    //setCurrentSection('hero');
   }, []);
 
   const scrollToDetails = useCallback(() => {
-    detailsRef.current?.scrollIntoView({ behavior: 'smooth' });
-    setCurrentSection('details');
+    //detailsRef.current?.scrollIntoView({ behavior: 'smooth' });
+    //setCurrentSection('details');
   }, []);
 
   const scrollToMap = useCallback(() => {
-    setCurrentSection('map');
+    //setCurrentSection('map');
   }, []);
 
   const scrollToDay = useCallback(() => {
-    const daySection = document.getElementById('day');
+    const daySection = document.getElementById('day0');
     if (daySection) {
       if (isMobile) {
         daySection.scrollIntoView({ behavior: 'smooth' });
@@ -65,7 +65,7 @@ const TravelProgram: React.FC = () => {
         }
       }
     }
-    setCurrentSection('day');
+    setCurrentSection('day0');
   }, [isMobile]);
 
   const handleScroll = useCallback(() => {
@@ -76,7 +76,7 @@ const TravelProgram: React.FC = () => {
     const detailsSection = document.getElementById('details');
     const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
     const mapSection = document.getElementById('map');
-    const daySection = document.getElementById('day');
+    const daySection = document.getElementById('day1');
 
     if (!detailsSection) return;
 
@@ -93,19 +93,6 @@ const TravelProgram: React.FC = () => {
     const daySectionStart = (daySection as HTMLElement).offsetTop - leftSideHeight;
     const dayScrolled = scrollTop + headerHeight - daySectionStart;
 
-    if (dayScrolled > 0) {
-      selectedImageNumberRef.current = 3;
-      setCurrentSection('day');
-    } else if (mapScrolled > 0) {
-      selectedImageNumberRef.current = 2;
-      setCurrentSection('map');
-    } else if (detailsScrolled > 0) {
-      selectedImageNumberRef.current = 1;
-      setCurrentSection('details');
-    } else {
-      selectedImageNumberRef.current = 0;
-      setCurrentSection('hero');
-    }
 
     const firstImage = backgroundImages[0];
     const secondImage = backgroundImages[1];
@@ -143,40 +130,7 @@ const TravelProgram: React.FC = () => {
 
   const handleWindowScroll = useCallback(() => {
     if (!isMobile) return;
-    
-    const detailsSection = document.getElementById('details');
-    const mapSection = document.getElementById('map');
-    const daySection = document.getElementById('day');
-    const leftSide = document.querySelector(`.${styles.leftSide}`);
 
-    if (!detailsSection || !leftSide) return;
-
-    const headerHeight = 80;
-    const scrollTop = window.scrollY;
-    const leftSideHeight = (leftSide as HTMLElement).offsetHeight;
-
-    const detailsSectionStart = detailsSection.offsetTop - leftSideHeight;
-    const detailsScrolled = scrollTop + headerHeight - detailsSectionStart;
-
-    const mapSectionStart = (mapSection as HTMLElement).offsetTop - leftSideHeight;
-    const mapScrolled = scrollTop + headerHeight - mapSectionStart;
-
-    const daySectionStart = (daySection as HTMLElement).offsetTop - leftSideHeight;
-    const dayScrolled = scrollTop + headerHeight - daySectionStart;
-
-    if (dayScrolled > 0) {
-      selectedImageNumberRef.current = 3;
-      setCurrentSection('day');
-    } else if (mapScrolled > 0) {
-      selectedImageNumberRef.current = 2;
-      setCurrentSection('map');
-    } else if (detailsScrolled > 0) {
-      selectedImageNumberRef.current = 1;
-      setCurrentSection('details');
-    } else {
-      selectedImageNumberRef.current = 0;
-      setCurrentSection('hero');
-    }
   }, [isMobile]);
 
   const handleResize = useCallback(() => {
@@ -210,6 +164,63 @@ const TravelProgram: React.FC = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, [handleResize, handleScroll, handleWindowScroll]);
+
+  useEffect(() => {
+    if (isMobile) return;
+    const rightSide = document.querySelector(`.${styles.rightSide}`);
+    if (!rightSide) return;
+
+    const hero = document.getElementById('hero');
+    const details = document.getElementById('details');
+    const map = document.getElementById('map');
+    const day1 = document.getElementById('day1');
+    const day2 = document.getElementById('day2');
+    if (!day1 && !day2) return;
+
+    const sections = [
+      { el: hero, name: 'hero' },
+      { el: details, name: 'details' },
+      { el: map, name: 'map' },
+      { el: day1, name: 'day1' },
+      { el: day2, name: 'day2' },
+    ];
+
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => b.boundingClientRect.top - a.boundingClientRect.top);
+        if (visible.length > 0) {
+          const entry = visible[0];
+          const found = sections.find(s => s.el === entry.target);
+          if (found) {
+            switch (found.name) {
+              case 'hero':
+                selectedImageNumberRef.current = 0;
+                break;
+              case 'details':
+                selectedImageNumberRef.current = 1;
+                break;
+              default:
+                selectedImageNumberRef.current = null;
+                break;
+            }
+            setCurrentSection(found.name);
+          }
+        }
+      },
+      {
+        root: rightSide,
+        threshold: 0.3,
+      }
+    );
+
+    sections.forEach(s => {
+      if (s.el) observer.observe(s.el);
+    });
+
+    return () => observer.disconnect();
+  }, [isMobile]);
 
   const firstPageBg = program?.bgImages?.[0]?.path
     ? `${ROOT_URL}/${program.bgImages[0].path.replace(/^\//, '')}`

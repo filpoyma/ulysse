@@ -6,6 +6,7 @@ import MapBox from '../../../components/MapBox/MapBoxCustomLayer.component';
 import MapPage from '../../../components/MapPage/MapPage';
 import DaySection from '../../../components/DaySection/DaySection';
 import styles from '../TravelProgram.module.css';
+import DaysGallery from '../../../components/Gallery/DaysGallery.tsx';
 
 interface DesktopLayoutProps {
   firstPageBg: string;
@@ -52,12 +53,7 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
         <MapBox isLoggedIn={isLoggedIn} />
       </div>
       <div className={styles.backgroundImage}>
-        <img
-          src={secondPageBg}
-          alt="Day section background"
-          onClick={() => setIsModalOpen(true)}
-          className={styles.leftSideBgImage}
-        />
+        <DaysGallery />
       </div>
     </div>
     <div className={styles.rightSide}>
@@ -74,4 +70,4 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   </div>
 );
 
-export default DesktopLayout; 
+export default DesktopLayout;

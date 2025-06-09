@@ -22,8 +22,8 @@ const Header = ({
   scrollToDetails,
   scrollToMap,
   scrollToHero,
-  scrollToDay,
   isLoggedIn,
+  scrollToDay,
 }: HeaderProps) => {
   const name_eng = useSelector((state: RootState) => state.travelProgram.program?.name_eng);
   return (
@@ -34,13 +34,11 @@ const Header = ({
       <nav className={styles.nav} ref={navRef}>
         <a
           href="#hero"
-          className={`${styles.navLink} ${currentSection === 'hero' ? styles.navLinkActive : ''}`}
-          onClick={scrollToHero}>
+          className={`${styles.navLink} ${currentSection === 'hero' ? styles.navLinkActive : ''}`}>
           Титульная страница
         </a>
         <a
           href="#details"
-          onClick={scrollToDetails}
           className={`${styles.navLink} ${
             currentSection === 'details' ? styles.navLinkActive : ''
           }`}>
@@ -53,12 +51,11 @@ const Header = ({
           Карта
         </a>
         <a
-          href="#day"
-          onClick={scrollToDay}
-          className={`${styles.navLink} ${currentSection === 'day' ? styles.navLinkActive : ''}`}>
+          href="#day1"
+          className={`${styles.navLink} ${currentSection === 'day1' ? styles.navLinkActive : ''}`}>
           День 1
         </a>
-        <a href="#" className={styles.navLink}>
+        <a href="#day2" className={`${styles.navLink} ${currentSection === 'day2' ? styles.navLinkActive : ''}`} >
           День 2
         </a>
         <a href="#" className={styles.navLink}>

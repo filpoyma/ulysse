@@ -60,7 +60,7 @@ const TravelProgram: React.FC = () => {
         if (rightSide) {
           rightSide.scrollTo({
             top: daySection.offsetTop - 80,
-            behavior: 'smooth'
+            behavior: 'smooth',
           });
         }
       }
@@ -68,13 +68,21 @@ const TravelProgram: React.FC = () => {
     setCurrentSection('day0');
   }, [isMobile]);
 
+  const scrollY = (element: HTMLElement, leftSideHeight: number, elScrolled: number) => {
+    let translateY = leftSideHeight;
+    if (elScrolled > 0) {
+      translateY = Math.max(0, leftSideHeight - elScrolled);
+    }
+    element.style.transform = `translateY(${translateY}px)`;
+  };
+
   const handleScroll = useCallback(() => {
     const rightSide = document.querySelector(`.${styles.rightSide}`);
     const leftSide = document.querySelector(`.${styles.leftSide}`);
     if (!rightSide || !leftSide || isMobile) return;
-    
+
     const detailsSection = document.getElementById('details');
-    const backgroundImages = document.querySelectorAll(`.${styles.backgroundImage}`);
+    const leftSideImages = document.querySelectorAll(`.${styles.backgroundImage}`);
     const mapSection = document.getElementById('map');
     const daySection = document.getElementById('day1');
 
@@ -93,44 +101,17 @@ const TravelProgram: React.FC = () => {
     const daySectionStart = (daySection as HTMLElement).offsetTop - leftSideHeight;
     const dayScrolled = scrollTop + headerHeight - daySectionStart;
 
+    const secondImage = leftSideImages[1] as HTMLElement;
+    const thirdImage = leftSideImages[2] as HTMLElement;
+    const fourthImage = leftSideImages[3] as HTMLElement;
 
-    const firstImage = backgroundImages[0];
-    const secondImage = backgroundImages[1];
-    const thirdImage = backgroundImages[2];
-    const fourthImage = backgroundImages[3];
-
-    if (firstImage) {
-      (firstImage as HTMLElement).style.transform = `translateY(0)`;
-    }
-
-    if (secondImage) {
-      let translateY = leftSideHeight;
-      if (detailsScrolled > 0) {
-        translateY = Math.max(0, leftSideHeight - detailsScrolled);
-      }
-      (secondImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
-    }
-
-    if (thirdImage) {
-      let translateY = leftSideHeight;
-      if (mapScrolled > 0) {
-        translateY = Math.max(0, leftSideHeight - mapScrolled);
-      }
-      (thirdImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
-    }
-
-    if (fourthImage) {
-      let translateY = leftSideHeight;
-      if (dayScrolled > 0) {
-        translateY = Math.max(0, leftSideHeight - dayScrolled);
-      }
-      (fourthImage as HTMLElement).style.transform = `translateY(${translateY}px)`;
-    }
+    scrollY(secondImage, leftSideHeight, detailsScrolled);
+    scrollY(thirdImage, leftSideHeight, mapScrolled);
+    scrollY(fourthImage, leftSideHeight, dayScrolled);
   }, [isMobile]);
 
   const handleWindowScroll = useCallback(() => {
     if (!isMobile) return;
-
   }, [isMobile]);
 
   const handleResize = useCallback(() => {
@@ -157,7 +138,7 @@ const TravelProgram: React.FC = () => {
     // Добавляем нужные обработчики
     handleResize();
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
       window.removeEventListener('scroll', handleWindowScroll);
       rightSide.removeEventListener('scroll', handleScroll);
@@ -186,7 +167,7 @@ const TravelProgram: React.FC = () => {
     ];
 
     const observer = new window.IntersectionObserver(
-      (entries) => {
+      entries => {
         const visible = entries
           .filter(e => e.isIntersecting)
           .sort((a, b) => b.boundingClientRect.top - a.boundingClientRect.top);
@@ -212,7 +193,7 @@ const TravelProgram: React.FC = () => {
       {
         root: rightSide,
         threshold: 0.3,
-      }
+      },
     );
 
     sections.forEach(s => {

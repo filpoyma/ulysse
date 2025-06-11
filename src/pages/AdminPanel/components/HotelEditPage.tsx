@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IHotel } from '../../../types/hotel.types';
 import styles from './HotelEditPage.module.css';
 import { useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
 import { selectHotels } from '../../../store/selectors';
+import ImageUploadModal from '../../../components/ImageUploadModal/ImageUploadModal.tsx';
+import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadHotels.tsx';
 
 const HotelEditPage = ({
   hotelId,
@@ -15,7 +17,8 @@ const HotelEditPage = ({
   const hotels = useSelector(selectHotels);
   const [hotel, setHotel] = useState<IHotel | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const roomsGallery = hotel?.roomInfo?.gallery || [];
   const hotelGallery = hotel?.hotelInfo?.gallery || [];
 
@@ -67,7 +70,7 @@ const HotelEditPage = ({
   const handleSave = async () => {
     if (!hotel) return;
     try {
-      // TODO: Implement save functionality
+      await hotelService.update(hotelId, hotel);
       console.log('Saving hotel:', hotel);
     } catch (error) {
       setError(`Ошибка при сохранении отеля ${error?.message}`);
@@ -84,38 +87,56 @@ const HotelEditPage = ({
 
   return (
     <div className={styles.container}>
+      <ImageUploadHotels
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        hotelId={hotel._id}
+      />
+
       {/* Левая панель - галереи */}
       <div className={styles.leftPanel}>
-      <div className={styles.gallerySection}>
+        <div className={styles.gallerySection}>
           <h2>Главная картинка</h2>
           <div className={styles.gallery}>
-            {hotel.mainImage ? 
-              <div  className={styles.imageItem}>
+            {hotel.mainImage ? (
+              <div className={styles.imageItem}>
                 <img src={hotel.mainImage} alt={`Hotel image`} />
               </div>
-            : <div className={styles.placeholder}>Выбрать изображение</div>}
+            ) : (
+              <div className={styles.placeholder} onClick={() => setIsModalOpen(true)}>
+                Выбрать изображение
+              </div>
+            )}
           </div>
         </div>
 
         <div className={styles.gallerySection}>
           <h2>Галерея отеля</h2>
           <div className={styles.gallery}>
-            {hotelGallery.length > 0 ? hotelGallery.map((image: string, index: number) => (
-              <div key={index} className={styles.imageItem}>
-                <img src={image} alt={`Hotel image ${index + 1}`} />
-              </div>
-            )) : <div className={styles.placeholder}>Выбрать изображение</div>}
+            {hotelGallery.length > 0 ? (
+              hotelGallery.map((image: string, index: number) => (
+                <div key={index} className={styles.imageItem}>
+                  <img src={image} alt={`Hotel image ${index + 1}`} />
+                </div>
+              ))
+            ) : (
+              <div className={styles.placeholder}>Выбрать изображение</div>
+            )}
           </div>
         </div>
 
         <div className={styles.gallerySection}>
           <h2>Галерея номеров</h2>
           <div className={styles.gallery}>
-            {roomsGallery.length > 0 ? roomsGallery.map((image: string, index: number) => (
-              <div key={index} className={styles.imageItem}>
-                <img src={image} alt={`Room image ${index + 1}`} />
-              </div>
-            )) : <div className={styles.placeholder}>Выбрать изображение</div>}
+            {roomsGallery.length > 0 ? (
+              roomsGallery.map((image: string, index: number) => (
+                <div key={index} className={styles.imageItem}>
+                  <img src={image} alt={`Room image ${index + 1}`} />
+                </div>
+              ))
+            ) : (
+              <div className={styles.placeholder}>Выбрать изображение</div>
+            )}
           </div>
         </div>
       </div>

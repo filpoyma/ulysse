@@ -27,7 +27,6 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   programName,
   isLoggedIn,
   onScrollToDetails,
-  onScrollToDay,
   setIsModalOpen,
   detailsRef,
 }) => (

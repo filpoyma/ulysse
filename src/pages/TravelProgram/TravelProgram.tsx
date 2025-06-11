@@ -222,13 +222,14 @@ const TravelProgram: React.FC = () => {
         scrollToDay={scrollToDay}
         isLoggedIn={isLoggedIn}
       />
-      <ImageUploadModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        programName={programName}
-        imageNumber={selectedImageNumberRef.current}
-        isLoggedIn={isLoggedIn}
-      />
+      {isLoggedIn && (
+        <ImageUploadModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          programName={programName}
+          imageNumber={selectedImageNumberRef.current}
+        />
+      )}
       {isMobile ? (
         <MobileLayout
           firstPageBg={firstPageBg}

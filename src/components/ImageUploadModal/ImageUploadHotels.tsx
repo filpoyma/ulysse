@@ -2,20 +2,18 @@ import React, { useRef, useState, useEffect } from 'react';
 import './ImageUploadModal.css';
 import { imageService } from '../../services/image.service';
 import { ROOT_URL } from '../../constants/api.constants';
-import { useSelector, useDispatch } from 'react-redux';
-import { travelProgramActions } from '../../store/reducers/travelProgram';
-import { RootState } from '../../store';
+import { useDispatch } from 'react-redux';
+
 import { createArrayFromNumberWithId } from '../../utils/helpers.ts';
 import { IUploadedImage } from '../../types/travelProgram.types.ts';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  programName?: string;
-  imageNumber: number | null;
+  hotelId?: string;
 }
 
-const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNumber }) => {
+const ImageUploadHotels: React.FC<Props> = ({ open, onClose, hotelId }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +21,6 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
   const [uploadedImages, setUploadedImages] = useState<IUploadedImage[]>([]);
 
   const dispatch = useDispatch();
-  const program = useSelector((state: RootState) => state.travelProgram.program);
 
   // Загружаем все изображения при открытии модального окна
   useEffect(() => {
@@ -93,25 +90,10 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
 
   // Клик по превью для выбора фона
   const handlePreviewClick = async (img: IUploadedImage) => {
-    if (!programName || imageNumber === null) return;
+    if (!hotelId) return;
     const imageId = img._id || img.id;
     if (!imageId) return;
     try {
-      const res = await imageService.setBgImage({
-        programName,
-        imageId,
-        imageNumber,
-      });
-      // Обновляем bgImages в сторе
-      if (program) {
-        const newBgImages = [...(res.data.program.bgImages || [])];
-        newBgImages[imageNumber] = {
-          _id: img._id || img.id || '',
-          filename: img.filename,
-          path: img.path,
-        };
-        dispatch(travelProgramActions.setBgImages(newBgImages));
-      }
     } catch {
       setError('Ошибка выбора фоновой картинки');
     }
@@ -213,4 +195,4 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
   );
 };
 
-export default ImageUploadModal;
+export default ImageUploadHotels;

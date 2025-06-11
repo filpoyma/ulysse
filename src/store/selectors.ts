@@ -13,3 +13,5 @@ export const selectLogisticsData = createSelector(
   [selectMapData],
   mapData => mapData?.logistics || [],
 );
+
+export const selectHotels = (state: RootState) => state.hotel.hotels;

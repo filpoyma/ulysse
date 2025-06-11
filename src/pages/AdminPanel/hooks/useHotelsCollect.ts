@@ -1,33 +1,35 @@
-import { useState, useRef, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { hotelService } from "../../../services/hotel.service";
-import { HotelApiModel } from "../../../api/hotel.api";
-import { hotelActions } from "../../../store/reducers/hotel";
-import { RootState } from "../../../store";
+import { useState, useRef, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { hotelService } from '../../../services/hotel.service';
+import { hotelActions } from '../../../store/reducers/hotel';
+import { RootState } from '../../../store';
+import { IHotel } from '../../../types/hotel.types.ts';
+import { HTTPError } from 'ky';
+
+type THotelEditable = Omit<
+  IHotel,
+  '_id' | 'createdAt' | 'updatedAt' | 'address' | 'hotelInfo' | 'roomInfo' | 'pros' | 'shortInfo'
+>;
 
 export const useHotelsCollect = () => {
   const dispatch = useDispatch();
   const hotels = useSelector((state: RootState) => state.hotel.hotels);
   const [isCreatingHotel, setIsCreatingHotel] = useState(false);
-  const [newHotel, setNewHotel] = useState<
-    Omit<HotelApiModel, "_id" | "createdAt" | "updatedAt">
-  >({
-    name: "",
-    country: "",
-    type: "",
-    region: "",
+  const [newHotel, setNewHotel] = useState<THotelEditable>({
+    name: '',
+    country: '',
+    link: '',
+    region: '',
   });
   const [editingHotelId, setEditingHotelId] = useState<string | null>(null);
-  const [editingHotelData, setEditingHotelData] = useState<
-    Omit<HotelApiModel, "_id" | "createdAt" | "updatedAt">
-  >({
-    name: "",
-    country: "",
-    type: "",
-    region: "",
+  const [editingHotelData, setEditingHotelData] = useState<THotelEditable>({
+    name: '',
+    country: '',
+    link: '',
+    region: '',
   });
-  const [sortField, setSortField] = useState<keyof HotelApiModel>("name");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortField, setSortField] = useState<keyof IHotel>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -35,10 +37,10 @@ export const useHotelsCollect = () => {
   const sortedHotels = useMemo(() => {
     const arr = [...hotels];
     arr.sort((a, b) => {
-      const aValue = a[sortField] || "";
-      const bValue = b[sortField] || "";
-      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
+      const aValue = a[sortField] || '';
+      const bValue = b[sortField] || '';
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
     return arr;
@@ -48,42 +50,39 @@ export const useHotelsCollect = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = (await hotelService.getAll()) as {
-        data: HotelApiModel[];
-      };
-      dispatch(hotelActions.setHotels(response.data || []));
+      await hotelService.getAll();
     } catch (err) {
-      setError("Ошибка при загрузке отелей");
-      console.error("Error fetching hotels:", err);
+      setError('Ошибка при загрузке отелей');
+      console.error('Error fetching hotels:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSortHotels = (field: keyof HotelApiModel) => {
+  const handleSortHotels = (field: keyof IHotel) => {
     if (sortField === field) {
-      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+      setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortField(field);
-      setSortOrder("asc");
+      setSortOrder('asc');
     }
   };
 
   const handleHotelClick = (id: string) => {
-    const hotel = hotels.find((h: HotelApiModel) => h._id === id);
+    const hotel = hotels.find((h: IHotel) => h._id === id);
     if (!hotel) return;
     setEditingHotelId(id);
     setEditingHotelData({
       name: hotel.name,
       country: hotel.country,
-      type: hotel.type,
+      link: hotel.link,
       region: hotel.region,
     });
-    setTimeout(() => nameInputRef.current?.focus(), 0);
+    //setTimeout(() => nameInputRef.current?.focus(), 0);
   };
 
-  const handleEditHotelChange = (field: keyof HotelApiModel, value: string) => {
-    setEditingHotelData((prev) => ({ ...prev, [field]: value }));
+  const handleEditHotelChange = (field: keyof IHotel, value: string) => {
+    setEditingHotelData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSaveEditHotel = async () => {
@@ -91,57 +90,52 @@ export const useHotelsCollect = () => {
     if (
       !editingHotelData.name ||
       !editingHotelData.country ||
-      !editingHotelData.type ||
+      !editingHotelData.link ||
       !editingHotelData.region
     ) {
-      setError("Заполните все поля");
+      setError('Заполните все поля');
       return;
     }
     try {
       setError(null);
       await hotelService.update(editingHotelId, editingHotelData);
       setEditingHotelId(null);
-      setEditingHotelData({ name: "", country: "", type: "", region: "" });
+      setEditingHotelData({ name: '', country: '', link: '', region: '' });
     } catch (err) {
-      setError("Ошибка при редактировании отеля");
-      console.error("Error editing hotel:", err);
+      setError('Ошибка при редактировании отеля');
+      console.error('Error editing hotel:', err);
     }
   };
 
   const handleCancelEditHotel = () => {
     setEditingHotelId(null);
-    setEditingHotelData({ name: "", country: "", type: "", region: "" });
+    setEditingHotelData({ name: '', country: '', link: '', region: '' });
   };
 
   const handleDeleteHotel = async (id: string) => {
-    if (!window.confirm("Вы уверены, что хотите удалить этот отель?")) return;
+    if (!window.confirm('Вы уверены, что хотите удалить этот отель?')) return;
     try {
       setError(null);
       await hotelService.delete(id);
     } catch (err) {
-      setError("Ошибка удаления отеля");
-      console.error("Error deleting hotel:", err);
+      setError('Ошибка удаления отеля');
+      console.error('Error deleting hotel:', err);
     }
   };
 
   const handleCreateHotelClick = () => {
     setIsCreatingHotel(true);
-    setNewHotel({ name: "", country: "", type: "", region: "" });
+    setNewHotel({ name: '', country: '', link: '', region: '' });
     setTimeout(() => nameInputRef.current?.focus(), 0);
   };
 
-  const handleNewHotelChange = (field: keyof HotelApiModel, value: string) => {
-    setNewHotel((prev) => ({ ...prev, [field]: value }));
+  const handleNewHotelChange = (field: keyof IHotel, value: string) => {
+    setNewHotel(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSaveNewHotel = async () => {
-    if (
-      !newHotel.name ||
-      !newHotel.country ||
-      !newHotel.type ||
-      !newHotel.region
-    ) {
-      setError("Заполните все поля");
+    if (!newHotel.name || !newHotel.country || !newHotel.link || !newHotel.region) {
+      setError('Заполните все поля');
       return;
     }
     try {
@@ -149,21 +143,22 @@ export const useHotelsCollect = () => {
       const res = await hotelService.create({
         name: newHotel.name,
         country: newHotel.country,
-        type: newHotel.type,
+        link: newHotel.link,
         region: newHotel.region,
       });
       dispatch(hotelActions.addHotel(res.data));
       setIsCreatingHotel(false);
-      setNewHotel({ name: "", country: "", type: "", region: "" });
+      setNewHotel({ name: '', country: '', link: '', region: '' });
     } catch (err) {
-      setError("Ошибка при создании отеля");
-      console.error("Error creating hotel:", err);
+      setError(`Ошибка при создании отеля ${JSON.stringify(err?.message)}`);
+      console.error('Error creating hotel:', err?.message);
     }
   };
 
   const handleCancelNewHotel = () => {
     setIsCreatingHotel(false);
-    setNewHotel({ name: "", country: "", type: "", region: "" });
+    setError(null);
+    setNewHotel({ name: '', country: '', link: '', region: '' });
   };
 
   return {

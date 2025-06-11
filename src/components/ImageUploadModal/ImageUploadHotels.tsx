@@ -20,8 +20,6 @@ const ImageUploadHotels: React.FC<Props> = ({ open, onClose, hotelId }) => {
   const [success, setSuccess] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<IUploadedImage[]>([]);
 
-  const dispatch = useDispatch();
-
   // Загружаем все изображения при открытии модального окна
   useEffect(() => {
     if (!open) return;
@@ -79,8 +77,12 @@ const ImageUploadHotels: React.FC<Props> = ({ open, onClose, hotelId }) => {
     try {
       await imageService.deleteImage(id);
       setUploadedImages(prev => prev.filter(i => (i._id || i.id) !== id));
-    } catch {
-      setError('Ошибка удаления');
+    } catch (e) {
+      let message = 'Ошибка удаления';
+      if (typeof e === 'object' && e && 'message' in e) {
+        message = (e as { message: string }).message;
+      }
+      setError(message);
     } finally {
       setLoading(false);
     }

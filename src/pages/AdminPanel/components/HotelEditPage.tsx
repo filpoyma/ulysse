@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IHotel } from '../../../types/hotel.types';
 import styles from './HotelEditPage.module.css';
 import { useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
 import { selectHotels } from '../../../store/selectors';
-import ImageUploadModal from '../../../components/ImageUploadModal/ImageUploadModal.tsx';
 import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadHotels.tsx';
 
 const HotelEditPage = ({
@@ -29,9 +28,12 @@ const HotelEditPage = ({
         if (hotel) setHotel(hotel);
         else setError('Отель не найден');
       } else {
-        hotelService.getById(hotelId).then(hotel => {
-          setHotel(hotel.data);
-        });
+        hotelService
+          .getById(hotelId)
+          .then(hotel => {
+            setHotel(hotel.data);
+          })
+          .catch(console.error);
       }
     }
   }, [hotelId, hotels]);
@@ -77,13 +79,9 @@ const HotelEditPage = ({
     }
   };
 
-  if (error) {
-    return <div className={styles.error}>{error}</div>;
-  }
+  if (error) return <div className={styles.error}>{error}</div>;
 
-  if (!hotel) {
-    return <div className={styles.error}>Загрузка...</div>;
-  }
+  if (!hotel) return <div className={styles.error}>Загрузка...</div>;
 
   return (
     <div className={styles.container}>

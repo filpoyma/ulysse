@@ -83,7 +83,7 @@ export const useHotelsCollect = () => {
     setEditingHotelData({
       name: hotel.name,
       country: hotel.country,
-      link: hotel.link,
+      address: hotel.address,
       region: hotel.region,
     });
     //setTimeout(() => nameInputRef.current?.focus(), 0);

@@ -88,6 +88,50 @@ const HotelEditPage = ({
     setIsModalOpen(true);
   };
 
+  const handleDeleteImage = async (
+    imageId: string,
+    type: 'hotelInfo.gallery' | 'roomInfo.gallery',
+  ) => {
+    if (!hotel || !imageId || !hotel._id) return;
+
+    try {
+      const updatedGallery =
+        type === 'hotelInfo.gallery'
+          ? hotel.hotelInfo.gallery.filter(img => img._id !== imageId)
+          : hotel.roomInfo.gallery.filter(img => img._id !== imageId);
+
+      await hotelService.updateGallery(
+        hotel._id,
+        type,
+        updatedGallery.map(img => img._id || ''),
+      );
+
+      setHotel(prev => {
+        if (!prev) return null;
+        if (type === 'hotelInfo.gallery') {
+          return {
+            ...prev,
+            hotelInfo: {
+              ...prev.hotelInfo,
+              gallery: updatedGallery,
+            },
+          };
+        } else {
+          return {
+            ...prev,
+            roomInfo: {
+              ...prev.roomInfo,
+              gallery: updatedGallery,
+            },
+          };
+        }
+      });
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      alert('Ошибка при удалении изображения');
+    }
+  };
+
   const handleSave = async () => {
     if (!hotel) return;
     try {
@@ -126,9 +170,7 @@ const HotelEditPage = ({
                 />
               </div>
             ) : (
-              <div className={styles.placeholder} onClick={handleSelectOneImage}>
-                Выбрать изображение
-              </div>
+              <div className={styles.placeholder} onClick={handleSelectOneImage} />
             )}
           </div>
         </div>
@@ -143,21 +185,27 @@ const HotelEditPage = ({
                     src={`${ROOT_URL}/${image.path?.replace(/^\//, '')}`}
                     alt={`Hotel image ${index + 1}`}
                   />
+                  <button
+                    className={styles.deleteButton}
+                    onClick={e => {
+                      e.stopPropagation();
+                      if (image._id) {
+                        handleDeleteImage(image._id, 'hotelInfo.gallery');
+                      }
+                    }}>
+                    ×
+                  </button>
                 </div>
               ))
             ) : (
               <div
                 className={styles.placeholder}
-                onClick={() => handleSelectManyImages('hotelInfo.gallery')}>
-                Выбрать изображения
-              </div>
+                onClick={() => handleSelectManyImages('hotelInfo.gallery')}></div>
             )}
             {hotelGallery.length > 0 && (
               <div
                 className={styles.placeholder}
-                onClick={() => handleSelectManyImages('hotelInfo.gallery')}>
-                Добавить изображения
-              </div>
+                onClick={() => handleSelectManyImages('hotelInfo.gallery')}></div>
             )}
           </div>
         </div>
@@ -172,21 +220,27 @@ const HotelEditPage = ({
                     src={`${ROOT_URL}/${image.path?.replace(/^\//, '')}`}
                     alt={`Room image ${index + 1}`}
                   />
+                  <button
+                    className={styles.deleteButton}
+                    onClick={e => {
+                      e.stopPropagation();
+                      if (image._id) {
+                        handleDeleteImage(image._id, 'roomInfo.gallery');
+                      }
+                    }}>
+                    ×
+                  </button>
                 </div>
               ))
             ) : (
               <div
                 className={styles.placeholder}
-                onClick={() => handleSelectManyImages('roomInfo.gallery')}>
-                Выбрать изображения
-              </div>
+                onClick={() => handleSelectManyImages('roomInfo.gallery')}></div>
             )}
             {roomsGallery.length > 0 && (
               <div
                 className={styles.placeholder}
-                onClick={() => handleSelectManyImages('roomInfo.gallery')}>
-                Добавить изображения
-              </div>
+                onClick={() => handleSelectManyImages('roomInfo.gallery')}></div>
             )}
           </div>
         </div>

@@ -1,30 +1,41 @@
-import api from "../api/baseApi";
-import {
-  ITravelProgramResponse,
-  IUploadedImage,
-} from "../types/travelProgram.types.ts";
+import api from '../api/baseApi';
+import { ITravelProgramResponse } from '../types/travelProgram.types.ts';
+import { IUploadedImage } from '../types/uploadImage.types.ts';
 
 export const imageService = {
-  async uploadImage(
-    file: File
-  ): Promise<{ image: IUploadedImage; message: string }> {
+  async uploadImage(file: File): Promise<{ image: IUploadedImage; message: string }> {
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append('image', file);
     // Не указываем Content-Type, ky сам выставит multipart boundary
     return api
-      .post("upload/image", {
+      .post('upload/image', {
         body: formData,
         timeout: 20000,
       })
       .json();
   },
+
+  async uploadMultipleImages(files: File[]): Promise<{ images: IUploadedImage[]; message: string }> {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('images', file);
+    });
+    return api
+      .post('upload/images', {
+        body: formData,
+        timeout: 20000,
+      })
+      .json();
+  },
+
   async getAllImages(): Promise<IUploadedImage[]> {
     return api
-      .get("upload/images", {
+      .get('upload/images', {
         timeout: 10000,
       })
       .json();
   },
+
   async deleteImage(id: string) {
     return api
       .delete(`upload/image/${id}`, {
@@ -32,6 +43,7 @@ export const imageService = {
       })
       .json();
   },
+
   async setBgImage({
     programName,
     imageId,
@@ -42,7 +54,7 @@ export const imageService = {
     imageNumber: number;
   }): Promise<{ data: { program: ITravelProgramResponse; message: string } }> {
     return api
-      .post("travel-program/bg-image", {
+      .post('travel-program/bg-image', {
         json: { programName, imageId, imageNumber },
         timeout: 10000,
       })

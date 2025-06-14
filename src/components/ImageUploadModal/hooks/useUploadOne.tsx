@@ -49,19 +49,10 @@ const useUploadOne = ({
 
     setLoading(true);
     try {
-      if (isMany) {
-        const uploadPromises = Array.from(files).map(file => imageService.uploadImage(file));
-        const responses = await Promise.all(uploadPromises);
+      const response = await imageService.uploadMultipleImages(Array.from(files));
 
-        const newImages = responses
-          .filter(response => response && response.image && response.image.path)
-          .map(response => response.image);
-        if (newImages.length > 0) setSelectedImages(prev => [...prev, ...newImages]);
-      } else {
-        const response = await imageService.uploadImage(files[0]);
-        if (response && response.image && response.image.path) {
-          setUploadedImages(prev => [...prev, response.image]);
-        }
+      if (response && response.images && response.images.length > 0) {
+        setUploadedImages(prev => [...prev, ...response.images]);
       }
 
       setSuccess(true);
@@ -139,6 +130,7 @@ const useUploadOne = ({
       const imageIds = selectedImages.map(img => img._id || img.id).filter(Boolean) as string[];
       await hotelService.updateGallery(hotelId, galleryType, imageIds);
       setSuccess(true);
+      setSelectedImages([]);
       onClose();
     } catch (e) {
       let message = 'Ошибка сохранения галереи';

@@ -36,7 +36,7 @@ const ImageUploadHotels: React.FC<Props> = ({ open, onClose, hotelId, isMany, ga
     <div className="modal-overlay">
       <div className="modal-content" style={{ position: 'relative' }}>
         <button className="modal-close-top" onClick={onClose} title="Закрыть">
-          <span className="modal-cross">×</span>
+          <span className="modal-cross-top">×</span>
         </button>
         <div className="modal-header">
           <h3 className="modal-title-upload" onClick={handleTitleClick}>
@@ -62,7 +62,11 @@ const ImageUploadHotels: React.FC<Props> = ({ open, onClose, hotelId, isMany, ga
           <div className="modal-grid">
             {createArrayFromNumberWithId(maxCells).map((id, i) => {
               const img = uploadedImages[i];
-              const isSelected = img && selectedImages.some(selected => (selected._id || selected.id) === (img._id || img.id));
+              const isSelected =
+                img &&
+                selectedImages.some(
+                  selected => (selected._id || selected.id) === (img._id || img.id),
+                );
               return (
                 <div className="modal-cell" key={id}>
                   {img ? (
@@ -94,18 +98,14 @@ const ImageUploadHotels: React.FC<Props> = ({ open, onClose, hotelId, isMany, ga
           </div>
         </div>
         <div className="modal-footer">
-          {isMany && selectedImages.length > 0 && (
-            <button 
-              className="modal-save-btn" 
-              onClick={handleSaveGallery} 
-              disabled={loading}
-            >
-              {loading ? 'Сохранение...' : 'Сохранить выбранные'}
+          {isMany && (
+            <button
+              className="modal-save-btn"
+              onClick={handleSaveGallery}
+              disabled={loading || !selectedImages.length}>
+              {loading ? 'Сохранение...' : 'Сохранить'}
             </button>
           )}
-          <button className="modal-close" onClick={onClose} disabled={loading}>
-            {loading ? 'Загрузка...' : 'Закрыть'}
-          </button>
         </div>
       </div>
     </div>

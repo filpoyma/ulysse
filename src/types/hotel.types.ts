@@ -6,6 +6,7 @@ export interface IHotel {
   link: string;
   address: string;
   mainImage: string;
+  coordinates: [number, number];
   hotelInfo: {
     gallery: string[];
     about: string;

@@ -43,6 +43,7 @@ const App = () => {
         <Route path="/ulyseadmin" element={<AdminLogin />} />
         <Route path="/ulyseadmin/register" element={<AdminRegister />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="*" element={<AdminPanel />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>

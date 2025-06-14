@@ -40,14 +40,14 @@ const ImageUploadHotels: React.FC<Props> = ({ open, onClose, hotelId, isMany, ga
         </button>
         <div className="modal-header">
           <h3 className="modal-title-upload" onClick={handleTitleClick}>
-            ЗАГРУЗИТЬ ИЗОБРАЖЕНИЯ
+            Загрузить изображения
           </h3>
           {error ? (
             <div style={{ color: 'red', marginBottom: 8 }}>{`${error}`}</div>
           ) : success ? (
             <div style={{ color: 'green', marginBottom: 8 }}>файл успешно загружен</div>
           ) : (
-            <p className="modal-subtext">размер изображения не менее 1080x1080 пикселей</p>
+            <p className="modal-subtext"> ≥ 1080x1080 px</p>
           )}
           <input
             type="file"

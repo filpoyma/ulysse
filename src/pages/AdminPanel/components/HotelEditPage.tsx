@@ -211,7 +211,7 @@ const HotelEditPage = ({
         </div>
 
         <div className={styles.gallerySection}>
-          <h2>Галерея номеров</h2>
+          <h2>Галерея номеров отеля</h2>
           <div className={styles.gallery}>
             {roomsGallery.length > 0 ? (
               roomsGallery.map((image: IUploadedImage, index: number) => (

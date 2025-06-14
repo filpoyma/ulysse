@@ -86,7 +86,7 @@ const useUploadOne = ({
     }
   };
 
-  const maxCells = Math.max(uploadedImages.length, 9);
+  const maxCells = Math.max(uploadedImages.length, 8);
 
   // Клик по превью для выбора изображения
   const handlePreviewClick = async (img: IUploadedImage) => {

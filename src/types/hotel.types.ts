@@ -1,3 +1,5 @@
+import { IUploadedImage } from './uploadImage.types.ts';
+
 export interface IHotel {
   _id?: string;
   name: string;
@@ -5,14 +7,14 @@ export interface IHotel {
   region: string;
   link: string;
   address: string;
-  mainImage: string;
+  mainImage: IUploadedImage;
   coordinates: [number, number];
   hotelInfo: {
-    gallery: string[];
+    gallery: IUploadedImage[];
     about: string;
   };
   roomInfo: {
-    gallery: string[];
+    gallery: IUploadedImage[];
     about: string;
   };
   pros: string[];

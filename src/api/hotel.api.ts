@@ -27,6 +27,18 @@ const HotelApi = {
   delete(id: string): Promise<{ message: string }> {
     return api.delete(this.getUrl(id)).json();
   },
+
+  updateMainImage(hotelId: string, imageId: string): Promise<{ data: IHotel }> {
+    return api.patch(this.getUrl('main-image'), { 
+      json: { hotelId, imageId } 
+    }).json();
+  },
+
+  updateGallery(hotelId: string, galleryType: 'hotelInfo.gallery' | 'roomInfo.gallery', imageIds: string[]): Promise<{ data: IHotel }> {
+    return api.patch(this.getUrl('gallery'), {
+      json: { hotelId, galleryType, imageIds }
+    }).json();
+  },
 };
 
 export default HotelApi;

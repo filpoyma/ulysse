@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
 import { selectHotels } from '../../../store/selectors';
 import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadHotels.tsx';
+import { ROOT_URL } from '../../../constants/api.constants.ts';
+import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 
 const HotelEditPage = ({
   hotelId,
@@ -15,8 +17,9 @@ const HotelEditPage = ({
 }) => {
   const hotels = useSelector(selectHotels);
   const [hotel, setHotel] = useState<IHotel | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMany, setIsmany] = useState(false);
+  const [galleryType, setGalleryType] = useState<'hotelInfo.gallery' | 'roomInfo.gallery' | null>(null);
 
   const roomsGallery = hotel?.roomInfo?.gallery || [];
   const hotelGallery = hotel?.hotelInfo?.gallery || [];
@@ -26,7 +29,9 @@ const HotelEditPage = ({
       if (hotels && hotels.length) {
         const hotel = hotels.find(h => h._id === hotelId);
         if (hotel) setHotel(hotel);
-        else setError('Отель не найден');
+        else {
+          alert('Отель не найден');
+        }
       } else {
         hotelService
           .getById(hotelId)
@@ -40,7 +45,7 @@ const HotelEditPage = ({
 
   const handleInputChange = (
     field: keyof IHotel | 'hotelInfo.about' | 'roomInfo.about',
-    value: string | string[],
+    value: string | string[] | number[],
   ) => {
     setHotel(hotel => {
       if (!hotel) return null;
@@ -69,17 +74,29 @@ const HotelEditPage = ({
     });
   };
 
+  const handleSelectManyImages = (type: 'hotelInfo.gallery' | 'roomInfo.gallery') => {
+    setIsmany(true);
+    setGalleryType(type);
+    setIsModalOpen(true);
+  };
+
+  const handleSelectOneImage = () => {
+    setIsmany(false);
+    setGalleryType(null);
+    setIsModalOpen(true);
+  };
+
   const handleSave = async () => {
     if (!hotel) return;
     try {
       await hotelService.update(hotelId, hotel);
       console.log('Saving hotel:', hotel);
-    } catch (error) {
-      setError(`Ошибка при сохранении отеля ${error?.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка при сохранении отеля';
+      console.log('file-HotelEditPage.tsx error:', error);
+      alert(errorMessage);
     }
   };
-
-  if (error) return <div className={styles.error}>{error}</div>;
 
   if (!hotel) return <div className={styles.error}>Загрузка...</div>;
 
@@ -89,6 +106,8 @@ const HotelEditPage = ({
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         hotelId={hotel._id}
+        isMany={isMany}
+        galleryType={galleryType || undefined}
       />
 
       {/* Левая панель - галереи */}
@@ -97,11 +116,14 @@ const HotelEditPage = ({
           <h2>Главная картинка</h2>
           <div className={styles.gallery}>
             {hotel.mainImage ? (
-              <div className={styles.imageItem}>
-                <img src={hotel.mainImage} alt={`Hotel image`} />
+              <div className={styles.imageItem} onClick={handleSelectOneImage}>
+                <img
+                  src={`${ROOT_URL}/${hotel.mainImage?.path?.replace(/^\//, '')}`}
+                  alt={`Hotel image`}
+                />
               </div>
             ) : (
-              <div className={styles.placeholder} onClick={() => setIsModalOpen(true)}>
+              <div className={styles.placeholder} onClick={handleSelectOneImage}>
                 Выбрать изображение
               </div>
             )}
@@ -112,13 +134,23 @@ const HotelEditPage = ({
           <h2>Галерея отеля</h2>
           <div className={styles.gallery}>
             {hotelGallery.length > 0 ? (
-              hotelGallery.map((image: string, index: number) => (
-                <div key={index} className={styles.imageItem}>
-                  <img src={image} alt={`Hotel image ${index + 1}`} />
+              hotelGallery.map((image: IUploadedImage, index: number) => (
+                <div key={image.id} className={styles.imageItem}>
+                  <img
+                    src={`${ROOT_URL}/${image.path?.replace(/^\//, '')}`}
+                    alt={`Hotel image ${index + 1}`}
+                  />
                 </div>
               ))
             ) : (
-              <div className={styles.placeholder}>Выбрать изображение</div>
+              <div className={styles.placeholder} onClick={() => handleSelectManyImages('hotelInfo.gallery')}>
+                Выбрать изображения
+              </div>
+            )}
+            {hotelGallery.length > 0 && (
+              <div className={styles.placeholder} onClick={() => handleSelectManyImages('hotelInfo.gallery')}>
+                Добавить изображения
+              </div>
             )}
           </div>
         </div>
@@ -127,13 +159,23 @@ const HotelEditPage = ({
           <h2>Галерея номеров</h2>
           <div className={styles.gallery}>
             {roomsGallery.length > 0 ? (
-              roomsGallery.map((image: string, index: number) => (
-                <div key={index} className={styles.imageItem}>
-                  <img src={image} alt={`Room image ${index + 1}`} />
+              roomsGallery.map((image: IUploadedImage, index: number) => (
+                <div key={image.id} className={styles.imageItem}>
+                  <img
+                    src={`${ROOT_URL}/${image.path?.replace(/^\//, '')}`}
+                    alt={`Room image ${index + 1}`}
+                  />
                 </div>
               ))
             ) : (
-              <div className={styles.placeholder}>Выбрать изображение</div>
+              <div className={styles.placeholder} onClick={() => handleSelectManyImages('roomInfo.gallery')}>
+                Выбрать изображения
+              </div>
+            )}
+            {roomsGallery.length > 0 && (
+              <div className={styles.placeholder} onClick={() => handleSelectManyImages('roomInfo.gallery')}>
+                Добавить изображения
+              </div>
             )}
           </div>
         </div>
@@ -176,6 +218,15 @@ const HotelEditPage = ({
                 onChange={e => handleInputChange('region', e.target.value)}
               />
             </div>
+
+            <div className={styles.field}>
+              <label>Адрес</label>
+              <input
+                type="text"
+                value={hotel.address}
+                onChange={e => handleInputChange('address', e.target.value)}
+              />
+            </div>
             <div className={styles.field}>
               <label>Ссылка</label>
               <input
@@ -185,12 +236,47 @@ const HotelEditPage = ({
               />
             </div>
             <div className={styles.field}>
-              <label>Адрес</label>
-              <input
-                type="text"
-                value={hotel.address}
-                onChange={e => handleInputChange('address', e.target.value)}
-              />
+              <label>Координаты</label>
+              <div className={styles.coordinatesContainer}>
+                <div className={styles.coordinateField}>
+                  <input
+                    type="number"
+                    step="any"
+                    min="-180"
+                    max="180"
+                    placeholder="Долгота"
+                    value={hotel.coordinates?.[0] || ''}
+                    onChange={e => {
+                      const value = parseFloat(e.target.value);
+                      if (isNaN(value) || (value >= -180 && value <= 180)) {
+                        const newCoordinates = [...(hotel.coordinates || [0, 0])];
+                        newCoordinates[0] = isNaN(value) ? 0 : value;
+                        handleInputChange('coordinates', newCoordinates);
+                      }
+                    }}
+                  />
+                  <div className={styles.helperText}>Долгота: от -180° до 180°</div>
+                </div>
+                <div className={styles.coordinateField}>
+                  <input
+                    type="number"
+                    step="any"
+                    min="-90"
+                    max="90"
+                    placeholder="Широта"
+                    value={hotel.coordinates?.[1] || ''}
+                    onChange={e => {
+                      const value = parseFloat(e.target.value);
+                      if (isNaN(value) || (value >= -90 && value <= 90)) {
+                        const newCoordinates = [...(hotel.coordinates || [0, 0])];
+                        newCoordinates[1] = isNaN(value) ? 0 : value;
+                        handleInputChange('coordinates', newCoordinates);
+                      }
+                    }}
+                  />
+                  <div className={styles.helperText}>Широта: от -90° до 90°</div>
+                </div>
+              </div>
             </div>
           </div>
 

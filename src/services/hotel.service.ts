@@ -23,4 +23,14 @@ export const hotelService = {
     await HotelApi.delete(id);
     store.dispatch(hotelActions.removeHotel(id));
   },
+  async updateMainImage(hotelId: string, imageId: string) {
+    const response = await HotelApi.updateMainImage(hotelId, imageId);
+    store.dispatch(hotelActions.updateHotel(response.data));
+    return response;
+  },
+  async updateGallery(hotelId: string, galleryType: 'hotelInfo.gallery' | 'roomInfo.gallery', imageIds: string[]) {
+    const response = await HotelApi.updateGallery(hotelId, galleryType, imageIds);
+    store.dispatch(hotelActions.updateHotel(response.data));
+    return response;
+  },
 };

@@ -4,11 +4,19 @@ import { hotelService } from '../../../services/hotel.service';
 import { hotelActions } from '../../../store/reducers/hotel';
 import { RootState } from '../../../store';
 import { IHotel } from '../../../types/hotel.types.ts';
-import { HTTPError } from 'ky';
 
 type THotelEditable = Omit<
   IHotel,
-  '_id' | 'createdAt' | 'updatedAt' | 'address' | 'hotelInfo' | 'roomInfo' | 'pros' | 'shortInfo'
+  | '_id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'link'
+  | 'hotelInfo'
+  | 'roomInfo'
+  | 'pros'
+  | 'shortInfo'
+  | 'mainImage'
+  | 'coordinates'
 >;
 
 export const useHotelsCollect = () => {
@@ -18,14 +26,14 @@ export const useHotelsCollect = () => {
   const [newHotel, setNewHotel] = useState<THotelEditable>({
     name: '',
     country: '',
-    link: '',
+    address: '',
     region: '',
   });
   const [editingHotelId, setEditingHotelId] = useState<string | null>(null);
   const [editingHotelData, setEditingHotelData] = useState<THotelEditable>({
     name: '',
     country: '',
-    link: '',
+    address: '',
     region: '',
   });
   const [sortField, setSortField] = useState<keyof IHotel>('name');
@@ -90,7 +98,7 @@ export const useHotelsCollect = () => {
     if (
       !editingHotelData.name ||
       !editingHotelData.country ||
-      !editingHotelData.link ||
+      !editingHotelData.address ||
       !editingHotelData.region
     ) {
       setError('Заполните все поля');
@@ -100,7 +108,7 @@ export const useHotelsCollect = () => {
       setError(null);
       await hotelService.update(editingHotelId, editingHotelData);
       setEditingHotelId(null);
-      setEditingHotelData({ name: '', country: '', link: '', region: '' });
+      setEditingHotelData({ name: '', country: '', address: '', region: '' });
     } catch (err) {
       setError('Ошибка при редактировании отеля');
       console.error('Error editing hotel:', err);
@@ -109,7 +117,7 @@ export const useHotelsCollect = () => {
 
   const handleCancelEditHotel = () => {
     setEditingHotelId(null);
-    setEditingHotelData({ name: '', country: '', link: '', region: '' });
+    setEditingHotelData({ name: '', country: '', address: '', region: '' });
   };
 
   const handleDeleteHotel = async (id: string) => {
@@ -125,7 +133,7 @@ export const useHotelsCollect = () => {
 
   const handleCreateHotelClick = () => {
     setIsCreatingHotel(true);
-    setNewHotel({ name: '', country: '', link: '', region: '' });
+    setNewHotel({ name: '', country: '', address: '', region: '' });
     setTimeout(() => nameInputRef.current?.focus(), 0);
   };
 
@@ -134,7 +142,7 @@ export const useHotelsCollect = () => {
   };
 
   const handleSaveNewHotel = async () => {
-    if (!newHotel.name || !newHotel.country || !newHotel.link || !newHotel.region) {
+    if (!newHotel.name || !newHotel.country || !newHotel.address || !newHotel.region) {
       setError('Заполните все поля');
       return;
     }
@@ -143,12 +151,12 @@ export const useHotelsCollect = () => {
       const res = await hotelService.create({
         name: newHotel.name,
         country: newHotel.country,
-        link: newHotel.link,
+        address: newHotel.address,
         region: newHotel.region,
       });
       dispatch(hotelActions.addHotel(res.data));
       setIsCreatingHotel(false);
-      setNewHotel({ name: '', country: '', link: '', region: '' });
+      setNewHotel({ name: '', country: '', address: '', region: '' });
     } catch (err) {
       setError(`Ошибка при создании отеля ${JSON.stringify(err?.message)}`);
       console.error('Error creating hotel:', err?.message);
@@ -158,7 +166,7 @@ export const useHotelsCollect = () => {
   const handleCancelNewHotel = () => {
     setIsCreatingHotel(false);
     setError(null);
-    setNewHotel({ name: '', country: '', link: '', region: '' });
+    setNewHotel({ name: '', country: '', address: '', region: '' });
   };
 
   return {

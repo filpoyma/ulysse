@@ -77,10 +77,10 @@ const HotelsTable: FC<HotelsTableProps> = ({
                 <span className={styles.sortArrow}>{renderSortIcon('country')}</span>
               </th>
               <th
-                onClick={() => onSort && onSort('link')}
+                onClick={() => onSort && onSort('address')}
                 style={{ cursor: 'pointer', minWidth: 100 }}>
-                Ссылка
-                <span className={styles.sortArrow}>{renderSortIcon('link')}</span>
+                Адрес
+                <span className={styles.sortArrow}>{renderSortIcon('address')}</span>
               </th>
               <th
                 onClick={() => onSort && onSort('region')}
@@ -121,9 +121,9 @@ const HotelsTable: FC<HotelsTableProps> = ({
                   <input
                     className={styles.hotelCreateInput}
                     type="text"
-                    value={newHotel.link || ''}
-                    onChange={e => onNewHotelChange && onNewHotelChange('link', e.target.value)}
-                    placeholder="Ссылка"
+                    value={newHotel.address || ''}
+                    onChange={e => onNewHotelChange && onNewHotelChange('address', e.target.value)}
+                    placeholder="Адрес"
                   />
                 </td>
                 <td>
@@ -158,7 +158,7 @@ const HotelsTable: FC<HotelsTableProps> = ({
               <tr key={hotel._id}>
                 <td>{hotel.name}</td>
                 <td>{hotel.country}</td>
-                <td>{hotel.link}</td>
+                <td>{hotel.address}</td>
                 <td>{hotel.region}</td>
                 <td>{hotel.createdAt ? dayjs(hotel.createdAt).format('DD.MM.YYYY') : ''}</td>
                 <td>

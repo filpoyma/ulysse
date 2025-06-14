@@ -1,12 +1,4 @@
-export interface IUploadedImage {
-  _id: string;
-  id?: string;
-  filename: string;
-  path: string;
-  originalName?: string;
-  mimetype?: string;
-  size?: number;
-}
+import { IUploadedImage } from './uploadImage.types.ts';
 
 export interface IFirstPageData {
   title: string;
@@ -19,7 +11,6 @@ export interface IAccommodation {
   hotelName: string;
   details: string;
   numOfNights: number;
-  
 }
 
 export type TRouteType = 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';

@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { travelProgramActions } from '../../store/reducers/travelProgram';
 import { RootState } from '../../store';
 import { createArrayFromNumberWithId } from '../../utils/helpers.ts';
-import { IUploadedImage } from '../../types/travelProgram.types.ts';
+import { IUploadedImage } from '../../types/uploadImage.types.ts';
 
 interface Props {
   open: boolean;
@@ -55,13 +55,21 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
   const handleFileChange = async () => {
     setError(null);
     setSuccess(false);
-    const file = fileInputRef.current?.files?.[0];
-    if (!file) return;
+    const files = fileInputRef.current?.files;
+    if (!files || files.length === 0) return;
+    
     setLoading(true);
     try {
-      const response = await imageService.uploadImage(file);
-      if (response && response.image && response.image.path) {
-        setUploadedImages(prev => [...prev, response.image]);
+      const uploadPromises = Array.from(files).map(file => imageService.uploadImage(file));
+      const responses = await Promise.all(uploadPromises);
+      
+      const newImages = responses
+        .filter(response => response && response.image && response.image.path)
+        .map(response => response.image);
+      
+      if (newImages.length > 0) {
+        setUploadedImages(prev => [...prev, ...newImages]);
+    
       }
       setSuccess(true);
     } catch (e: unknown) {
@@ -144,11 +152,8 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
           </span>
         </button>
         <div className="modal-header">
-          <h3
-            className="modal-title-upload"
-            onClick={handleTitleClick}
-            style={{ cursor: 'pointer' }}>
-            ЗАГРУЗИТЬ ИЗОБРАЖЕНИЕ
+          <h3 className="modal-title-upload" onClick={handleTitleClick}>
+            ЗАГРУЗИТЬ ИЗОБРАЖЕНИЯ
           </h3>
           {error ? (
             <div style={{ color: 'red', marginBottom: 8 }}>{`${error}`}</div>
@@ -163,6 +168,7 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
             ref={fileInputRef}
             style={{ display: 'none' }}
             onChange={handleFileChange}
+            multiple
           />
         </div>
         <div className="modal-grid-wrapper">

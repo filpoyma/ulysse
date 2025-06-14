@@ -19,7 +19,9 @@ const HotelEditPage = ({
   const [hotel, setHotel] = useState<IHotel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMany, setIsmany] = useState(false);
-  const [galleryType, setGalleryType] = useState<'hotelInfo.gallery' | 'roomInfo.gallery' | null>(null);
+  const [galleryType, setGalleryType] = useState<'hotelInfo.gallery' | 'roomInfo.gallery' | null>(
+    null,
+  );
 
   const roomsGallery = hotel?.roomInfo?.gallery || [];
   const hotelGallery = hotel?.hotelInfo?.gallery || [];
@@ -92,7 +94,8 @@ const HotelEditPage = ({
       await hotelService.update(hotelId, hotel);
       console.log('Saving hotel:', hotel);
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Произошла ошибка при сохранении отеля';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Произошла ошибка при сохранении отеля';
       console.log('file-HotelEditPage.tsx error:', error);
       alert(errorMessage);
     }
@@ -135,7 +138,7 @@ const HotelEditPage = ({
           <div className={styles.gallery}>
             {hotelGallery.length > 0 ? (
               hotelGallery.map((image: IUploadedImage, index: number) => (
-                <div key={image.id} className={styles.imageItem}>
+                <div key={image._id} className={styles.imageItem}>
                   <img
                     src={`${ROOT_URL}/${image.path?.replace(/^\//, '')}`}
                     alt={`Hotel image ${index + 1}`}
@@ -143,12 +146,16 @@ const HotelEditPage = ({
                 </div>
               ))
             ) : (
-              <div className={styles.placeholder} onClick={() => handleSelectManyImages('hotelInfo.gallery')}>
+              <div
+                className={styles.placeholder}
+                onClick={() => handleSelectManyImages('hotelInfo.gallery')}>
                 Выбрать изображения
               </div>
             )}
             {hotelGallery.length > 0 && (
-              <div className={styles.placeholder} onClick={() => handleSelectManyImages('hotelInfo.gallery')}>
+              <div
+                className={styles.placeholder}
+                onClick={() => handleSelectManyImages('hotelInfo.gallery')}>
                 Добавить изображения
               </div>
             )}
@@ -160,7 +167,7 @@ const HotelEditPage = ({
           <div className={styles.gallery}>
             {roomsGallery.length > 0 ? (
               roomsGallery.map((image: IUploadedImage, index: number) => (
-                <div key={image.id} className={styles.imageItem}>
+                <div key={image._id} className={styles.imageItem}>
                   <img
                     src={`${ROOT_URL}/${image.path?.replace(/^\//, '')}`}
                     alt={`Room image ${index + 1}`}
@@ -168,12 +175,16 @@ const HotelEditPage = ({
                 </div>
               ))
             ) : (
-              <div className={styles.placeholder} onClick={() => handleSelectManyImages('roomInfo.gallery')}>
+              <div
+                className={styles.placeholder}
+                onClick={() => handleSelectManyImages('roomInfo.gallery')}>
                 Выбрать изображения
               </div>
             )}
             {roomsGallery.length > 0 && (
-              <div className={styles.placeholder} onClick={() => handleSelectManyImages('roomInfo.gallery')}>
+              <div
+                className={styles.placeholder}
+                onClick={() => handleSelectManyImages('roomInfo.gallery')}>
                 Добавить изображения
               </div>
             )}

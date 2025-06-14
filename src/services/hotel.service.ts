@@ -12,7 +12,7 @@ export const hotelService = {
     return HotelApi.getById(id);
     //store.dispatch(hotelActions.setHotel(response.data || []));
   },
-  async create(data: Omit<IHotel, '_id' | 'createdAt' | 'updatedAt'>) {
+  async create(data: Omit<IHotel, '_id' | 'createdAt' | 'updatedAt' | 'coordinates'>) {
     return HotelApi.create(data);
   },
   async update(id: string, data: Partial<IHotel>) {
@@ -28,7 +28,11 @@ export const hotelService = {
     store.dispatch(hotelActions.updateHotel(response.data));
     return response;
   },
-  async updateGallery(hotelId: string, galleryType: 'hotelInfo.gallery' | 'roomInfo.gallery', imageIds: string[]) {
+  async updateGallery(
+    hotelId: string,
+    galleryType: 'hotelInfo.gallery' | 'roomInfo.gallery',
+    imageIds: string[],
+  ) {
     const response = await HotelApi.updateGallery(hotelId, galleryType, imageIds);
     store.dispatch(hotelActions.updateHotel(response.data));
     return response;

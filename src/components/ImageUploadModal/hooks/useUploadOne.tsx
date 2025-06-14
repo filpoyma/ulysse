@@ -3,8 +3,13 @@ import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 import { imageService } from '../../../services/image.service.ts';
 import { hotelService } from '../../../services/hotel.service.ts';
 
-const useUploadOne = ({ hotelId, onClose, isMany, galleryType }: { 
-  hotelId?: string; 
+const useUploadOne = ({
+  hotelId,
+  onClose,
+  isMany,
+  galleryType,
+}: {
+  hotelId?: string;
   onClose: () => void;
   isMany?: boolean;
   galleryType?: 'hotelInfo.gallery' | 'roomInfo.gallery';
@@ -41,22 +46,24 @@ const useUploadOne = ({ hotelId, onClose, isMany, galleryType }: {
     setSuccess(false);
     const files = fileInputRef.current?.files;
     if (!files || files.length === 0) return;
-    
+
     setLoading(true);
     try {
-      const uploadPromises = Array.from(files).map(file => imageService.uploadImage(file));
-      const responses = await Promise.all(uploadPromises);
-      
-      const newImages = responses
-        .filter(response => response && response.image && response.image.path)
-        .map(response => response.image);
-      
-      if (newImages.length > 0) {
-        setUploadedImages(prev => [...prev, ...newImages]);
-        if (isMany) {
-          setSelectedImages(prev => [...prev, ...newImages]);
+      if (isMany) {
+        const uploadPromises = Array.from(files).map(file => imageService.uploadImage(file));
+        const responses = await Promise.all(uploadPromises);
+
+        const newImages = responses
+          .filter(response => response && response.image && response.image.path)
+          .map(response => response.image);
+        if (newImages.length > 0) setSelectedImages(prev => [...prev, ...newImages]);
+      } else {
+        const response = await imageService.uploadImage(files[0]);
+        if (response && response.image && response.image.path) {
+          setUploadedImages(prev => [...prev, response.image]);
         }
       }
+
       setSuccess(true);
     } catch (e: unknown) {
       let message = 'Ошибка загрузки';
@@ -126,7 +133,7 @@ const useUploadOne = ({ hotelId, onClose, isMany, galleryType }: {
   // Сохранение выбранных изображений в галерею
   const handleSaveGallery = async () => {
     if (!hotelId || !galleryType || selectedImages.length === 0) return;
-    
+
     try {
       setLoading(true);
       const imageIds = selectedImages.map(img => img._id || img.id).filter(Boolean) as string[];

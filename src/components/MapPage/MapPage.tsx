@@ -100,7 +100,6 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
         number,
       ],
     }));
-    console.log('logisticsWithParsedCoordinates', logisticsWithParsedCoordinates);
 
     try {
       setIsSaving(true);

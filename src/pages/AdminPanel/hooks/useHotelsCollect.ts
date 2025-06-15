@@ -3,34 +3,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
 import { hotelActions } from '../../../store/reducers/hotel';
 import { RootState } from '../../../store';
-import { IHotel } from '../../../types/hotel.types.ts';
-
-type THotelEditable = Omit<
-  IHotel,
-  | '_id'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'link'
-  | 'hotelInfo'
-  | 'roomInfo'
-  | 'pros'
-  | 'shortInfo'
-  | 'mainImage'
-  | 'coordinates'
->;
+import { IHotel, IHotelCreate } from '../../../types/hotel.types.ts';
 
 export const useHotelsCollect = () => {
   const dispatch = useDispatch();
   const hotels = useSelector((state: RootState) => state.hotel.hotels);
   const [isCreatingHotel, setIsCreatingHotel] = useState(false);
-  const [newHotel, setNewHotel] = useState<THotelEditable>({
+  const [newHotel, setNewHotel] = useState<IHotelCreate>({
     name: '',
     country: '',
     address: '',
     region: '',
   });
   const [editingHotelId, setEditingHotelId] = useState<string | null>(null);
-  const [editingHotelData, setEditingHotelData] = useState<THotelEditable>({
+  const [editingHotelData, setEditingHotelData] = useState<IHotelCreate>({
     name: '',
     country: '',
     address: '',

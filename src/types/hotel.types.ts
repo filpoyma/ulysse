@@ -22,3 +22,12 @@ export interface IHotel {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface IHotelCreate {
+  name: string;
+  country: string;
+  region: string;
+  address: string;
+}
+
+export type TGalleryType = 'hotelInfo.gallery' | 'roomInfo.gallery';

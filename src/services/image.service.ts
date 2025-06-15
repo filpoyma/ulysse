@@ -15,11 +15,15 @@ export const imageService = {
       .json();
   },
 
-  async uploadMultipleImages(files: File[]): Promise<{ images: IUploadedImage[]; message: string }> {
+  async uploadMultipleImages(
+    files: File[],
+    belongsToId?: string,
+  ): Promise<{ images: IUploadedImage[]; message: string }> {
     const formData = new FormData();
     files.forEach(file => {
       formData.append('images', file);
     });
+    formData.append('belongsToId', belongsToId ? belongsToId : '');
     return api
       .post('upload/images', {
         body: formData,
@@ -28,10 +32,11 @@ export const imageService = {
       .json();
   },
 
-  async getAllImages(): Promise<IUploadedImage[]> {
+  async getAllImages(belongsId?: string): Promise<IUploadedImage[]> {
     return api
       .get('upload/images', {
         timeout: 10000,
+        searchParams: { id: belongsId || '' },
       })
       .json();
   },

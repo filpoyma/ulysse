@@ -1,5 +1,5 @@
 import api from './baseApi';
-import { IHotel } from '../types/hotel.types.ts';
+import { IHotel, IHotelCreate } from '../types/hotel.types.ts';
 
 const HotelApi = {
   basePath: 'hotels',
@@ -16,7 +16,7 @@ const HotelApi = {
     return api.get(this.getUrl(id)).json();
   },
 
-  create(data: Omit<IHotel, '_id' | 'createdAt' | 'updatedAt'>): Promise<{ data: IHotel }> {
+  create(data: IHotelCreate): Promise<{ data: IHotel }> {
     return api.post(this.getUrl(), { json: data }).json();
   },
 
@@ -29,15 +29,23 @@ const HotelApi = {
   },
 
   updateMainImage(hotelId: string, imageId: string): Promise<{ data: IHotel }> {
-    return api.patch(this.getUrl('main-image'), { 
-      json: { hotelId, imageId } 
-    }).json();
+    return api
+      .patch(this.getUrl('main-image'), {
+        json: { hotelId, imageId },
+      })
+      .json();
   },
 
-  updateGallery(hotelId: string, galleryType: 'hotelInfo.gallery' | 'roomInfo.gallery', imageIds: string[]): Promise<{ data: IHotel }> {
-    return api.patch(this.getUrl('gallery'), {
-      json: { hotelId, galleryType, imageIds }
-    }).json();
+  updateGallery(
+    hotelId: string,
+    galleryType: 'hotelInfo.gallery' | 'roomInfo.gallery',
+    imageIds: string[],
+  ): Promise<{ data: IHotel }> {
+    return api
+      .patch(this.getUrl('gallery'), {
+        json: { hotelId, galleryType, imageIds },
+      })
+      .json();
   },
 };
 

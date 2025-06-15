@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IHotel } from '../../../types/hotel.types';
+import { IHotel, TGalleryType } from '../../../types/hotel.types';
 import styles from './HotelEditPage.module.css';
 import { useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
@@ -19,9 +19,7 @@ const HotelEditPage = ({
   const [hotel, setHotel] = useState<IHotel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMany, setIsmany] = useState(false);
-  const [galleryType, setGalleryType] = useState<'hotelInfo.gallery' | 'roomInfo.gallery' | null>(
-    null,
-  );
+  const [galleryType, setGalleryType] = useState<TGalleryType | null>(null);
 
   const roomsGallery = hotel?.roomInfo?.gallery || [];
   const hotelGallery = hotel?.hotelInfo?.gallery || [];
@@ -155,6 +153,7 @@ const HotelEditPage = ({
         hotelId={hotel._id}
         isMany={isMany}
         galleryType={galleryType || undefined}
+        belongsToId={hotel._id}
       />
 
       {/* Левая панель - галереи */}

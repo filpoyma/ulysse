@@ -6,4 +6,5 @@ export interface IUploadedImage {
   originalName?: string;
   mimetype?: string;
   size?: number;
+  belongsToId: string;
 }

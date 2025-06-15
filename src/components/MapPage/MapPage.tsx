@@ -7,6 +7,7 @@ import iconsMapList from '../../assets/icons/mapIcons/list';
 import { X, Check, Edit, Plus, Trash2, MoveDown, MoveUp } from 'lucide-react';
 import { mapService } from '../../services/map.service';
 import { ILogistics, TRouteType, TSourceListIcon } from '../../types/travelProgram.types';
+import { validateCoordinates } from '../../utils/helpers.ts';
 
 const routeTypeLabels: Record<string, string> = {
   driving: 'Автомобиль',
@@ -26,37 +27,6 @@ const locationTypeLabels: Record<string, string> = {
   restMarker: 'Ресторан',
 };
 
-// Валидация координат
-const validateCoordinates = (
-  coordinates: string[],
-): { isValid: boolean; error: string | null; fieldNumber: number } => {
-  let fieldNumber = 0;
-  for (const item of coordinates) {
-    const [lng, lat] = item.split(',').map(coord => parseFloat(coord.trim()));
-    console.log(lat, lng);
-    // Проверяем, что значения являются числами
-    if (isNaN(lat) || isNaN(lng)) {
-      return {
-        isValid: false,
-        error: 'Координаты должны быть числами',
-        fieldNumber,
-      };
-    }
-
-    // Проверяем диапазоны координат
-    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-      return {
-        isValid: false,
-        error: 'Некорректные координаты: широта от -90 до 90, долгота от -180 до 180',
-        fieldNumber,
-      };
-    }
-    fieldNumber++;
-  }
-
-  return { isValid: true, error: null, fieldNumber };
-};
-
 const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const logistics = useSelector(selectLogisticsData);
   const program = useSelector(selectTravelProgram);
@@ -72,7 +42,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const [isNewPoint, setIsNewPoint] = useState(false);
 
   useEffect(() => {
-    setCoordinates(logistics.map(item => `${item.coordinates[0]}, ${item.coordinates[1]}`));
+    setCoordinates(logistics.map(item => `${item.coordinates[0]} ${item.coordinates[1]}`));
   }, [logistics]);
 
   const handleEdit = () => {
@@ -95,7 +65,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     // Преобразуем текстовые координаты в числа перед валидацией
     const logisticsWithParsedCoordinates = editedLogistics.map((item, i) => ({
       ...item,
-      coordinates: coordinates[i]?.split(',').map(coord => parseFloat(coord.trim())) as [
+      coordinates: coordinates[i]?.split(' ').map(coord => parseFloat(coord.trim())) as [
         number,
         number,
       ],
@@ -184,7 +154,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     };
 
     setEditedLogistics(prev => [...prev, newLogisticsItem as ILogistics]);
-    setCoordinates(prev => [...prev, '0, 0']);
+    setCoordinates(prev => [...prev, '0 0']);
   };
 
   const handleInputChange = (id: string, field: string, value: string | number[] | TRouteType) => {
@@ -197,7 +167,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setCoordinates(prev => prev.map((coord, i) => (i === id ? value : coord)));
     setCoordinateError(prev => (coordinateError?.fieldNumber === id ? null : prev));
   };
-  console.log('coordinates', coordinates);
+
   return (
     <div className={styles.container} id="map">
       <div className={styles.header}>КАРТА / ЛОГИСТИКА ПУТЕШЕСТВИЯ</div>

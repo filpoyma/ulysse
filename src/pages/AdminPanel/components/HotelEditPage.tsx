@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { IHotel, TGalleryType } from '../../../types/hotel.types';
 import styles from './HotelEditPage.module.css';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadH
 import { ROOT_URL } from '../../../constants/api.constants.ts';
 import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
+import { validateHotelCoordinates } from '../../../utils/helpers.ts';
 
 const HotelEditPage = ({
   hotelId,
@@ -20,7 +21,13 @@ const HotelEditPage = ({
   const [hotel, setHotel] = useState<IHotel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMany, setIsmany] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [galleryType, setGalleryType] = useState<TGalleryType | null>(null);
+  const [hotelCoord, setHotelCoord] = useState('');
+  const [coordinateError, setCoordinateError] = useState<{
+    isValid: boolean;
+    error: string | null;
+  } | null>(null);
 
   const roomsGallery = hotel?.roomInfo?.gallery || [];
   const hotelGallery = hotel?.hotelInfo?.gallery || [];
@@ -28,6 +35,7 @@ const HotelEditPage = ({
   useEffect(() => {
     if (hotelId) {
       if (hotels && hotels.length) {
+        setIsLoading(false);
         const hotel = hotels.find(h => h._id === hotelId);
         if (hotel) setHotel(hotel);
         else {
@@ -39,10 +47,16 @@ const HotelEditPage = ({
           .then(hotel => {
             setHotel(hotel.data);
           })
-          .catch(console.error);
+          .catch(console.error)
+          .finally(() => setIsLoading(false));
       }
     }
   }, [hotelId, hotels]);
+
+  useEffect(() => {
+    if (hotel) setHotelCoord(`${hotel.coordinates[0]} ${hotel.coordinates[1]}`);
+    setCoordinateError(null);
+  }, [hotel]);
 
   const handleInputChange = (
     field: keyof IHotel | 'hotelInfo.about' | 'roomInfo.about',
@@ -73,6 +87,11 @@ const HotelEditPage = ({
 
       return { ...hotel, [field]: value };
     });
+  };
+
+  const handleInputChangeCoord = (e: ChangeEvent<HTMLInputElement>) => {
+    setCoordinateError(null);
+    setHotelCoord(e.target.value.replace(/[^0-9\s.]/g, ''));
   };
 
   const handleSelectManyImages = (type: 'hotelInfo.gallery' | 'roomInfo.gallery') => {
@@ -133,14 +152,30 @@ const HotelEditPage = ({
 
   const handleSave = async () => {
     if (!hotel) return;
+    const validation = validateHotelCoordinates(hotelCoord);
+    if (!validation.isValid) {
+      setCoordinateError(validation);
+      alert('Ошибка координат');
+      return;
+    }
+
+    const [lng, lat] = hotelCoord.split(' ').map(coord => parseFloat(coord.trim()));
+    const hotelWithParsedCoordinates = {
+      ...hotel,
+      coordinates: [lng, lat] as [number, number],
+    };
+    setIsLoading(true);
     try {
-      await hotelService.update(hotelId, hotel);
+      await hotelService.update(hotelId, hotelWithParsedCoordinates);
       console.log('Saving hotel:', hotel);
+      setCoordinateError(null);
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Произошла ошибка при сохранении отеля';
       console.log('file-HotelEditPage.tsx error:', error);
       alert(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -270,12 +305,11 @@ const HotelEditPage = ({
             <div className={styles.field}>
               <label>Страна</label>
               <CountryAutocomplete
-                    value={hotel.country || ''}
-                    onChange={value => handleInputChange('country', value)}
-                  
-                  />
+                value={hotel.country || ''}
+                onChange={value => handleInputChange('country', value)}
+              />
             </div>
-            
+
             <div className={styles.field}>
               <label>Регион</label>
               <input
@@ -302,46 +336,19 @@ const HotelEditPage = ({
               />
             </div>
             <div className={styles.field}>
-              <label>Координаты</label>
-              <div className={styles.coordinatesContainer}>
-                <div className={styles.coordinateField}>
-                  <input
-                    type="number"
-                    step="any"
-                    min="-180"
-                    max="180"
-                    placeholder="Долгота"
-                    value={hotel.coordinates?.[0] || ''}
-                    onChange={e => {
-                      const value = parseFloat(e.target.value);
-                      if (isNaN(value) || (value >= -180 && value <= 180)) {
-                        const newCoordinates = [...(hotel.coordinates || [0, 0])];
-                        newCoordinates[0] = isNaN(value) ? 0 : value;
-                        handleInputChange('coordinates', newCoordinates);
-                      }
-                    }}
-                  />
-                  <div className={styles.helperText}>Долгота: от -180° до 180°</div>
-                </div>
-                <div className={styles.coordinateField}>
-                  <input
-                    type="number"
-                    step="any"
-                    min="-90"
-                    max="90"
-                    placeholder="Широта"
-                    value={hotel.coordinates?.[1] || ''}
-                    onChange={e => {
-                      const value = parseFloat(e.target.value);
-                      if (isNaN(value) || (value >= -90 && value <= 90)) {
-                        const newCoordinates = [...(hotel.coordinates || [0, 0])];
-                        newCoordinates[1] = isNaN(value) ? 0 : value;
-                        handleInputChange('coordinates', newCoordinates);
-                      }
-                    }}
-                  />
-                  <div className={styles.helperText}>Широта: от -90° до 90°</div>
-                </div>
+              <label>Координаты через пробел (81.85 25.44)</label>
+              <div className={coordinateError ? styles.coordinateFieldErr : styles.coordinateField}>
+                <input
+                  pattern="^[0-9\s.]+$"
+                  placeholder="Долгота Широта"
+                  value={hotelCoord || ''}
+                  onChange={handleInputChangeCoord}
+                />
+                {coordinateError ? (
+                  <div className={styles.helperTextErr}>{coordinateError.error}</div>
+                ) : (
+                  <div className={styles.helperText}>Долгота:-180°...180°. Широта: -90°...90°</div>
+                )}
               </div>
             </div>
           </div>
@@ -447,7 +454,7 @@ const HotelEditPage = ({
               ))}
             </div>
           </div>
-          <button className={styles.saveButton} onClick={handleSave}>
+          <button className={styles.saveButton} onClick={handleSave} disabled={isLoading}>
             Сохранить изменения
           </button>
         </div>

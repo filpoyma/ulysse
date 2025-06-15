@@ -11,6 +11,60 @@ export const createArrayFromNumberWithId = (number: number) =>
 //     });
 // };
 
-export const copyToClipboard = (text: string) => {
+export const copyToClipboard = (text: unknown) => {
   if (text && typeof text === 'string') navigator.clipboard.writeText(text).catch(console.error);
+};
+
+// Валидация координат
+export const validateCoordinates = (
+  coordinates: string[],
+): { isValid: boolean; error: string | null; fieldNumber: number } => {
+  let fieldNumber = 0;
+  for (const item of coordinates) {
+    const [lng, lat] = item.split(' ').map(coord => parseFloat(coord.trim()));
+    console.log(lat, lng);
+    // Проверяем, что значения являются числами
+    if (isNaN(lat) || isNaN(lng)) {
+      return {
+        isValid: false,
+        error: 'Координаты должны быть числами',
+        fieldNumber,
+      };
+    }
+
+    // Проверяем диапазоны координат
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      return {
+        isValid: false,
+        error: 'Некорректные координаты: широта от -90 до 90, долгота от -180 до 180',
+        fieldNumber,
+      };
+    }
+    fieldNumber++;
+  }
+
+  return { isValid: true, error: null, fieldNumber };
+};
+
+export const validateHotelCoordinates = (
+  coordinates: string,
+): { isValid: boolean; error: string | null } => {
+  const [lng, lat] = coordinates.split(' ').map(coord => parseFloat(coord.trim()));
+  // Проверяем, что значения являются числами
+  if (isNaN(lat) || isNaN(lng)) {
+    return {
+      isValid: false,
+      error: 'Координаты должны быть числами',
+    };
+  }
+
+  // Проверяем диапазоны координат
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    return {
+      isValid: false,
+      error: 'Некорректные координаты: долгота от -180 до 180, широта от -90 до 90',
+    };
+  }
+
+  return { isValid: true, error: null };
 };

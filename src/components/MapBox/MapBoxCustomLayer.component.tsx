@@ -3,68 +3,9 @@ import mapboxgl, { LngLat } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { FeatureCollection, LineString } from 'geojson';
 import iconsMap from '../../assets/icons/mapIcons/map/icons.map.ts';
-import { copyToClipboardWithTooltip } from './map.utils.ts';
+import { copyToClipboardWithTooltip, createIconEl, getRouteType } from './map.utils.ts';
 import { useSelector } from 'react-redux';
 import { selectMapData } from '../../store/selectors.ts';
-
-const createIconEl = (icon: string) => {
-  const el = document.createElement('div');
-  el.innerHTML = icon;
-  el.style.transform = 'translate(-50%, -50%)';
-  el.style.width = '32px';
-  el.style.height = '32px';
-  return el;
-};
-
-const getRouteType = (type: string) => {
-  if (type === 'walking') return 'walking';
-  return 'driving';
-};
-
-// const trackData: {
-//   logistics: {
-//     city: string;
-//     coordinates: [number, number];
-//     routeType: 'driving' | 'helicopter' | 'flight' | 'yacht' | 'train';
-//     markerColor?: string;
-//     sourceMapIcon?: 'startPoint';
-//     // hotel: string;
-//     // time: string;
-//     // distance: string;
-//   }[];
-//   mapCenter: [number, number];
-//   zoom: number;
-// } = {
-//   logistics: [
-//     {
-//       city: 'Tokyo',
-//       coordinates: [139.7671, 35.6812],
-//       routeType: 'flight',
-//       markerColor: '#d7263d',
-//       sourceMapIcon: 'startPoint',
-//     },
-//     {
-//       city: 'Osaka',
-//       coordinates: [135.5023, 34.6937],
-//       routeType: 'driving',
-//       markerColor: '#1b998b',
-//       sourceMapIcon: 'startPoint',
-//     },
-//     {
-//       city: 'Kyoto',
-//       coordinates: [135.7681, 35.0116],
-//       routeType: 'flight',
-//       markerColor: '#f2bb05',
-//       sourceMapIcon: 'startPoint',
-//     },
-//     {
-//       city: 'Tokyo',
-//       coordinates: [139.7671, 35.6812],
-//     },
-//   ],
-//   mapCenter: [139.7671, 35.6812],
-//   zoom: 6,
-// };
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 

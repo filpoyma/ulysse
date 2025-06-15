@@ -304,10 +304,23 @@
   border-radius: 4px;
 }
 
+.coordinateFieldErr input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #dc3545;
+  border-radius: 4px;
+}
+
 .helperText {
   font-size: 0.8rem;
   color: #666;
   margin-top: 4px;
+}
+
+.helperTextErr {
+  font-size: 0.8rem;
+  margin-top: 4px;
+  color: #dc3545;
 }
 
 .coordinateField input:invalid {

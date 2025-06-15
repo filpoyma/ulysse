@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { ChevronDown, Check, X } from 'lucide-react';
+import { ChevronDown, Check, X, Edit } from 'lucide-react';
 import { IFirstPageData } from '../../types/travelProgram.types.ts';
 import { travelProgramService } from '../../services/travelProgram.service.ts';
 import styles from './FirstPage.module.css';
@@ -71,17 +71,22 @@ const FirstPage: React.FC<FirstPageProps> = ({
         );
       }
 
-      return (
-        <div className={styles[className]} onClick={() => setIsEditing(true)}>
-          {firstPage[field]}
-        </div>
-      );
+      return <div className={styles[className]}>{firstPage[field]}</div>;
     },
     [isLoggedIn, isEditing, editedValues, handleFieldChange, firstPage],
   );
 
   return (
     <section id="hero" className={styles.contentSection}>
+      <div className={styles.editButtons}>
+        <button
+          onClick={() => {
+            if (isLoggedIn) setIsEditing(true);
+          }}
+          title="Сохранить">
+          <Edit size={16} />
+        </button>
+      </div>
       <div className={`${styles.contentWrapper} ${styles.heroContent}`}>
         <div className={styles.heroText}>
           {renderEditableField('title', 'heroTitle')}
@@ -93,10 +98,10 @@ const FirstPage: React.FC<FirstPageProps> = ({
         {isEditing && (
           <div className={styles.editButtons}>
             <button onClick={handleSave} className={styles.saveButton} title="Сохранить">
-              <Check size={36} />
+              <Check size={16} />
             </button>
             <button onClick={handleCancel} className={styles.cancelButton} title="Отмена">
-              <X size={36} />
+              <X size={16} />
             </button>
           </div>
         )}

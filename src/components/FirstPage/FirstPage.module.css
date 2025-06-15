@@ -90,40 +90,35 @@
   gap: 16px;
   margin-top: 12px;
   justify-content: center;
-  width: 100%;
 }
 
 .saveButton,
 .cancelButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: none;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  padding: 3px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
   cursor: pointer;
-  transition: all 0.2s;
-  padding: 0;
-  background: transparent;
+  transition: all 0.2s ease;
 }
 
 .saveButton {
-  color: #4CAF50;
   border: 1px solid var(--border-color);
 }
 
 .saveButton:hover {
-  background: #4CAF50;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
   color: white;
 }
 
-.cancelButton {
-  color: #f44336;
-  border: 1px solid var(--border-color);
-}
 
 .cancelButton:hover {
-  background: #f44336;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
   color: white;
 }
 
@@ -137,4 +132,4 @@
   .contentWrapper {
     padding: 2rem 1rem;
   }
-} 
+}

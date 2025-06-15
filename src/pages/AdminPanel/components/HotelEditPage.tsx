@@ -7,6 +7,7 @@ import { selectHotels } from '../../../store/selectors';
 import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadHotels.tsx';
 import { ROOT_URL } from '../../../constants/api.constants.ts';
 import { IUploadedImage } from '../../../types/uploadImage.types.ts';
+import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
 
 const HotelEditPage = ({
   hotelId,
@@ -268,12 +269,13 @@ const HotelEditPage = ({
             </div>
             <div className={styles.field}>
               <label>Страна</label>
-              <input
-                type="text"
-                value={hotel.country}
-                onChange={e => handleInputChange('country', e.target.value)}
-              />
+              <CountryAutocomplete
+                    value={hotel.country || ''}
+                    onChange={value => handleInputChange('country', value)}
+                  
+                  />
             </div>
+            
             <div className={styles.field}>
               <label>Регион</label>
               <input

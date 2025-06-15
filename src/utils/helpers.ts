@@ -22,7 +22,6 @@ export const validateCoordinates = (
   let fieldNumber = 0;
   for (const item of coordinates) {
     const [lng, lat] = item.split(' ').map(coord => parseFloat(coord.trim()));
-    console.log(lat, lng);
     // Проверяем, что значения являются числами
     if (isNaN(lat) || isNaN(lng)) {
       return {

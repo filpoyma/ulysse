@@ -8,6 +8,7 @@ import { X, Check, Edit, Plus, Trash2, MoveDown, MoveUp } from 'lucide-react';
 import { mapService } from '../../services/map.service';
 import { ILogistics, TRouteType, TSourceListIcon } from '../../types/travelProgram.types';
 import { validateCoordinates } from '../../utils/helpers.ts';
+import { validateClipboardCoordinates } from '../MapBox/map.utils.ts';
 
 const routeTypeLabels: Record<string, string> = {
   driving: 'Автомобиль',
@@ -168,11 +169,21 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     setCoordinateError(prev => (coordinateError?.fieldNumber === id ? null : prev));
   };
 
+  const handleCoordinatesClick = async (index: number) => {
+    try {
+      const text = await navigator.clipboard.readText();
+      validateClipboardCoordinates(text);
+      handleCoordinatesChange(index, text);
+    } catch (err) {
+      console.error('Failed to read coordinates:', err);
+    }
+  };
+
   return (
     <div className={styles.container} id="map">
       <div className={styles.header}>КАРТА / ЛОГИСТИКА ПУТЕШЕСТВИЯ</div>
 
-      {isLoggedIn && (
+      {isLoggedIn && !isEditing && (
         <div className={styles.headerContainer}>
           <button className={styles.editIcon} onClick={handleEdit}>
             <Edit size={16} />
@@ -189,8 +200,9 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                 <div className={styles.routeRow}>
                   <input
                     type="text"
-                    value={coordinates[i] === '0, 0' ? '' : coordinates[i]}
+                    value={coordinates[i] === '0 0' ? '' : coordinates[i]}
                     onChange={e => handleCoordinatesChange(i, e.target.value)}
+                    onClick={() => handleCoordinatesClick(i)}
                     placeholder="Координаты"
                     className={coordinateError?.fieldNumber === i ? styles.error : styles.input}
                   />

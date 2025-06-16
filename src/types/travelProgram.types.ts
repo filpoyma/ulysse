@@ -69,6 +69,9 @@ export interface ITravelProgramResponse {
     mapCenter: [number, number];
     zoom: number;
   };
+  fourthPageDay: {
+    gallery: IUploadedImage[];
+  };
   createdAt: string;
   updatedAt: string;
 }

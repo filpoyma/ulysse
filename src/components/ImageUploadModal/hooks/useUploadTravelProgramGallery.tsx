@@ -1,7 +1,6 @@
 import { IUploadedImage } from '../../../types/uploadImage.types.ts';
-import { hotelService } from '../../../services/hotel.service.ts';
-import { TGalleryType } from '../../../types/hotel.types.ts';
 import useModalGallery from './useModalGallery.tsx';
+import { travelProgramService } from '../../../services/travelProgram.service.ts';
 
 const useUploadTravelProgramGallery = ({
   programId,
@@ -66,7 +65,7 @@ const useUploadTravelProgramGallery = ({
     try {
       setLoading(true);
       const imageIds = selectedImages.map(img => img._id || img.id).filter(Boolean) as string[];
-      await hotelService.updateGallery(programId, galleryType, imageIds);
+      await travelProgramService.updateGallery(programId, imageIds);
       setSuccess(true);
       setSelectedImages([]);
       onClose();

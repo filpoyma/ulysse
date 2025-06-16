@@ -87,6 +87,14 @@ const travelProgramApi = {
     const url = this.getUrl(`${programId}/accommodation/${rowIndex}`);
     return api.delete(url).json();
   },
+
+  async updateGallery(
+    programId: string,
+    imageIds: string[],
+  ): Promise<{ data: ITravelProgramResponse; success: boolean }> {
+    const url = this.getUrl('gallery');
+    return api.post(url, { json: { programId, imageIds } }).json();
+  },
 };
 
 export default travelProgramApi;

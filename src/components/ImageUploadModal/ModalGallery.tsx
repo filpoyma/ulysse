@@ -5,7 +5,7 @@ import { IUploadedImage } from '../../types/uploadImage.types.ts';
 
 interface IModalGallery {
   handleTitleClick: () => void;
-  handleFileChange: (id?: string) => void;
+  handleFileChange: () => void;
   handlePreviewClick: (img: IUploadedImage) => void;
   handleDelete: (img: IUploadedImage) => void;
   handleSaveGallery: () => void;
@@ -17,7 +17,6 @@ interface IModalGallery {
   loading: boolean;
   maxCells: number;
   onClose: () => void;
-  hotelId?: string;
   isMany: boolean;
 }
 
@@ -28,7 +27,6 @@ const ModalGallery: React.FC<IModalGallery> = ({
   success,
   fileInputRef,
   handleFileChange,
-  hotelId,
   maxCells,
   uploadedImages,
   selectedImages,

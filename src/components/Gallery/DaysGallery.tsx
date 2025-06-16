@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import ImageGallery from 'react-image-gallery';
 import IconLeftNav from '../../assets/icons/leftNav.svg';
 import IconRightNav from '../../assets/icons/leftNav.svg';
-import { ROOT_URL } from '../../constants/api.constants.ts';
+
 import styles from './Days.module.css';
-import ImageUploadHotels from '../ImageUploadModal/ImageUploadHotels.tsx';
-import ImageUploadTravelProgram from '../ImageUploadModal/ImageUploadTravelProgram.tsx';
+
 import { useSelector } from 'react-redux';
-import { selectTravelProgram } from '../../store/selectors.ts';
+import { selectTravelProgram, selectTravelProgramGallery } from '../../store/selectors.ts';
+import ImageUploadTravelProgram from '../ImageUploadModal/ImageUploadTravelProgram.tsx';
 
 const images = [
   {
-    original: `${ROOT_URL}/upload/1749986233867-871879643.jpg`,
+    original: 'http://localhost:5000/upload/1750082607402-554255416.png',
   },
   {
-    original: `${ROOT_URL}/upload/1749986233867-871879643.jpg`,
+    original: 'http://localhost:5000/upload/1750082607402-554255416.png',
   },
   {
-    original: `${ROOT_URL}/upload/1749986233867-871879643.jpg`,
+    original: 'http://localhost:5000/upload/1750082607402-554255416.png',
   },
 ];
 
@@ -48,8 +48,16 @@ const RightNav = React.memo(({ disabled, onClick }: { onClick: () => void; disab
 const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const program = useSelector(selectTravelProgram);
+  const images = useSelector(selectTravelProgramGallery);
+  console.log('file-DaysGallery.tsx images:', images);
   return (
     <div className={styles.content}>
+      <button
+        onClick={() => {
+          if (isLoggedIn) setIsModalOpen(true);
+        }}>
+        Edit
+      </button>
       {isLoggedIn && program && (
         <ImageUploadTravelProgram
           open={isModalOpen}
@@ -58,17 +66,19 @@ const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           isMany={true}
         />
       )}
-      <ImageGallery
-        items={images}
-        showThumbnails={false}
-        showBullets={true}
-        renderLeftNav={(onClick: () => void, disabled: boolean) => (
-          <LeftNav onClick={onClick} disabled={disabled} />
-        )}
-        renderRightNav={(onClick: () => void, disabled: boolean) => (
-          <RightNav onClick={onClick} disabled={disabled} />
-        )}
-      />
+      {images.length > 0 && (
+        <ImageGallery
+          items={images}
+          showThumbnails={false}
+          showBullets={true}
+          renderLeftNav={(onClick: () => void, disabled: boolean) => (
+            <LeftNav onClick={onClick} disabled={disabled} />
+          )}
+          renderRightNav={(onClick: () => void, disabled: boolean) => (
+            <RightNav onClick={onClick} disabled={disabled} />
+          )}
+        />
+      )}
     </div>
   );
 };

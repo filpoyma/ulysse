@@ -1,6 +1,5 @@
 import React from 'react';
 import './ImageUploadModal.css';
-import useUploadHotelGallery from './hooks/useUploadHotelGallery.tsx';
 import ModalGallery from './ModalGallery.tsx';
 import useUploadTravelProgramGallery from './hooks/useUploadTravelProgramGallery.tsx';
 
@@ -44,7 +43,6 @@ const ImageUploadTravelProgram: React.FC<Props> = ({ open, onClose, programId, i
       loading={loading}
       maxCells={maxCells}
       onClose={onClose}
-      hotelId={programId}
       isMany={isMany}
     />
   );

@@ -36,7 +36,7 @@ export const travelProgramService = {
     dayIndex: number,
     data: {
       day?: Date;
-      numOfDay?: string;
+      numOfDay: string;
       activity?: {
         icon: string;
         dayActivity: {
@@ -103,15 +103,23 @@ export const travelProgramService = {
       if (program) {
         const updatedAccommodation = [...program.secondPageTables.accommodation];
         updatedAccommodation.splice(rowIndex, 1);
-      store.dispatch(
+        store.dispatch(
           travelProgramActions.updateProgram({
             secondPageTables: {
               ...program.secondPageTables,
               accommodation: updatedAccommodation,
             },
           }),
-      );
+        );
       }
     }
+  },
+  async updateGallery(programId: string, imageIds: string[]) {
+    const res = await travelProgramApi.updateGallery(programId, imageIds);
+    console.log('file-travelProgram.service.ts res:', res);
+    if (res?.data) {
+      store.dispatch(travelProgramActions.updateProgram({ fourthPageDay: res.data.fourthPageDay }));
+    }
+    return res;
   },
 };

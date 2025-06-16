@@ -52,7 +52,7 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
         <MapBox isLoggedIn={isLoggedIn} />
       </div>
       <div className={styles.backgroundImage}>
-        <DaysGallery />
+        <DaysGallery isLoggedIn={isLoggedIn} />
       </div>
     </div>
     <div className={styles.rightSide}>

@@ -1,5 +1,6 @@
 @import "fonts.css";
 @import "root.css";
+@import "react-image-gallery/styles/css/image-gallery.css";
 
 body {
   font-family: 'Inter', sans-serif;

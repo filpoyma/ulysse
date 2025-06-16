@@ -60,7 +60,7 @@ const ModalGallery: React.FC<IModalGallery> = ({
             accept="image/*"
             ref={fileInputRef}
             style={{ display: 'none' }}
-            onChange={() => handleFileChange(hotelId)}
+            onChange={handleFileChange}
             multiple
           />
         </div>

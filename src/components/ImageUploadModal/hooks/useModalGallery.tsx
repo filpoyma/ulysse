@@ -35,7 +35,7 @@ const useModalGallery = ({ belongsToId, open }: { belongsToId?: string; open: bo
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (belongsToId?: string) => {
+  const handleFileChange = async () => {
     setError(null);
     setSuccess(false);
     const files = fileInputRef.current?.files;

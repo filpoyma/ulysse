@@ -116,7 +116,6 @@ export const travelProgramService = {
   },
   async updateGallery(programId: string, imageIds: string[]) {
     const res = await travelProgramApi.updateGallery(programId, imageIds);
-    console.log('file-travelProgram.service.ts res:', res);
     if (res?.data) {
       store.dispatch(travelProgramActions.updateProgram({ fourthPageDay: res.data.fourthPageDay }));
     }

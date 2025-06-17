@@ -9,18 +9,6 @@ import { useSelector } from 'react-redux';
 import { selectTravelProgram, selectTravelProgramGallery } from '../../store/selectors.ts';
 import ImageUploadTravelProgram from '../ImageUploadModal/ImageUploadTravelProgram.tsx';
 
-const images = [
-  {
-    original: 'http://localhost:5000/upload/1750082607402-554255416.png',
-  },
-  {
-    original: 'http://localhost:5000/upload/1750082607402-554255416.png',
-  },
-  {
-    original: 'http://localhost:5000/upload/1750082607402-554255416.png',
-  },
-];
-
 const LeftNav = React.memo(({ disabled, onClick }: { onClick: () => void; disabled: boolean }) => {
   return (
     <button
@@ -49,14 +37,13 @@ const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const program = useSelector(selectTravelProgram);
   const images = useSelector(selectTravelProgramGallery);
-  console.log('file-DaysGallery.tsx images:', images);
   return (
     <div className={styles.content}>
       <button
         onClick={() => {
           if (isLoggedIn) setIsModalOpen(true);
         }}>
-        Edit
+        Add Images
       </button>
       {isLoggedIn && program && (
         <ImageUploadTravelProgram

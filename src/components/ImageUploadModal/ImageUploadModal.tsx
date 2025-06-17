@@ -57,19 +57,18 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
     setSuccess(false);
     const files = fileInputRef.current?.files;
     if (!files || files.length === 0) return;
-    
+
     setLoading(true);
     try {
       const uploadPromises = Array.from(files).map(file => imageService.uploadImage(file));
       const responses = await Promise.all(uploadPromises);
-      
+
       const newImages = responses
         .filter(response => response && response.image && response.image.path)
         .map(response => response.image);
-      
+
       if (newImages.length > 0) {
         setUploadedImages(prev => [...prev, ...newImages]);
-    
       }
       setSuccess(true);
     } catch (e: unknown) {
@@ -110,6 +109,7 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
         imageId,
         imageNumber,
       });
+
       // Обновляем bgImages в сторе
       if (program) {
         const newBgImages = [...(res.data.program.bgImages || [])];

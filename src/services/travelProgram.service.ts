@@ -1,7 +1,7 @@
 import travelProgramApi from '../api/travelProgram.api.ts';
 import { travelProgramActions } from '../store/reducers/travelProgram';
 import { store } from '../store';
-import { IFirstPageData } from '../types/travelProgram.types.ts';
+import { IFirstPageData, IFourthDayData } from '../types/travelProgram.types.ts';
 
 export const travelProgramService = {
   getAll() {
@@ -69,6 +69,44 @@ export const travelProgramService = {
       }
     }
   },
+  async deleteReviewDay(programId: string, dayIndex: number) {
+    const res = await travelProgramApi.deleteReviewDay(programId, dayIndex);
+    if (res?.data) {
+      const program = store.getState().travelProgram.program;
+      if (program) {
+        store.dispatch(
+          travelProgramActions.updateProgram({
+            secondPageTables: {
+              ...program.secondPageTables,
+              routeDetailsTable: {
+                ...program.secondPageTables.routeDetailsTable,
+                review: res.data,
+              },
+            },
+          }),
+        );
+      }
+    }
+  },
+  async reorderReviewDays(programId: string, fromIndex: number, toIndex: number) {
+    const res = await travelProgramApi.reorderReviewDays(programId, fromIndex, toIndex);
+    if (res?.data) {
+      const program = store.getState().travelProgram.program;
+      if (program) {
+        store.dispatch(
+          travelProgramActions.updateProgram({
+            secondPageTables: {
+              ...program.secondPageTables,
+              routeDetailsTable: {
+                ...program.secondPageTables.routeDetailsTable,
+                review: res.data,
+              },
+            },
+          }),
+        );
+      }
+    }
+  },
   async updateAccommodationRow(
     programId: string,
     rowIndex: number,
@@ -114,11 +152,75 @@ export const travelProgramService = {
       }
     }
   },
-  async updateGallery(programId: string, imageIds: string[]) {
-    const res = await travelProgramApi.updateGallery(programId, imageIds);
+  async addToGallery(programId: string, imageIds: string[]) {
+    const res = await travelProgramApi.addToGallery(programId, imageIds);
+    console.log(res.data);
     if (res?.data) {
       store.dispatch(travelProgramActions.updateProgram({ fourthPageDay: res.data.fourthPageDay }));
     }
     return res;
+  },
+
+  async updateGallery(programId: string, imageIds: string[]) {
+    const res = await travelProgramApi.updateGallery(programId, imageIds);
+    console.log(res.data);
+    if (res?.data) {
+      store.dispatch(travelProgramActions.updateProgram({ fourthPageDay: res.data.fourthPageDay }));
+    }
+    return res;
+  },
+
+  async updateDaySection(programId: string, dayIndex: number, data: IFourthDayData) {
+    const res = await travelProgramApi.updateDaySection(programId, dayIndex, data);
+    if (res?.data) {
+      const program = store.getState().travelProgram.program;
+      if (program) {
+        const updatedDaysData = [...program.fourthPageDay.daysData];
+        updatedDaysData[dayIndex] = res.data;
+        store.dispatch(
+          travelProgramActions.updateProgram({
+            fourthPageDay: {
+              ...program.fourthPageDay,
+              daysData: updatedDaysData,
+            },
+          }),
+        );
+      }
+    }
+  },
+
+  async addDaySection(programId: string, data: IFourthDayData) {
+    const res = await travelProgramApi.addDaySection(programId, data);
+    if (res?.data) {
+      const program = store.getState().travelProgram.program;
+      if (program) {
+        const updatedDaysData = [...program.fourthPageDay.daysData, res.data];
+        store.dispatch(
+          travelProgramActions.updateProgram({
+            fourthPageDay: {
+              ...program.fourthPageDay,
+              daysData: updatedDaysData,
+            },
+          }),
+        );
+      }
+    }
+  },
+
+  async deleteDaySection(programId: string, dayIndex: number) {
+    const res = await travelProgramApi.deleteDaySection(programId, dayIndex);
+    if (res?.data) {
+      const program = store.getState().travelProgram.program;
+      if (program) {
+        store.dispatch(
+          travelProgramActions.updateProgram({
+            fourthPageDay: {
+              ...program.fourthPageDay,
+              daysData: res.data,
+            },
+          }),
+        );
+      }
+    }
   },
 };

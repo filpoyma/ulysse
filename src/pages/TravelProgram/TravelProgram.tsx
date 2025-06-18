@@ -86,7 +86,7 @@ const TravelProgram: React.FC = () => {
     const mapSection = document.getElementById('map');
     const daySection = document.getElementById('day1');
 
-    if (!detailsSection) return;
+    if (!detailsSection || !mapSection || !daySection) return;
 
     const headerHeight = 80;
     const scrollTop = rightSide.scrollTop;

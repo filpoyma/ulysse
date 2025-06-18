@@ -145,3 +145,206 @@ padding-left: 10px;
   margin-bottom: 2px;
   margin-left: 24px;
 }
+
+/* Стили для редактирования */
+.editable-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.94rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+  margin-bottom: 3px;
+  font-family: inherit;
+}
+
+.editable-input:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.editable-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.94rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+  margin-bottom: 3px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.editable-textarea:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.edit-controls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 84px 20px 108px;
+}
+
+.edit-icons {
+  display: flex;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.edit-icon {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.del-icon {
+  color: orangered;
+  border: 1px solid orangered;
+}
+
+.edit-icon:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.del-icon:hover {
+  background-color: orangered;
+  border-color: orangered;
+  color: white;
+}
+
+.edit-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.add-item-btn {
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-item-btn:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.remove-item-btn {
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  border-radius: 4px;
+  background-color: #ffebee;
+  border: 1px solid #f44336;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f44336;
+  flex-shrink: 0;
+}
+
+.remove-item-btn:hover {
+  background-color: #f44336;
+  border-color: #f44336;
+  color: white;
+}
+
+.edit-item-btn {
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.edit-item-btn:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.add-schedule-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  width: 60%
+}
+
+.add-schedule-btn:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+}
+
+.add-day-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.add-day-btn {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.add-day-btn:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

@@ -17,6 +17,14 @@ export const selectTravelProgramGallery = createSelector(
     })) || [],
 );
 
+export const selectTravelProgramDaySection = (state: RootState) =>
+  state.travelProgram.program?.fourthPageDay.daysData;
+
+export const selectTravelProgramImages = createSelector(
+  [selectTravelProgram],
+  travelProgram => travelProgram?.fourthPageDay?.gallery || [],
+);
+
 export const selectMapData = (state: RootState) => state.travelProgram.program?.thirdPageMap;
 
 export const selectLogisticsData = createSelector(

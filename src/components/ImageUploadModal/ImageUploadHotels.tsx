@@ -52,7 +52,6 @@ const ImageUploadHotels: React.FC<Props> = ({
       loading={loading}
       maxCells={maxCells}
       onClose={onClose}
-      hotelId={hotelId}
       isMany={isMany}
     />
   );

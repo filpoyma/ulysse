@@ -6,7 +6,7 @@ interface DayCellProps {
   daysPeriodChange: (newDate: string) => void;
 }
 
-export function DayCallAccomodationTable({
+export function DayCallAccomodationTabl({
   daysPeriod,
   isEditable,
   daysPeriodChange,

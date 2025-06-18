@@ -29,6 +29,17 @@ export interface ILogistics {
   markerColor?: string;
 }
 
+export interface IFourthDayData {
+  header: { date: Date; dayIndex: number };
+  title: string;
+  nights: number;
+  subtitle: string;
+  description: string;
+  pros: string[];
+  info: string[];
+  schedule: { title: string; description: string }[];
+}
+
 export interface ITravelProgramResponse {
   _id: string;
   id: string;
@@ -71,6 +82,7 @@ export interface ITravelProgramResponse {
   };
   fourthPageDay: {
     gallery: IUploadedImage[];
+    daysData: IFourthDayData[];
   };
   createdAt: string;
   updatedAt: string;

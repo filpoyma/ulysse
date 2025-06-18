@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { DayCell } from './DayCell';
-import { Map, Check, X, Plus, Hotel, Pin, Plane } from 'lucide-react';
+import { Map, Check, X, Plus, Hotel, Pin, Plane, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 import dayjs from 'dayjs';
 import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
 import React, { useState } from 'react';
@@ -143,6 +143,17 @@ export function OverviewTable() {
   const handleSave = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (editableRow !== null && editedData && program?._id) {
+      // Проверяем, что у каждой активности есть хотя бы одно заполненное поле
+      const hasValidActivities = editedData.activity?.every(act => {
+        const { line1 = '', line2 = '', line3 = '' } = act.dayActivity;
+        return line1.trim() || line2.trim() || line3.trim();
+      });
+
+      if (!hasValidActivities) {
+        alert('Каждая активность должна содержать хотя бы одно заполненное поле (Заголовок, Подзаголовок или Дополнительная строка).');
+        return;
+      }
+
       const filteredActivity = editedData.activity?.filter(act => {
         const { line1 = '', line2 = '', line3 = '' } = act.dayActivity;
         return line1.trim() || line2?.trim() || line3?.trim();
@@ -165,6 +176,49 @@ export function OverviewTable() {
     e.stopPropagation();
     setEditableRow(null);
     setEditedData(null);
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (editableRow !== null && program?._id) {
+      // Проверяем, что это не последний день
+      if (reviewData.length <= 1) {
+        alert('Нельзя удалить последний день. Должен остаться хотя бы один день.');
+        return;
+      }
+      
+      try {
+        await travelProgramService.deleteReviewDay(program._id, editableRow);
+        setEditableRow(null);
+        setEditedData(null);
+      } catch (error) {
+        console.error('Failed to delete day:', error);
+      }
+    }
+  };
+
+  const handleMoveUp = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (editableRow !== null && editableRow > 0 && program?._id) {
+      try {
+        await travelProgramService.reorderReviewDays(program._id, editableRow, editableRow - 1);
+        setEditableRow(editableRow - 1);
+      } catch (error) {
+        console.error('Failed to move day up:', error);
+      }
+    }
+  };
+
+  const handleMoveDown = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (editableRow !== null && editableRow < reviewData.length - 1 && program?._id) {
+      try {
+        await travelProgramService.reorderReviewDays(program._id, editableRow, editableRow + 1);
+        setEditableRow(editableRow + 1);
+      } catch (error) {
+        console.error('Failed to move day down:', error);
+      }
+    }
   };
 
   const handleAddNewRow = async () => {
@@ -225,6 +279,14 @@ export function OverviewTable() {
     ) : (
       <Map size={20} className={styles['activity-icon']} />
     );
+  };
+
+  const isDataValid = () => {
+    if (!editedData?.activity) return false;
+    return editedData.activity.every(act => {
+      const { line1 = '', line2 = '', line3 = '' } = act.dayActivity;
+      return line1.trim() || line2.trim() || line3.trim();
+    });
   };
 
   return (
@@ -363,12 +425,40 @@ export function OverviewTable() {
                       type="button">
                       <Plus size={16} />
                     </button>
-                    <button className={styles['edit-icon']} onClick={handleSave}>
+                    <button 
+                      className={`${styles['edit-icon']} ${!isDataValid() ? styles['disabled-icon'] : ''}`}
+                      onClick={handleSave}
+                      disabled={!isDataValid()}
+                      title={!isDataValid() ? 'Заполните хотя бы одно поле в каждой активности' : 'Сохранить'}>
                       <Check size={16} />
                     </button>
                     <button className={styles['edit-icon']} onClick={handleCancel}>
                       <X size={16} />
                     </button>
+                    {reviewData.length > 1 && (
+                      <button
+                        className={`${styles['edit-icon']} ${styles['del-icon']}`}
+                        onClick={handleDelete}
+                        title="Удалить день">
+                        <Trash2 size={16} />
+                      </button>
+                    )}
+                    <div className={styles['move-buttons']}>
+                      <button
+                        className={`${styles['edit-icon']} ${styles['move-icon']}`}
+                        onClick={handleMoveUp}
+                        disabled={editableRow === 0}
+                        title="Переместить вверх">
+                        <ChevronUp size={16} />
+                      </button>
+                      <button
+                        className={`${styles['edit-icon']} ${styles['move-icon']}`}
+                        onClick={handleMoveDown}
+                        disabled={editableRow === reviewData.length - 1}
+                        title="Переместить вниз">
+                        <ChevronDown size={16} />
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

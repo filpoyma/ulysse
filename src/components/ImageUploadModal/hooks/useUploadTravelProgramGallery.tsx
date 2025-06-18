@@ -65,7 +65,7 @@ const useUploadTravelProgramGallery = ({
     try {
       setLoading(true);
       const imageIds = selectedImages.map(img => img._id || img.id).filter(Boolean) as string[];
-      await travelProgramService.updateGallery(programId, imageIds);
+      await travelProgramService.addToGallery(programId, imageIds);
       setSuccess(true);
       setSelectedImages([]);
       onClose();

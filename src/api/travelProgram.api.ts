@@ -4,6 +4,7 @@ import {
   IFirstPageData,
   ITravelProgramResponse,
   TravelProgramSingleResponse,
+  IFourthDayData,
 } from '../types/travelProgram.types.ts';
 
 interface FirstPageData {
@@ -61,9 +62,26 @@ const travelProgramApi = {
         };
       }[];
     },
-  ): Promise<{ data: any; success: boolean }> {
+  ): Promise<{ data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review'][0]; success: boolean }> {
     const url = this.getUrl(`${id}/review-day/${dayIndex}`);
     return api.put(url, { json: data }).json();
+  },
+
+  async deleteReviewDay(
+    id: string,
+    dayIndex: number,
+  ): Promise<{ data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review']; success: boolean }> {
+    const url = this.getUrl(`${id}/review-day/${dayIndex}`);
+    return api.delete(url).json();
+  },
+
+  async reorderReviewDays(
+    id: string,
+    fromIndex: number,
+    toIndex: number,
+  ): Promise<{ data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review']; success: boolean }> {
+    const url = this.getUrl(`${id}/review-days/reorder`);
+    return api.put(url, { json: { fromIndex, toIndex } }).json();
   },
 
   async updateAccommodationRow(
@@ -88,12 +106,45 @@ const travelProgramApi = {
     return api.delete(url).json();
   },
 
-  async updateGallery(
+  async addToGallery(
     programId: string,
     imageIds: string[],
   ): Promise<{ data: ITravelProgramResponse; success: boolean }> {
     const url = this.getUrl('gallery');
     return api.post(url, { json: { programId, imageIds } }).json();
+  },
+
+  async updateGallery(
+    programId: string,
+    imageIds: string[],
+  ): Promise<{ data: ITravelProgramResponse; success: boolean }> {
+    const url = this.getUrl('gallery');
+    return api.patch(url, { json: { programId, imageIds } }).json();
+  },
+
+  async updateDaySection(
+    programId: string,
+    dayIndex: number,
+    data: IFourthDayData,
+  ): Promise<{ data: IFourthDayData; success: boolean }> {
+    const url = this.getUrl(`${programId}/day-section/${dayIndex}`);
+    return api.put(url, { json: data }).json();
+  },
+
+  async addDaySection(
+    programId: string,
+    data: IFourthDayData,
+  ): Promise<{ data: IFourthDayData; success: boolean }> {
+    const url = this.getUrl(`${programId}/day-section`);
+    return api.post(url, { json: data }).json();
+  },
+
+  async deleteDaySection(
+    programId: string,
+    dayIndex: number,
+  ): Promise<{ data: IFourthDayData[]; success: boolean }> {
+    const url = this.getUrl(`${programId}/day-section/${dayIndex}`);
+    return api.delete(url).json();
   },
 };
 

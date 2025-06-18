@@ -77,7 +77,7 @@ export function OverviewTable() {
     if (editedData) {
       setEditedData({
         ...editedData,
-        day: dayjs(newDate, 'DD.MM.YYYY').toDate(),
+        day: new Date(newDate),
       });
     }
   };

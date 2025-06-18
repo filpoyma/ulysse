@@ -5,27 +5,19 @@ import { Link } from 'react-router-dom';
 import { RootState } from '../../store';
 import { useSelector } from 'react-redux';
 import styles from './Header.module.css';
+import { createArrayFromNumberWithId } from '../../utils/helpers.ts';
 
 interface HeaderProps {
   currentSection: string;
   navRef: React.RefObject<HTMLElement>;
-  scrollToDetails: () => void;
   scrollToMap: () => void;
-  scrollToHero: () => void;
-  scrollToDay: () => void;
   isLoggedIn: boolean;
+  numOfDays: number;
 }
 
-const Header = ({
-  currentSection,
-  navRef,
-  scrollToDetails,
-  scrollToMap,
-  scrollToHero,
-  isLoggedIn,
-  scrollToDay,
-}: HeaderProps) => {
+const Header = ({ currentSection, navRef, scrollToMap, isLoggedIn, numOfDays }: HeaderProps) => {
   const name_eng = useSelector((state: RootState) => state.travelProgram.program?.name_eng);
+  const days = createArrayFromNumberWithId(numOfDays);
   return (
     <header className={styles.header}>
       <Link to={isLoggedIn ? '/admin' : `/travel-programm/${name_eng}`} className={styles.logo}>
@@ -50,26 +42,16 @@ const Header = ({
           className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>
           Карта
         </a>
-        <a
-          href="#day1"
-          className={`${styles.navLink} ${currentSection === 'day1' ? styles.navLinkActive : ''}`}>
-          День 1
-        </a>
-        <a href="#day2" className={`${styles.navLink} ${currentSection === 'day2' ? styles.navLinkActive : ''}`} >
-          День 2
-        </a>
-        <a href="#" className={styles.navLink}>
-          День 3
-        </a>
-        <a href="#" className={styles.navLink}>
-          День 4
-        </a>
-        <a href="#" className={styles.navLink}>
-          День 5-6
-        </a>
-        <a href="#" className={styles.navLink}>
-          День 7
-        </a>
+        {days.map(day => (
+          <a
+            key={day.id}
+            href={`#day${day.num}`}
+            className={`${styles.navLink} ${
+              currentSection === `day${day.num}` ? styles.navLinkActive : ''
+            }`}>
+            День {day.num}
+          </a>
+        ))}
       </nav>
       <div className={styles.utilities}>
         <Share2 size={20} className={styles.utilityIcon} />
@@ -80,4 +62,4 @@ const Header = ({
   );
 };
 
-export default Header;
+export default React.memo(Header);

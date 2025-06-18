@@ -442,3 +442,31 @@
   border-color: #ccc;
   color: #999;
 }
+
+/* Стили для поля даты */
+.day-cell input[type="date"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  background-color: var(--input-bg);
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.day-cell input[type="date"]:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+.day-cell input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.day-cell input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}

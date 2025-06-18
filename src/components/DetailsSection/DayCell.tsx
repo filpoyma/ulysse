@@ -27,8 +27,8 @@ export function DayCell({ title, subtitle, date, isEditable, onDateChange, onTit
 
       {isEditable ? (
         <input
-          type="text"
-          defaultValue={dayjs(date, 'DD MMMM YYYY').format('DD.MM.YYYY')}
+          type="date"
+          defaultValue={dayjs(date, 'DD MMMM YYYY').format('YYYY-MM-DD')}
           className={styles['editable-input']}
           onChange={e => onDateChange && onDateChange(e.target.value)}
         />

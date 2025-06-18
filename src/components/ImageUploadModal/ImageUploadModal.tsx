@@ -5,7 +5,7 @@ import { ROOT_URL } from '../../constants/api.constants';
 import { useSelector, useDispatch } from 'react-redux';
 import { travelProgramActions } from '../../store/reducers/travelProgram';
 import { RootState } from '../../store';
-import { createArrayFromNumberWithId } from '../../utils/helpers.ts';
+import { createArrayFromNumber } from '../../utils/helpers.ts';
 import { IUploadedImage } from '../../types/uploadImage.types.ts';
 
 interface Props {
@@ -173,7 +173,7 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
         </div>
         <div className="modal-grid-wrapper">
           <div className="modal-grid">
-            {createArrayFromNumberWithId(maxCells).map((id, i) => {
+            {createArrayFromNumber(maxCells).map((id, i) => {
               const img = uploadedImages[i];
               return (
                 <div

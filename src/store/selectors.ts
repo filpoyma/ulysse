@@ -18,7 +18,7 @@ export const selectTravelProgramGallery = createSelector(
 );
 
 export const selectTravelProgramDaySection = (state: RootState) =>
-  state.travelProgram.program?.fourthPageDay.daysData;
+  state.travelProgram.program?.fourthPageDay.daysData || [];
 
 export const selectTravelProgramImages = createSelector(
   [selectTravelProgram],

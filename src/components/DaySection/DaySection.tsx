@@ -3,7 +3,11 @@ import styles from './DaySection.module.css';
 import PlusIcon from '../../assets/icons/plusInCircle.svg';
 import InfoIcon from '../../assets/icons/infoInCircle.svg';
 import { useSelector } from 'react-redux';
-import { selectTravelProgramDaySection, selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
+import {
+  selectTravelProgramDaySection,
+  selectIsLoggedIn,
+  selectTravelProgram,
+} from '../../store/selectors.ts';
 import dayjs from 'dayjs';
 import { Check, X, Plus, Trash2 } from 'lucide-react';
 import { travelProgramService } from '../../services/travelProgram.service';
@@ -72,7 +76,11 @@ const DaySection: React.FC = () => {
     }
   };
 
-  const handleScheduleItemChange = (index: number, field: 'title' | 'description', value: string) => {
+  const handleScheduleItemChange = (
+    index: number,
+    field: 'title' | 'description',
+    value: string,
+  ) => {
     if (editedData) {
       const updatedSchedule = [...editedData.schedule];
       updatedSchedule[index] = {
@@ -100,7 +108,7 @@ const DaySection: React.FC = () => {
       if (editedData[arrayName].length <= 1) {
         return;
       }
-      
+
       const updatedArray = editedData[arrayName].filter((_, i) => i !== index);
       setEditedData({
         ...editedData,
@@ -155,7 +163,7 @@ const DaySection: React.FC = () => {
         alert('Нельзя удалить последний день. Должен остаться хотя бы один день.');
         return;
       }
-      
+
       try {
         await travelProgramService.deleteDaySection(program._id, editableDay);
         setEditableDay(null);
@@ -170,9 +178,9 @@ const DaySection: React.FC = () => {
     if (program?._id) {
       try {
         const newDay: IFourthDayData = {
-          header: { 
-            date: new Date(), 
-            dayIndex: daySectionData.length + 1 
+          header: {
+            date: new Date(),
+            dayIndex: daySectionData.length + 1,
           },
           title: 'Новый день',
           nights: 1,
@@ -199,22 +207,19 @@ const DaySection: React.FC = () => {
     }
   };
 
-  console.log('editableDay', editableDay);
-
   return (
-    <>
+    <div data-days="days">
       {daySectionData.map((dayData, index) => {
         const isEditing = editableDay === index;
         const currentData = isEditing && editedData ? editedData : dayData;
-        
+
         return (
-          <div 
-            key={index} 
-            className={styles.container} 
+          <div
+            key={index}
+            className={styles.container}
             id={`day${index + 1}`}
             onClick={!isEditing ? () => handleDayClick(index) : undefined}
-            style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
-          >
+            style={{ cursor: isLoggedIn && !isEditing ? 'pointer' : 'default' }}>
             <div className={styles.header}>
               {isEditing ? (
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -241,7 +246,7 @@ const DaySection: React.FC = () => {
                 `День ${dayData.header.dayIndex} / ${dayjs(dayData.header.date).format('DD dddd')}`
               )}
             </div>
-            
+
             <div className={styles.content}>
               {isEditing ? (
                 <input
@@ -255,7 +260,7 @@ const DaySection: React.FC = () => {
               ) : (
                 <div className={styles.title}>{dayData.title}</div>
               )}
-              
+
               <div className={styles.night}>
                 {isEditing ? (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -268,7 +273,11 @@ const DaySection: React.FC = () => {
                       style={{ width: '60px' }}
                     />
                     <span>
-                      {currentData.nights === 1 ? 'ночь' : currentData.nights < 5 ? 'ночи' : 'ночей'}
+                      {currentData.nights === 1
+                        ? 'ночь'
+                        : currentData.nights < 5
+                        ? 'ночи'
+                        : 'ночей'}
                     </span>
                   </div>
                 ) : (
@@ -278,7 +287,7 @@ const DaySection: React.FC = () => {
                   </p>
                 )}
               </div>
-              
+
               {isEditing ? (
                 <textarea
                   value={currentData.description}
@@ -303,8 +312,7 @@ const DaySection: React.FC = () => {
                         onClick={e => {
                           e.stopPropagation();
                           handleAddArrayItem('pros');
-                        }}
-                      >
+                        }}>
                         <Plus size={16} />
                       </button>
                     )}
@@ -319,7 +327,9 @@ const DaySection: React.FC = () => {
                               value={pro}
                               className={styles['editable-input']}
                               onClick={e => e.stopPropagation()}
-                              onChange={e => handleArrayItemChange('pros', proIndex, e.target.value)}
+                              onChange={e =>
+                                handleArrayItemChange('pros', proIndex, e.target.value)
+                              }
                             />
                             {currentData.pros.length > 1 && (
                               <button
@@ -327,8 +337,7 @@ const DaySection: React.FC = () => {
                                 onClick={e => {
                                   e.stopPropagation();
                                   handleRemoveArrayItem('pros', proIndex);
-                                }}
-                              >
+                                }}>
                                 <X size={14} />
                               </button>
                             )}
@@ -353,8 +362,7 @@ const DaySection: React.FC = () => {
                         onClick={e => {
                           e.stopPropagation();
                           handleAddArrayItem('info');
-                        }}
-                      >
+                        }}>
                         <Plus size={16} />
                       </button>
                     )}
@@ -369,7 +377,9 @@ const DaySection: React.FC = () => {
                               value={infoItem}
                               className={styles['editable-input']}
                               onClick={e => e.stopPropagation()}
-                              onChange={e => handleArrayItemChange('info', infoIndex, e.target.value)}
+                              onChange={e =>
+                                handleArrayItemChange('info', infoIndex, e.target.value)
+                              }
                             />
                             {currentData.info.length > 1 && (
                               <button
@@ -377,8 +387,7 @@ const DaySection: React.FC = () => {
                                 onClick={e => {
                                   e.stopPropagation();
                                   handleRemoveArrayItem('info', infoIndex);
-                                }}
-                              >
+                                }}>
                                 <X size={14} />
                               </button>
                             )}
@@ -395,7 +404,6 @@ const DaySection: React.FC = () => {
 
             {currentData?.schedule?.length > 0 && (
               <div className={styles.scheduleBlock}>
-                
                 {currentData.schedule.map((scheduleItem, scheduleIndex) => (
                   <div key={scheduleIndex} className={styles.scheduleItem}>
                     <div>
@@ -407,14 +415,22 @@ const DaySection: React.FC = () => {
                               value={scheduleItem.title}
                               className={styles['editable-input']}
                               onClick={e => e.stopPropagation()}
-                              onChange={e => handleScheduleItemChange(scheduleIndex, 'title', e.target.value)}
+                              onChange={e =>
+                                handleScheduleItemChange(scheduleIndex, 'title', e.target.value)
+                              }
                               placeholder="Заголовок"
                             />
                             <textarea
                               value={scheduleItem.description}
                               className={styles['editable-textarea']}
                               onClick={e => e.stopPropagation()}
-                              onChange={e => handleScheduleItemChange(scheduleIndex, 'description', e.target.value)}
+                              onChange={e =>
+                                handleScheduleItemChange(
+                                  scheduleIndex,
+                                  'description',
+                                  e.target.value,
+                                )
+                              }
                               placeholder="Описание"
                               rows={2}
                             />
@@ -425,20 +441,20 @@ const DaySection: React.FC = () => {
                               onClick={e => {
                                 e.stopPropagation();
                                 handleRemoveScheduleItem(scheduleIndex);
-                              }}
-                            >
+                              }}>
                               <X size={14} />
                             </button>
                           )}
-                          {currentData.schedule.length === scheduleIndex + 1 && <button
+                          {currentData.schedule.length === scheduleIndex + 1 && (
+                            <button
                               className={styles['edit-item-btn']}
                               onClick={e => {
                                 e.stopPropagation();
                                 handleAddScheduleItem();
-                              }}
-                            >
+                              }}>
                               <Plus size={14} />
-                            </button>}
+                            </button>
+                          )}
                         </div>
                       ) : (
                         <>
@@ -453,7 +469,7 @@ const DaySection: React.FC = () => {
                 ))}
               </div>
             )}
-            
+
             {isEditing && (
               <div className={styles['edit-controls']}>
                 <div className={styles['edit-icons']}>
@@ -464,8 +480,7 @@ const DaySection: React.FC = () => {
                     <button
                       className={`${styles['edit-icon']} ${styles['del-icon']}`}
                       onClick={handleDelete}
-                      title="Удалить день"
-                    >
+                      title="Удалить день">
                       <Trash2 size={16} />
                     </button>
                   )}
@@ -485,7 +500,7 @@ const DaySection: React.FC = () => {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createArrayFromNumberWithId } from '../../utils/helpers.ts';
+import { createArrayFromNumber } from '../../utils/helpers.ts';
 import { ROOT_URL } from '../../constants/api.constants.ts';
 import { IUploadedImage } from '../../types/uploadImage.types.ts';
 
@@ -64,7 +64,7 @@ const ModalGallery: React.FC<IModalGallery> = ({
         </div>
         <div className="modal-grid-wrapper">
           <div className="modal-grid">
-            {createArrayFromNumberWithId(maxCells).map((id, i) => {
+            {createArrayFromNumber(maxCells).map((id, i) => {
               const img = uploadedImages[i];
               const isSelected =
                 img &&

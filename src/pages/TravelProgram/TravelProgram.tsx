@@ -6,7 +6,11 @@ import { useSelector } from 'react-redux';
 import { travelProgramService } from '../../services/travelProgram.service.ts';
 import { ROOT_URL } from '../../constants/api.constants.ts';
 import { IFirstPageData as FirstPageType } from '../../types/travelProgram.types.ts';
-import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
+import {
+  selectIsLoggedIn,
+  selectTravelProgram,
+  selectTravelProgramDaySection,
+} from '../../store/selectors.ts';
 import useIsMobile from '../../hooks/useIsMobile.tsx';
 import styles from './TravelProgram.module.css';
 import MobileLayout from './components/MobileLayout';
@@ -28,6 +32,7 @@ const TravelProgram: React.FC = () => {
   const isMobile = useIsMobile();
 
   const program = useSelector(selectTravelProgram);
+  const numOfDays = (program?.fourthPageDay.daysData || []).length;
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const firstPage: FirstPageType = program?.firstPage || DEFAULT_FIRST_PAGE;
 
@@ -42,8 +47,8 @@ const TravelProgram: React.FC = () => {
   }, []);
 
   const scrollToDetails = useCallback(() => {
-    //detailsRef.current?.scrollIntoView({ behavior: 'smooth' });
-    //setCurrentSection('details');
+    detailsRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setCurrentSection('details');
   }, []);
 
   const scrollToMap = useCallback(() => {
@@ -147,23 +152,23 @@ const TravelProgram: React.FC = () => {
   }, [handleResize, handleScroll, handleWindowScroll]);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (isMobile || numOfDays === 0) return;
     const rightSide = document.querySelector(`.${styles.rightSide}`);
     if (!rightSide) return;
 
     const hero = document.getElementById('hero');
     const details = document.getElementById('details');
     const map = document.getElementById('map');
-    const day1 = document.getElementById('day1');
-    const day2 = document.getElementById('day2');
-    if (!day1 && !day2) return;
+    const daysSection = document.querySelectorAll('[data-days="days"] > div');
+    const days = Array.from(daysSection);
+
+    const createDaysSections = days.map((el, i) => ({ el: el, name: `day${i + 1}` }));
 
     const sections = [
       { el: hero, name: 'hero' },
       { el: details, name: 'details' },
       { el: map, name: 'map' },
-      { el: day1, name: 'day1' },
-      { el: day2, name: 'day2' },
+      ...createDaysSections,
     ];
 
     const observer = new window.IntersectionObserver(
@@ -201,7 +206,7 @@ const TravelProgram: React.FC = () => {
     });
 
     return () => observer.disconnect();
-  }, [isMobile]);
+  }, [isMobile, numOfDays]);
 
   const firstPageBg = program?.bgImages?.[0]?.path
     ? `${ROOT_URL}/${program.bgImages[0].path.replace(/^\//, '')}`
@@ -216,11 +221,9 @@ const TravelProgram: React.FC = () => {
       <Header
         currentSection={currentSection}
         navRef={navRef}
-        scrollToDetails={scrollToDetails}
         scrollToMap={scrollToMap}
-        scrollToHero={scrollToHero}
-        scrollToDay={scrollToDay}
         isLoggedIn={isLoggedIn}
+        numOfDays={numOfDays}
       />
       {isLoggedIn && (
         <ImageUploadModal

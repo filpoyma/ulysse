@@ -78,15 +78,17 @@ const FirstPage: React.FC<FirstPageProps> = ({
 
   return (
     <section id="hero" className={styles.contentSection}>
-      <div className={styles.editButtons}>
-        <button
-          onClick={() => {
-            if (isLoggedIn) setIsEditing(true);
-          }}
-          title="Сохранить">
-          <Edit size={16} />
-        </button>
-      </div>
+      {isLoggedIn && (
+        <div className={styles.editButtons}>
+          <button
+            onClick={() => {
+              if (isLoggedIn) setIsEditing(true);
+            }}
+            title="Сохранить">
+            <Edit size={16} />
+          </button>
+        </div>
+      )}
       <div className={`${styles.contentWrapper} ${styles.heroContent}`}>
         <div className={styles.heroText}>
           {renderEditableField('title', 'heroTitle')}

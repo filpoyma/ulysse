@@ -1,5 +1,6 @@
-import React from 'react';
+import { memo } from 'react';
 import { Share2, Sun, Menu } from 'lucide-react';
+import { useDebouncedCallback } from 'use-debounce';
 import { Logo } from '../../assets/icons/Logo.tsx';
 import { Link } from 'react-router-dom';
 import { RootState } from '../../store';
@@ -18,6 +19,21 @@ interface HeaderProps {
 const Header = ({ currentSection, navRef, scrollToMap, isLoggedIn, numOfDays }: HeaderProps) => {
   const name_eng = useSelector((state: RootState) => state.travelProgram.program?.name_eng);
   const days = createArrayFromNumberWithId(numOfDays);
+
+  const scrollMenuToCenter = useDebouncedCallback(() => {
+    const activeElement = navRef.current?.querySelector(`.${styles.navLinkActive}`);
+    if (activeElement) {
+      (activeElement as HTMLElement).scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, 300)
+
+  scrollMenuToCenter();
+
+
   return (
     <header className={styles.header}>
       <Link to={isLoggedIn ? '/admin' : `/travel-programm/${name_eng}`} className={styles.logo}>
@@ -62,4 +78,4 @@ const Header = ({ currentSection, navRef, scrollToMap, isLoggedIn, numOfDays }: 
   );
 };
 
-export default React.memo(Header);
+export default memo(Header);

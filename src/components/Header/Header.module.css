@@ -31,6 +31,8 @@
   padding: 0 1rem;
   flex: 1;
   margin: 0 2rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav::-webkit-scrollbar {

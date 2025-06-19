@@ -17,18 +17,18 @@ const tokenInterceptor = (request: Request) => {
   }
 };
 
+// Глобальный errorInterceptor для автоматического refresh токена (будет работать для большинства запросов)
 const errorInterceptor = async (error: HTTPError) => {
   const response = error.response;
   // Handle 401 Unauthorized
   if (response.status === 401) {
     try {
-      // Try to refresh token
       const { data } = await baseApi
         .post('auth/refresh-token')
         .json<{ data: { accessToken: string } }>();
       store.dispatch(authActions.setToken(data.accessToken));
 
-      // Получаем параметры оригинального запроса
+      // Повторяем оригинальный запрос с новым токеном
       const original = error.request;
       const method = original.method;
       const url = original.url;
@@ -37,15 +37,16 @@ const errorInterceptor = async (error: HTTPError) => {
 
       let body: BodyInit | undefined = undefined;
       if (error.options && error.options.body) body = error.options.body;
-      return ky(url, { method, headers, body });
+      return ky(url, { method, headers, body, credentials: 'include' });
     } catch (refreshError) {
-      console.error('refreshError', refreshError);
       store.dispatch(authActions.setToken(null));
       store.dispatch(authActions.setUser(null));
       store.dispatch(authActions.setIsLoggedIn(false));
-      return refreshError;
+      throw refreshError;
     }
   }
+
+
 
   console.error('Error:', response.status, response.url);
   const contentType = response.headers.get('content-type');
@@ -54,8 +55,7 @@ const errorInterceptor = async (error: HTTPError) => {
   error.message = contentType?.includes('application/json')
     ? await response.json()
     : await response.text();
-
-  return error;
+    return error;
 };
 
 const api = baseApi.extend({
@@ -64,5 +64,65 @@ const api = baseApi.extend({
     beforeError: [errorInterceptor],
   },
 });
+
+// Функция-обёртка для критичных запросов (например, validateSession), чтобы явно контролировать refresh и повтор
+export async function requestWithRefresh<T>(input: RequestInfo, options?: RequestInit): Promise<T> {
+  try {
+    return await api(input, options).json();
+  } catch (error: unknown) {
+    if (error instanceof HTTPError && error.response.status === 401) {
+      try {
+        const { data } = await baseApi
+          .post('auth/refresh-token')
+          .json<{ data: { accessToken: string } }>();
+        store.dispatch(authActions.setToken(data.accessToken));
+        const headers = new Headers(options?.headers || {});
+        headers.set('Authorization', `Bearer ${data.accessToken}`);
+        return await api(input, { ...options, headers }).json();
+      } catch (refreshError) {
+        store.dispatch(authActions.setToken(null));
+        store.dispatch(authActions.setUser(null));
+        store.dispatch(authActions.setIsLoggedIn(false));
+        throw refreshError;
+      }
+    }
+    throw error;
+  }
+}
+
+// === АВТОМАТИЧЕСКОЕ ОБНОВЛЕНИЕ ТОКЕНА КАЖДЫЕ 10 МИНУТ ===
+async function autoRefreshToken() {
+  try {
+    const { data } = await baseApi
+      .post('auth/refresh-token')
+      .json<{ data: { accessToken: string } }>();
+    store.dispatch(authActions.setToken(data.accessToken));
+  } catch {
+    store.dispatch(authActions.setToken(null));
+    store.dispatch(authActions.setUser(null));
+    store.dispatch(authActions.setIsLoggedIn(false));
+  }
+}
+
+let refreshIntervalId: ReturnType<typeof setInterval> | null = null;
+
+// Подписка на изменения isLoggedIn
+store.subscribe(() => {
+  const { isLoggedIn } = store.getState().auth;
+  if (isLoggedIn) startRefreshInterval();
+   else stopRefreshInterval();
+});
+
+function startRefreshInterval() {
+  if (refreshIntervalId) return; // Уже запущен
+  refreshIntervalId = setInterval(autoRefreshToken, 10 * 60 * 1000);
+}
+
+function stopRefreshInterval() {
+  if (refreshIntervalId) {
+    clearInterval(refreshIntervalId);
+    refreshIntervalId = null;
+  }
+}
 
 export default api;

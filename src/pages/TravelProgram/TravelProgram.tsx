@@ -126,18 +126,6 @@ const TravelProgram: React.FC = () => {
     if (!isMobile) return;
   }, [isMobile]);
 
-  const handleResize = useCallback(() => {
-    const rightSide = document.querySelector(`.${styles.rightSide}`);
-    if (!rightSide) return;
-    console.log('file-TravelProgram.tsx addEventListener:_________________________________');
-    if (isMobile) {
-      window.addEventListener('scroll', handleWindowScroll);
-    } else {
-      rightSide.addEventListener('scroll', handleScroll);
-      setTimeout(handleScroll, 100);
-    }
-  }, [isMobile, handleScroll, handleWindowScroll]);
-
   useEffect(() => {
     if (isLoading) return;
     const rightSide = document.querySelector(`.${styles.rightSide}`);
@@ -146,21 +134,28 @@ const TravelProgram: React.FC = () => {
     // Удаляем все обработчики
     window.removeEventListener('scroll', handleWindowScroll);
     rightSide.removeEventListener('scroll', handleScroll);
-    window.removeEventListener('resize', handleResize);
+    // window.removeEventListener('resize', handleResize);
+
+    if (isMobile) {
+      window.addEventListener('scroll', handleWindowScroll);
+    } else {
+      rightSide.addEventListener('scroll', handleScroll);
+      setTimeout(handleScroll, 100);
+    }
 
     // Добавляем нужные обработчики
-    handleResize();
-    window.addEventListener('resize', handleResize);
+    // handleResize();
+    // window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('scroll', handleWindowScroll);
       rightSide.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
+      // window.removeEventListener('resize', handleResize);
     };
-  }, [handleResize, handleScroll, handleWindowScroll, isLoading]);
+  }, [handleScroll, handleWindowScroll, isLoading]);
 
   useEffect(() => {
-    if (isMobile || numOfDays === 0) return;
+    if (isMobile || isLoading) return;
     const rightSide = document.querySelector(`.${styles.rightSide}`);
     if (!rightSide) return;
 
@@ -200,6 +195,7 @@ const TravelProgram: React.FC = () => {
                 break;
             }
             setCurrentSection(found.name);
+            console.log('file-TravelProgram.tsx found.name:', found.name);
           }
         }
       },
@@ -214,7 +210,7 @@ const TravelProgram: React.FC = () => {
     });
 
     return () => observer.disconnect();
-  }, [isMobile, numOfDays]);
+  }, [isMobile, isLoading]);
 
   const firstPageBg = program?.bgImages?.[0]?.path
     ? `${ROOT_URL}/${program.bgImages[0].path.replace(/^\//, '')}`

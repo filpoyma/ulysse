@@ -1,4 +1,4 @@
-import api from '../api/baseApi';
+import api, { requestWithRefresh } from '../api/baseApi';
 
 interface User {
     id: string;
@@ -75,10 +75,9 @@ const AuthApi = {
 
   validateSession(): Promise<ValidateSessionResponse> {
     const url = this.getUrl('profile');
-    return api.get(url, {
+    return requestWithRefresh(url, {
       credentials: 'include',
-      timeout: 5000,
-    }).json();
+    });
   }
 };
 

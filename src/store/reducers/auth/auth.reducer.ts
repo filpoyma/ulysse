@@ -39,6 +39,11 @@ const { reducer: authReducer, actions: authActions } = createSlice({
     setIsLoggedIn(state: IAuthState, action: PayloadAction<boolean>) {
       state.isLoggedIn = action.payload;
     },
+    clearAuthState(state: IAuthState) {
+      state.token = null;
+      state.user = null;
+      state.isLoggedIn = false;
+    },
     updateUser(state: IAuthState, action: PayloadAction<Partial<IUser>>) {
       if (state.user) {
         state.user = {

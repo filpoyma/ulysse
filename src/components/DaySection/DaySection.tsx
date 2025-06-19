@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import styles from './DaySection.module.css';
-import PlusIcon from '../../assets/icons/plusInCircle.svg';
-import InfoIcon from '../../assets/icons/infoInCircle.svg';
 import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 import {
   selectTravelProgramDaySection,
   selectIsLoggedIn,
   selectTravelProgram,
 } from '../../store/selectors.ts';
-import dayjs from 'dayjs';
-import { Check, X, Plus, Trash2 } from 'lucide-react';
+import PlusIcon from '../../assets/icons/plusInCircle.svg';
+import InfoIcon from '../../assets/icons/infoInCircle.svg';
+import Check from '../../assets/icons/check.svg';
+import Trash2 from '../../assets/icons/trash2.svg';
+import Plus from '../../assets/icons/plus.svg';
+import X from '../../assets/icons/x.svg';
+
 import { travelProgramService } from '../../services/travelProgram.service';
 import { IFourthDayData } from '../../types/travelProgram.types';
 

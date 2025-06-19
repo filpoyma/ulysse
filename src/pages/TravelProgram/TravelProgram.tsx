@@ -15,6 +15,7 @@ import useIsMobile from '../../hooks/useIsMobile.tsx';
 import styles from './TravelProgram.module.css';
 import MobileLayout from './components/MobileLayout';
 import DesktopLayout from './components/DesktopLayout';
+import { Loader } from '../../components/Loader/Loader.tsx';
 
 const DEFAULT_FIRST_PAGE: FirstPageType = {
   title: '',
@@ -28,6 +29,7 @@ const TravelProgram: React.FC = () => {
   const navRef = useRef<HTMLElement>(null);
   const [currentSection, setCurrentSection] = useState('hero');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const selectedImageNumberRef = useRef<number | null>(0);
   const isMobile = useIsMobile();
 
@@ -35,10 +37,15 @@ const TravelProgram: React.FC = () => {
   const numOfDays = (program?.fourthPageDay.daysData || []).length;
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const firstPage: FirstPageType = program?.firstPage || DEFAULT_FIRST_PAGE;
-
+  console.log('file-TravelProgram.tsx isLoading:', isLoading);
   useEffect(() => {
     if (programName) {
-      travelProgramService.getByName(programName).catch(console.error);
+      travelProgramService
+        .getByName(programName)
+        .catch(console.error)
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   }, [programName]);
 
@@ -122,7 +129,7 @@ const TravelProgram: React.FC = () => {
   const handleResize = useCallback(() => {
     const rightSide = document.querySelector(`.${styles.rightSide}`);
     if (!rightSide) return;
-
+    console.log('file-TravelProgram.tsx addEventListener:_________________________________');
     if (isMobile) {
       window.addEventListener('scroll', handleWindowScroll);
     } else {
@@ -132,6 +139,7 @@ const TravelProgram: React.FC = () => {
   }, [isMobile, handleScroll, handleWindowScroll]);
 
   useEffect(() => {
+    if (isLoading) return;
     const rightSide = document.querySelector(`.${styles.rightSide}`);
     if (!rightSide) return;
 
@@ -149,7 +157,7 @@ const TravelProgram: React.FC = () => {
       rightSide.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
     };
-  }, [handleResize, handleScroll, handleWindowScroll]);
+  }, [handleResize, handleScroll, handleWindowScroll, isLoading]);
 
   useEffect(() => {
     if (isMobile || numOfDays === 0) return;
@@ -215,6 +223,8 @@ const TravelProgram: React.FC = () => {
   const secondPageBg = program?.bgImages?.[1]?.path
     ? `${ROOT_URL}/${program.bgImages[1].path.replace(/^\//, '')}`
     : 'https://images.pexels.com/photos/4577791/pexels-photo-4577791.jpeg?auto=compress&cs=tinysrgb&w=1920';
+
+  if (isLoading) return <Loader />;
 
   return (
     <>

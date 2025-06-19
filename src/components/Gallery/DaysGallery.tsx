@@ -7,7 +7,11 @@ import { ROOT_URL } from '../../constants/api.constants';
 import styles from './Days.module.css';
 
 import { useSelector } from 'react-redux';
-import { selectTravelProgram, selectTravelProgramGallery, selectTravelProgramImages } from '../../store/selectors.ts';
+import {
+  selectTravelProgram,
+  selectTravelProgramGallery,
+  selectTravelProgramImages,
+} from '../../store/selectors.ts';
 import ImageUploadTravelProgram from '../ImageUploadModal/ImageUploadTravelProgram.tsx';
 import { travelProgramService } from '../../services/travelProgram.service';
 
@@ -40,21 +44,21 @@ const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const program = useSelector(selectTravelProgram);
   const imagesForGallery = useSelector(selectTravelProgramGallery);
   const images = useSelector(selectTravelProgramImages);
-  
+
   const handleDeleteImage = async (imageId: string) => {
     if (!program?._id || !imageId) return;
 
     try {
       const updatedImages = images.filter(img => img._id !== imageId);
       const imageIds = updatedImages.map(img => img._id || '');
-      
+
       await travelProgramService.updateGallery(program._id, imageIds);
     } catch (error) {
       console.error('Error deleting image:', error);
       alert('Ошибка при удалении изображения');
     }
   };
-  
+
   return (
     <div className={styles.content}>
       {isLoggedIn && program && (
@@ -67,26 +71,22 @@ const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       )}
       {isLoggedIn && (
         <div className={styles.scrollableGallery}>
-          <div 
-            className={styles.addImagePlaceholder}
-            onClick={() => setIsModalOpen(true)}
-          />
+          <div className={styles.addImagePlaceholder} onClick={() => setIsModalOpen(true)} />
           {images.map((image, index) => (
-            <div key={index} className={styles.imageWrapper}>
-              <img 
+            <div key={image._id} className={styles.imageWrapper}>
+              <img
                 src={`${ROOT_URL}/${image.path.replace(/^\//, '')}`}
                 alt={`Image ${index + 1}`}
                 className={styles.scrollableImage}
               />
               <button
                 className={styles.deleteButton}
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   if (image._id) {
                     handleDeleteImage(image._id);
                   }
-                }}
-              >
+                }}>
                 ×
               </button>
             </div>

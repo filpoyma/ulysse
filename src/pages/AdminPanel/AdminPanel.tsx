@@ -10,17 +10,7 @@ import { ProgramsSection } from './components/ProgramsSection';
 import { HotelsCollectSection } from './components/HotelsCollectSection.tsx';
 import { RestarauntsCollectSection } from './components/RestarauntsCollectSection';
 import { Loader } from '../../components/Loader/Loader';
-
-type NavItem =
-  | 'itineraries'
-  | 'hotels'
-  | 'hotels-collections'
-  | 'hotels-pages'
-  | 'restaurants'
-  | 'restaurants-collections'
-  | 'restaurants-pages'
-  | 'info'
-  | 'references';
+import { NavItem } from '../../types/adminPanel.types.ts';
 
 const AdminPanel: FC = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -40,13 +30,9 @@ const AdminPanel: FC = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  if (isLoading) return <Loader />;
 
-  if (!isLoggedIn) {
-    return <AdminSignIn />;
-  }
+  if (!isLoggedIn) return <AdminSignIn />;
 
   return (
     <div className={styles.container}>

@@ -7,8 +7,8 @@ import {
   selectIsLoggedIn,
   selectTravelProgram,
 } from '../../store/selectors.ts';
-import PlusIcon from '../../assets/icons/plusInCircle.svg';
-import InfoIcon from '../../assets/icons/infoInCircle.svg';
+import PlusCircle from '../../assets/icons/plusInCircle.svg';
+import InfoCircle from '../../assets/icons/infoInCircle.svg';
 import Check from '../../assets/icons/check.svg';
 import Trash2 from '../../assets/icons/trash2.svg';
 import Plus from '../../assets/icons/plus.svg';
@@ -308,7 +308,7 @@ const DaySection: React.FC = () => {
               {currentData.pros && currentData.pros.length > 0 && (
                 <>
                   <div className={styles.infoContainer}>
-                    <PlusIcon height={31} width={31} />
+                    <PlusCircle height={31} width={31} />
                     <div>Преимущества</div>
                     {isEditing && (
                       <button
@@ -317,7 +317,7 @@ const DaySection: React.FC = () => {
                           e.stopPropagation();
                           handleAddArrayItem('pros');
                         }}>
-                        <Plus size={16} />
+                        <Plus />
                       </button>
                     )}
                   </div>
@@ -342,7 +342,7 @@ const DaySection: React.FC = () => {
                                   e.stopPropagation();
                                   handleRemoveArrayItem('pros', proIndex);
                                 }}>
-                                <X size={14} />
+                                <X />
                               </button>
                             )}
                           </div>
@@ -358,7 +358,7 @@ const DaySection: React.FC = () => {
               {currentData.info && currentData.info.length > 0 && (
                 <>
                   <div className={styles.infoContainer}>
-                    <InfoIcon height={31} width={31} />
+                    <InfoCircle height={31} width={31} />
                     <div>Краткая информация</div>
                     {isEditing && (
                       <button
@@ -367,7 +367,7 @@ const DaySection: React.FC = () => {
                           e.stopPropagation();
                           handleAddArrayItem('info');
                         }}>
-                        <Plus size={16} />
+                        <Plus />
                       </button>
                     )}
                   </div>
@@ -392,7 +392,7 @@ const DaySection: React.FC = () => {
                                   e.stopPropagation();
                                   handleRemoveArrayItem('info', infoIndex);
                                 }}>
-                                <X size={14} />
+                                <X />
                               </button>
                             )}
                           </div>
@@ -446,7 +446,7 @@ const DaySection: React.FC = () => {
                                 e.stopPropagation();
                                 handleRemoveScheduleItem(scheduleIndex);
                               }}>
-                              <X size={14} />
+                              <X />
                             </button>
                           )}
                           {currentData.schedule.length === scheduleIndex + 1 && (
@@ -456,7 +456,7 @@ const DaySection: React.FC = () => {
                                 e.stopPropagation();
                                 handleAddScheduleItem();
                               }}>
-                              <Plus size={14} />
+                              <Plus />
                             </button>
                           )}
                         </div>
@@ -478,18 +478,18 @@ const DaySection: React.FC = () => {
               <div className={styles['edit-controls']}>
                 <div className={styles['edit-icons']}>
                   <button className={styles['edit-icon']} onClick={handleCancel} title="Отмена">
-                    <X size={16} />
+                    <X />
                   </button>
                   {daySectionData.length > 1 && (
                     <button
                       className={`${styles['edit-icon']} ${styles['del-icon']}`}
                       onClick={handleDelete}
                       title="Удалить день">
-                      <Trash2 size={16} />
+                      <Trash2 />
                     </button>
                   )}
                   <button className={styles['edit-icon']} onClick={handleSave} title="Сохранить">
-                    <Check size={16} />
+                    <Check />
                   </button>
                 </div>
               </div>
@@ -500,7 +500,7 @@ const DaySection: React.FC = () => {
       {isLoggedIn && (
         <div className={styles['add-day-container']}>
           <button className={styles['add-day-btn']} onClick={handleAddNewDay}>
-            <Plus size={16} /> День
+            <Plus /> День
           </button>
         </div>
       )}

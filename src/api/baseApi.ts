@@ -11,13 +11,9 @@ const baseApi = ky.create({
 
 const tokenInterceptor = (request: Request) => {
   const { token } = store.getState().auth;
-
-  if (token) {
-    request.headers.set('Authorization', `Bearer ${token}`);
-  }
+  if (token) request.headers.set('Authorization', `Bearer ${token}`);
 };
 
-// Глобальный errorInterceptor для автоматического refresh токена (будет работать для большинства запросов)
 const errorInterceptor = async (error: HTTPError) => {
   const response = error.response;
   // Handle 401 Unauthorized
@@ -27,31 +23,15 @@ const errorInterceptor = async (error: HTTPError) => {
         .post('auth/refresh-token')
         .json<{ data: { accessToken: string } }>();
       store.dispatch(authActions.setToken(data.accessToken));
-
-      // Повторяем оригинальный запрос с новым токеном
-      const original = error.request;
-      const method = original.method;
-      const url = original.url;
-      const headers = new Headers(original.headers);
-      headers.set('Authorization', `Bearer ${data.accessToken}`);
-
-      let body: BodyInit | undefined = undefined;
-      if (error.options && error.options.body) body = error.options.body;
-      return ky(url, { method, headers, body, credentials: 'include' });
-    } catch (refreshError) {
-      store.dispatch(authActions.setToken(null));
-      store.dispatch(authActions.setUser(null));
-      store.dispatch(authActions.setIsLoggedIn(false));
-      throw refreshError;
+      return error;
+    } catch  {
+      store.dispatch(authActions.clearAuthState());
+      return error;
     }
   }
-
-
-
   console.error('Error:', response.status, response.url);
   const contentType = response.headers.get('content-type');
   if (!contentType) return error;
-
   error.message = contentType?.includes('application/json')
     ? await response.json()
     : await response.text();
@@ -80,9 +60,7 @@ export async function requestWithRefresh<T>(input: RequestInfo, options?: Reques
         headers.set('Authorization', `Bearer ${data.accessToken}`);
         return await api(input, { ...options, headers }).json();
       } catch (refreshError) {
-        store.dispatch(authActions.setToken(null));
-        store.dispatch(authActions.setUser(null));
-        store.dispatch(authActions.setIsLoggedIn(false));
+        store.dispatch(authActions.clearAuthState());
         throw refreshError;
       }
     }
@@ -98,9 +76,7 @@ async function autoRefreshToken() {
       .json<{ data: { accessToken: string } }>();
     store.dispatch(authActions.setToken(data.accessToken));
   } catch {
-    store.dispatch(authActions.setToken(null));
-    store.dispatch(authActions.setUser(null));
-    store.dispatch(authActions.setIsLoggedIn(false));
+    store.dispatch(authActions.clearAuthState());
   }
 }
 

@@ -12,11 +12,19 @@
   flex-direction: column;
 }
 
+.title {
+  position: sticky;
+  top: 0;
+  background-color: var(--background-color);
+  z-index: 100;
+}
+
 .detailsTitle {
   text-align: center;
   font-family: 'Cormorant Garamond', serif;
   font-size: 2.5rem;
   margin-bottom: 2rem;
+  padding-top: 8px;
   color: var(--primary-color);
 }
 
@@ -24,4 +32,4 @@
   .contentWrapper {
     padding: 2rem 1rem;
   }
-} 
+}

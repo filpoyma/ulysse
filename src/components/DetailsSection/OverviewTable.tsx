@@ -1,13 +1,23 @@
-import { useSelector } from 'react-redux';
-import { DayCell } from './DayCell';
-import { Map, Check, X, Plus, Hotel, Pin, Plane, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
-import dayjs from 'dayjs';
-import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
 import React, { useState } from 'react';
-import styles from './index.module.css';
-import { travelProgramService } from '../../services/travelProgram.service';
+import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
+
 import { store } from '../../store';
+import { DayCell } from './DayCell';
+import Map from '../../assets/icons/map.svg';
+import Check from '../../assets/icons/check.svg';
+import Pin from '../../assets/icons/pin.svg';
+import Hotel from '../../assets/icons/hotel.svg';
+import Trash2 from '../../assets/icons/trash2.svg';
+import Plane from '../../assets/icons/plane.svg';
+import Plus from '../../assets/icons/plus.svg';
+import X from '../../assets/icons/x.svg';
+import ChevronDown from '../../assets/icons/chevronDown.svg';
+import ChevronUp from '../../assets/icons/chevronUp.svg';
+import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
+import { travelProgramService } from '../../services/travelProgram.service';
 import { travelProgramActions } from '../../store/reducers/travelProgram';
+import styles from './index.module.css';
 
 const ICON_OPTIONS = [
   { value: 'none', label: 'Map', icon: Map },
@@ -150,7 +160,9 @@ export function OverviewTable() {
       });
 
       if (!hasValidActivities) {
-        alert('Каждая активность должна содержать хотя бы одно заполненное поле (Заголовок, Подзаголовок или Дополнительная строка).');
+        alert(
+          'Каждая активность должна содержать хотя бы одно заполненное поле (Заголовок, Подзаголовок или Дополнительная строка).',
+        );
         return;
       }
 
@@ -186,7 +198,7 @@ export function OverviewTable() {
         alert('Нельзя удалить последний день. Должен остаться хотя бы один день.');
         return;
       }
-      
+
       try {
         await travelProgramService.deleteReviewDay(program._id, editableRow);
         setEditableRow(null);
@@ -275,9 +287,9 @@ export function OverviewTable() {
   const getIconComponent = (iconValue: string) => {
     const option = ICON_OPTIONS.find(opt => opt.value === iconValue);
     return option ? (
-      <option.icon size={20} className={styles['activity-icon']} />
+      <option.icon height={20} width={20} className={styles['activity-icon']} />
     ) : (
-      <Map size={20} className={styles['activity-icon']} />
+      <Map height={16} width={16} className={styles['activity-icon']} />
     );
   };
 
@@ -292,10 +304,10 @@ export function OverviewTable() {
   return (
     <>
       <div className={`${styles['details-table']} ${styles['overview-table']}`}>
-        <div className={styles['table-header']}>
-          <div className={styles['header-cell']}>День</div>
-          <div className={styles['header-cell']}>Активности</div>
-        </div>
+        {/*<div className={styles['table-header']}>*/}
+        {/*  <div className={styles['header-cell']}>День</div>*/}
+        {/*  <div className={styles['header-cell']}>Активности</div>*/}
+        {/*</div>*/}
         {reviewData.map((dayData, index: number) => {
           const activities =
             (editableRow === index && editedData?.activity
@@ -342,7 +354,7 @@ export function OverviewTable() {
                                   e.stopPropagation();
                                   handleIconChange(activityIndex, option.value);
                                 }}>
-                                <option.icon size={20} />
+                                <option.icon height={16} width={16} />
                                 <span>{option.label}</span>
                               </div>
                             ))}
@@ -423,24 +435,30 @@ export function OverviewTable() {
                       className={styles['edit-icon']}
                       onClick={handleAddNewActivity}
                       type="button">
-                      <Plus size={16} />
+                      <Plus height={16} width={16} />
                     </button>
-                    <button 
-                      className={`${styles['edit-icon']} ${!isDataValid() ? styles['disabled-icon'] : ''}`}
+                    <button
+                      className={`${styles['edit-icon']} ${
+                        !isDataValid() ? styles['disabled-icon'] : ''
+                      }`}
                       onClick={handleSave}
                       disabled={!isDataValid()}
-                      title={!isDataValid() ? 'Заполните хотя бы одно поле в каждой активности' : 'Сохранить'}>
-                      <Check size={16} />
+                      title={
+                        !isDataValid()
+                          ? 'Заполните хотя бы одно поле в каждой активности'
+                          : 'Сохранить'
+                      }>
+                      <Check height={16} width={16} />
                     </button>
                     <button className={styles['edit-icon']} onClick={handleCancel}>
-                      <X size={16} />
+                      <X height={16} width={16} />
                     </button>
                     {reviewData.length > 1 && (
                       <button
                         className={`${styles['edit-icon']} ${styles['del-icon']}`}
                         onClick={handleDelete}
                         title="Удалить день">
-                        <Trash2 size={16} />
+                        <Trash2 height={16} width={16} />
                       </button>
                     )}
                     <div className={styles['move-buttons']}>
@@ -449,14 +467,14 @@ export function OverviewTable() {
                         onClick={handleMoveUp}
                         disabled={editableRow === 0}
                         title="Переместить вверх">
-                        <ChevronUp size={16} />
+                        <ChevronUp height={16} width={16} />
                       </button>
                       <button
                         className={`${styles['edit-icon']} ${styles['move-icon']}`}
                         onClick={handleMoveDown}
                         disabled={editableRow === reviewData.length - 1}
                         title="Переместить вниз">
-                        <ChevronDown size={16} />
+                        <ChevronDown height={16} width={16} />
                       </button>
                     </div>
                   </div>
@@ -469,7 +487,7 @@ export function OverviewTable() {
       {isLoggedIn && (
         <div className={styles['edit-icons-add-new-row']}>
           <button className={styles['edit-icon']} onClick={handleAddNewRow}>
-            <Plus size={16} />
+            <Plus height={16} width={16} />
           </button>
         </div>
       )}

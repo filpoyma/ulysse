@@ -179,6 +179,13 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     }
   };
 
+  const time = (time: string) => {
+    if (!time) return '';
+    const hours = time.split(':')[0];
+    const mins = time.split(':')[1];
+    return hours === '0' || hours === '00' ? `${mins}мин` : `${hours}ч ${mins}мин`;
+  };
+
   return (
     <div className={styles.container} id="map">
       <div className={styles.header}>КАРТА / ЛОГИСТИКА ПУТЕШЕСТВИЯ</div>
@@ -331,9 +338,9 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                   </div>
                   <div className={styles.infoCol}>
                     <div className={styles.transportInfo}>
-                      <span className={styles.transportTime}>{item.time}</span>
+                      <span className={styles.transportTime}>{time(item.time)}</span>
                       {' / '}
-                      <span className={styles.transportDistance}>{item.distance}</span>
+                      <span className={styles.transportDistance}>{item.distance}км</span>
                     </div>
                   </div>
                 </div>

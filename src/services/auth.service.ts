@@ -2,12 +2,6 @@ import { authActions } from '../store/reducers/auth';
 import { store } from '../store';
 import AuthApi from '../api/auth.api';
 
-const clearAuthState = () => {
-  store.dispatch(authActions.setToken(null));
-  store.dispatch(authActions.setUser(null));
-  store.dispatch(authActions.setIsLoggedIn(false));
-};
-
 export const authService = {
   async login(credentials: Parameters<typeof AuthApi.login>[0]) {
     try {
@@ -20,7 +14,7 @@ export const authService = {
       return response;
     } catch (error) {
       console.error('Login error:', error);
-      clearAuthState();
+      store.dispatch(authActions.clearAuthState());
       throw error;
     }
   },
@@ -52,7 +46,7 @@ export const authService = {
     try {
       console.log('file-auth.service.ts logout >>>:');
       await AuthApi.logout();
-      clearAuthState();
+      store.dispatch(authActions.clearAuthState());
     } catch (error) {
       if (!silent) {
         console.error('Logout error:', error);
@@ -70,7 +64,7 @@ export const authService = {
       store.dispatch(authActions.setIsLoggedIn(true));
       return response.user;
     } catch (error) {
-      clearAuthState();
+      store.dispatch(authActions.clearAuthState());
       throw error;
     }
   },

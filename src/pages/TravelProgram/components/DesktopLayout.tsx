@@ -1,7 +1,7 @@
 import React from 'react';
 import { IFirstPageData } from '../../../types/travelProgram.types';
 import FirstPage from '../../../components/FirstPage/FirstPage';
-import { DetailsSection } from '../../../components/DetailsSection';
+import DetailsSection from '../../../components/DetailsSection/DetailsSection.tsx';
 import MapBox from '../../../components/MapBox/MapBoxCustomLayer.component';
 import MapPage from '../../../components/MapPage/MapPage';
 import DaySection from '../../../components/DaySection/DaySection';

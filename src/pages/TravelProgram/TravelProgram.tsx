@@ -6,11 +6,7 @@ import { useSelector } from 'react-redux';
 import { travelProgramService } from '../../services/travelProgram.service.ts';
 import { ROOT_URL } from '../../constants/api.constants.ts';
 import { IFirstPageData as FirstPageType } from '../../types/travelProgram.types.ts';
-import {
-  selectIsLoggedIn,
-  selectTravelProgram,
-  selectTravelProgramDaySection,
-} from '../../store/selectors.ts';
+import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
 import useIsMobile from '../../hooks/useIsMobile.tsx';
 import styles from './TravelProgram.module.css';
 import MobileLayout from './components/MobileLayout';
@@ -49,9 +45,9 @@ const TravelProgram: React.FC = () => {
     }
   }, [programName]);
 
-  const scrollToHero = useCallback(() => {
-    //setCurrentSection('hero');
-  }, []);
+  // const scrollToHero = useCallback(() => {
+  //   //setCurrentSection('hero');
+  // }, []);
 
   const scrollToDetails = useCallback(() => {
     detailsRef.current?.scrollIntoView({ behavior: 'smooth' });

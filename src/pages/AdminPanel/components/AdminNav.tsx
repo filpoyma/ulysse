@@ -1,17 +1,7 @@
-import { FC, useState } from "react";
-import styles from "../AdminPanel.module.css";
-import IconExit from "../../../assets/icons/exit.svg";
-
-type NavItem =
-  | "itineraries"
-  | "hotels"
-  | "hotels-collections"
-  | "hotels-pages"
-  | "restaurants"
-  | "restaurants-collections"
-  | "restaurants-pages"
-  | "info"
-  | "references";
+import { FC, useState } from 'react';
+import styles from '../AdminPanel.module.css';
+import IconExit from '../../../assets/icons/exit.svg';
+import { NavItem } from '../../../types/adminPanel.types.ts';
 
 interface AdminNavProps {
   activeNavItem: NavItem;
@@ -19,11 +9,7 @@ interface AdminNavProps {
   onLogout: () => void;
 }
 
-const AdminNav: FC<AdminNavProps> = ({
-  activeNavItem,
-  onNavItemChange,
-  onLogout,
-}) => {
+const AdminNav: FC<AdminNavProps> = ({ activeNavItem, onNavItemChange, onLogout }) => {
   const [isHotelsMenuOpen, setIsHotelsMenuOpen] = useState(false);
   const [isRestaurantsMenuOpen, setIsRestaurantsMenuOpen] = useState(false);
 
@@ -56,93 +42,72 @@ const AdminNav: FC<AdminNavProps> = ({
   return (
     <nav className={styles.nav}>
       <button
-        className={`${styles.navItem} ${
-          activeNavItem === "itineraries" ? styles.active : ""
-        }`}
-        onClick={() => handleOtherNavItemClick("itineraries")}
-      >
+        className={`${styles.navItem} ${activeNavItem === 'itineraries' ? styles.active : ''}`}
+        onClick={() => handleOtherNavItemClick('itineraries')}>
         Itineraries
       </button>
       <div className={styles.dropdownContainer}>
         <button
-          className={`${styles.navItem} ${
-            activeNavItem.startsWith("hotels") ? styles.active : ""
-          }`}
-          onClick={handleHotelsClick}
-        >
+          className={`${styles.navItem} ${activeNavItem.startsWith('hotels') ? styles.active : ''}`}
+          onClick={handleHotelsClick}>
           Hotels
         </button>
         <div
           className={`${styles.dropdownMenu} ${
-            isHotelsMenuOpen ? styles.dropdownMenuVisible : ""
-          }`}
-        >
+            isHotelsMenuOpen ? styles.dropdownMenuVisible : ''
+          }`}>
           <button
             className={`${styles.dropdownItem} ${
-              activeNavItem === "hotels-collections" ? styles.active : ""
+              activeNavItem === 'hotels-collections' ? styles.active : ''
             }`}
-            onClick={() => handleHotelsItemClick("hotels-collections")}
-          >
-            Hotels Collections
+            onClick={() => handleHotelsItemClick('hotels-collections')}>
+            Single Hotel
           </button>
           <button
             className={`${styles.dropdownItem} ${
-              activeNavItem === "hotels-pages" ? styles.active : ""
+              activeNavItem === 'hotels-pages' ? styles.active : ''
             }`}
-            onClick={() => handleHotelsItemClick("hotels-pages")}
-          >
-            Hotels Pages
+            onClick={() => handleHotelsItemClick('hotels-pages')}>
+            Hotels List
           </button>
         </div>
       </div>
       <div className={styles.dropdownContainer}>
         <button
           className={`${styles.navItem} ${
-            activeNavItem.startsWith("restaurants") ? styles.active : ""
+            activeNavItem.startsWith('restaurants') ? styles.active : ''
           }`}
-          onClick={handleRestaurantsClick}
-        >
+          onClick={handleRestaurantsClick}>
           Restaurants
         </button>
         <div
           className={`${styles.dropdownMenu} ${
-            isRestaurantsMenuOpen ? styles.dropdownMenuVisible : ""
-          }`}
-        >
+            isRestaurantsMenuOpen ? styles.dropdownMenuVisible : ''
+          }`}>
           <button
             className={`${styles.dropdownItem} ${
-              activeNavItem === "restaurants-collections" ? styles.active : ""
+              activeNavItem === 'restaurants-collections' ? styles.active : ''
             }`}
-            onClick={() =>
-              handleRestaurantsItemClick("restaurants-collections")
-            }
-          >
-            Rest Collections
+            onClick={() => handleRestaurantsItemClick('restaurants-collections')}>
+            Single Rest
           </button>
           <button
             className={`${styles.dropdownItem} ${
-              activeNavItem === "restaurants-pages" ? styles.active : ""
+              activeNavItem === 'restaurants-pages' ? styles.active : ''
             }`}
-            onClick={() => handleRestaurantsItemClick("restaurants-pages")}
-          >
-            Rest Pages
+            onClick={() => handleRestaurantsItemClick('restaurants-pages')}>
+            Rest List
           </button>
         </div>
       </div>
       <button
-        className={`${styles.navItem} ${
-          activeNavItem === "info" ? styles.active : ""
-        }`}
-        onClick={() => handleOtherNavItemClick("info")}
-      >
+        className={`${styles.navItem} ${activeNavItem === 'info' ? styles.active : ''}`}
+        onClick={() => handleOtherNavItemClick('info')}>
         Info
       </button>
       <button
-        className={`${styles.navItem} ${
-          activeNavItem === "references" ? styles.active : ""
-        }`}
-        onClick={() => handleOtherNavItemClick("references")}
-      >
+        className={`${styles.navItem} ${activeNavItem === 'references' ? styles.active : ''}`}
+        onClick={() => handleOtherNavItemClick('references')}>
         References
       </button>
       <button className={styles.logoutButton} onClick={onLogout} title="Выйти">

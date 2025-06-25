@@ -94,12 +94,6 @@ export function AccommodationTable() {
   return (
     <>
       <div className={`${styles['details-table']} ${styles['accommodation-table']}`}>
-        <div className={styles['table-header']}>
-          <div className={styles['header-cell']}>День</div>
-          <div className={styles['header-cell']}>Проживание</div>
-          <div className={styles['header-cell']}>Детали</div>
-          <div className={styles['header-cell']}>Ночи</div>
-        </div>
         {accommodationData.map((row, index) => (
           <div key={index} className={styles['table-row']} style={{ position: 'relative' }}>
             {/* 4 ячейки */}

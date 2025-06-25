@@ -117,6 +117,7 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
           _id: img._id || img.id || '',
           filename: img.filename,
           path: img.path,
+          belongsToId: img.belongsToId,
         };
         dispatch(travelProgramActions.setBgImages(newBgImages));
       }

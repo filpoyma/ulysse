@@ -2,15 +2,29 @@
 .details-table {
   width: 100%;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  /*border-radius: 8px;*/
+  background: transparent;
+  overflow-x: auto;
+  position: relative;
+  border-top: none;
+}
+
+.details-header {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  /*border-radius: 8px;*/
   background: transparent;
   overflow-x: auto;
   position: relative;
 }
 
+.details-table .accommodation-table {
+  border-top: none;
+}
+
 .table-header {
   display: grid;
-  border-bottom: 1px solid var(--border-color);
+  /*border-bottom: 1px solid var(--border-color);*/
   background-color: var(--table-header-bg);
   min-width: min-content;
 }

@@ -1,19 +1,21 @@
-import { Plane } from 'lucide-react';
-import { DayCell } from './DayCell';
-import styles from './index.module.css';
-import { useSelector } from 'react-redux';
-import { selectTravelProgram } from '../../store/selectors';
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { useSelector } from 'react-redux';
+
+import Plane from '../../assets/icons/plane.svg';
+import { DayCell } from './DayCell';
+import styles from './index.module.css';
+import { selectTravelProgram } from '../../store/selectors';
 
 export function FlightsTable() {
   const program = useSelector(selectTravelProgram);
   const reviewData = program?.secondPageTables?.routeDetailsTable?.review || [];
-  console.log('reviewData',reviewData);
-  const flightData = reviewData.filter((item) => item.activity.some((activity) => activity.dayActivity.isFlight));
+  console.log('reviewData', reviewData);
+  const flightData = reviewData.filter(item =>
+    item.activity.some(activity => activity.dayActivity.isFlight),
+  );
 
-  
-  console.log('flightData',flightData);
+  console.log('flightData', flightData);
   const [expandedActivities, setExpandedActivities] = useState<Record<string, boolean>>({});
 
   const toggleActivity = (activityId: string, e: React.MouseEvent) => {
@@ -26,16 +28,9 @@ export function FlightsTable() {
 
   return (
     <div className={`${styles['details-table']} ${styles['flights-table']}`}>
-      <div className={styles['table-header']}>
-        <div className={styles['header-cell']}>День</div>
-        <div className={styles['header-cell']}>Рейс</div>
-      </div>
       {flightData.map((dayData, index) => (
-        <div 
-          key={index} 
-          className={styles['table-row']}
-        >
-          <DayCell 
+        <div key={index} className={styles['table-row']}>
+          <DayCell
             title={`${dayData.numOfDay}`}
             subtitle={dayjs(dayData.day).format('dddd')}
             date={dayjs(dayData.day).format('DD MMM YYYY')}
@@ -43,22 +38,18 @@ export function FlightsTable() {
           <div className={styles['activities-cell']}>
             {dayData.activity
               .filter(activity => activity.dayActivity.isFlight)
-              .map((activity) => (
+              .map(activity => (
                 <div key={activity.id} className={styles['activity-item']}>
-                  <Plane size={20} className={styles['activity-icon']} />
+                  <Plane height={20} width={20} className={styles['activity-icon']} />
                   <div className={styles['activity-details']}>
                     <div>{activity.dayActivity.line1}</div>
-                    {activity.dayActivity.line2 && (
-                      <div>{activity.dayActivity.line2}</div>
-                    )}
-                    {activity.dayActivity.line3 && (
-                      <div>{activity.dayActivity.line3}</div>
-                    )}
+                    {activity.dayActivity.line2 && <div>{activity.dayActivity.line2}</div>}
+                    {activity.dayActivity.line3 && <div>{activity.dayActivity.line3}</div>}
                     {activity.dayActivity.more && (
                       <div className={styles['activity-subtext']}>
                         <div
                           className={styles['more-text']}
-                          onClick={(e) => toggleActivity(activity.id, e)}>
+                          onClick={e => toggleActivity(activity.id, e)}>
                           {expandedActivities[activity.id] ? 'СКРЫТЬ' : 'ПОДРОБНЕЕ'}
                         </div>
                         <div

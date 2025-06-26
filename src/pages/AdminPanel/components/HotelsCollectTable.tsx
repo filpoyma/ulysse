@@ -15,6 +15,7 @@ interface HotelsTableProps {
   onNewHotelChange?: (field: keyof IHotel, value: string) => void;
   onSaveNewHotel?: () => void;
   handleCreateHotelClick: () => void;
+  handleNavigateToHotelPage: (id: string) => void;
   onCancelNewHotel?: () => void;
   nameInputRef?: RefObject<HTMLInputElement>;
   sortField?: keyof IHotel;
@@ -35,6 +36,7 @@ const HotelsTable: FC<HotelsTableProps> = ({
   sortOrder,
   onSort,
   handleCreateHotelClick,
+  handleNavigateToHotelPage,
 }) => {
   const [hotelEditId, setHotelEditId] = useState('');
 
@@ -106,14 +108,14 @@ const HotelsTable: FC<HotelsTableProps> = ({
                     className={styles.hotelCreateInput}
                     type="text"
                     value={newHotel.name || ''}
-                    onChange={e => onNewHotelChange && onNewHotelChange('name', e.target.value)}
+                    onChange={(e) => onNewHotelChange && onNewHotelChange('name', e.target.value)}
                     placeholder="Название"
                   />
                 </td>
                 <td>
                   <CountryAutocomplete
                     value={newHotel.country || ''}
-                    onChange={value => onNewHotelChange && onNewHotelChange('country', value)}
+                    onChange={(value) => onNewHotelChange && onNewHotelChange('country', value)}
                     className={styles.hotelCreateInput}
                   />
                 </td>
@@ -122,7 +124,9 @@ const HotelsTable: FC<HotelsTableProps> = ({
                     className={styles.hotelCreateInput}
                     type="text"
                     value={newHotel.address || ''}
-                    onChange={e => onNewHotelChange && onNewHotelChange('address', e.target.value)}
+                    onChange={(e) =>
+                      onNewHotelChange && onNewHotelChange('address', e.target.value)
+                    }
                     placeholder="Адрес"
                   />
                 </td>
@@ -131,7 +135,7 @@ const HotelsTable: FC<HotelsTableProps> = ({
                     className={styles.hotelCreateInput}
                     type="text"
                     value={newHotel.region || ''}
-                    onChange={e => onNewHotelChange && onNewHotelChange('region', e.target.value)}
+                    onChange={(e) => onNewHotelChange && onNewHotelChange('region', e.target.value)}
                     placeholder="Регион"
                   />
                 </td>
@@ -154,9 +158,13 @@ const HotelsTable: FC<HotelsTableProps> = ({
                 </td>
               </tr>
             )}
-            {hotels.map(hotel => (
+            {hotels.map((hotel) => (
               <tr key={hotel._id}>
-                <td>{hotel.name}</td>
+                <td
+                  className={styles.programName}
+                  onClick={() => handleNavigateToHotelPage(hotel._id)}>
+                  {hotel.name}
+                </td>
                 <td>{hotel.country}</td>
                 <td>{hotel.address}</td>
                 <td>{hotel.region}</td>

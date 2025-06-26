@@ -12,6 +12,7 @@ import styles from './TravelProgram.module.css';
 import MobileLayout from './components/MobileLayout';
 import DesktopLayout from './components/DesktopLayout';
 import { Loader } from '../../components/Loader/Loader.tsx';
+import NotFoundPage from '../NotFoundPage/NotFoundPage.tsx';
 
 const DEFAULT_FIRST_PAGE: FirstPageType = {
   title: '',
@@ -33,7 +34,7 @@ const TravelProgram: React.FC = () => {
   const numOfDays = (program?.fourthPageDay.daysData || []).length;
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const firstPage: FirstPageType = program?.firstPage || DEFAULT_FIRST_PAGE;
-  console.log('file-TravelProgram.tsx isLoading:', isLoading);
+
   useEffect(() => {
     if (programName) {
       travelProgramService
@@ -217,6 +218,8 @@ const TravelProgram: React.FC = () => {
     : 'https://images.pexels.com/photos/4577791/pexels-photo-4577791.jpeg?auto=compress&cs=tinysrgb&w=1920';
 
   if (isLoading) return <Loader />;
+
+  if (!program) return <NotFoundPage />;
 
   return (
     <>

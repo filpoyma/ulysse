@@ -1,7 +1,7 @@
 import { IUploadedImage } from './uploadImage.types.ts';
 
 export interface IHotel {
-  _id?: string;
+  _id: string;
   name: string;
   country: string;
   region: string;

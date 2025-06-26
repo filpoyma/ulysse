@@ -16,6 +16,7 @@ dayjs.extend(customParseFormat);
 const TravelProgram = React.lazy(() => import('./pages/TravelProgram/TravelProgram.tsx'));
 const AdminLogin = React.lazy(() => import('./pages/AdminLogin/AdminSignIn.tsx'));
 const AdminRegister = React.lazy(() => import('./pages/AdminLogin/AdminSighUp.tsx'));
+const SingleHotel = React.lazy(() => import('./pages/Hotels/SingleHotel/SingleHotel.tsx'));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const App = () => {
     <Suspense fallback={<Loader />}>
       <Routes>
         <Route path="/travel-programm/:programName" element={<TravelProgram />} />
+        <Route path="/hotel/:id" element={<SingleHotel />} />
         <Route path="/ulyseadmin" element={<AdminLogin />} />
         <Route path="/ulyseadmin/register" element={<AdminRegister />} />
         <Route path="/admin" element={<AdminPanel />} />

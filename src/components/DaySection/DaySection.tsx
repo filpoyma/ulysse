@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import styles from './DaySection.module.css';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
-import {
-  selectTravelProgramDaySection,
-  selectIsLoggedIn,
-  selectTravelProgram,
-} from '../../store/selectors.ts';
+import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
 import PlusCircle from '../../assets/icons/plusInCircle.svg';
 import InfoCircle from '../../assets/icons/infoInCircle.svg';
 import Check from '../../assets/icons/check.svg';
@@ -16,6 +12,7 @@ import X from '../../assets/icons/x.svg';
 
 import { travelProgramService } from '../../services/travelProgram.service';
 import { IFourthDayData } from '../../types/travelProgram.types';
+import { selectTravelProgramDaySection } from '../../store/reSelect.ts';
 
 const DaySection: React.FC = () => {
   const daySectionData = useSelector(selectTravelProgramDaySection);

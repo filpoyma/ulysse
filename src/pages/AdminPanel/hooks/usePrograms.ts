@@ -1,23 +1,25 @@
-import { useState, useMemo } from "react";
-import { travelProgramService } from "../../../services/travelProgram.service";
-import { ITravelProgramResponse } from "../../../types/travelProgram.types";
+import { useState, useMemo } from 'react';
+import { travelProgramService } from '../../../services/travelProgram.service';
+import { ITravelProgramResponse } from '../../../types/travelProgram.types';
+import { useNavigate } from 'react-router-dom';
 
 export const usePrograms = () => {
+  const navigate = useNavigate();
+
   const [programs, setPrograms] = useState<ITravelProgramResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [sortField, setSortField] =
-    useState<keyof ITravelProgramResponse>("name");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortField, setSortField] = useState<keyof ITravelProgramResponse>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const sortedPrograms = useMemo(() => {
     const arr = [...programs];
     arr.sort((a, b) => {
-      const aValue = a[sortField] || "";
-      const bValue = b[sortField] || "";
-      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
+      const aValue = a[sortField] || '';
+      const bValue = b[sortField] || '';
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
     return arr;
@@ -25,10 +27,10 @@ export const usePrograms = () => {
 
   const handleSortPrograms = (field: keyof ITravelProgramResponse) => {
     if (sortField === field) {
-      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortField(field);
-      setSortOrder("asc");
+      setSortOrder('asc');
     }
   };
 
@@ -39,8 +41,8 @@ export const usePrograms = () => {
       const response = await travelProgramService.getAll();
       setPrograms(response.data || []);
     } catch (err) {
-      setError("Ошибка при загрузке программ");
-      console.error("Error fetching programs:", err);
+      setError('Ошибка при загрузке программ');
+      console.error('Error fetching programs:', err);
     } finally {
       setLoading(false);
     }
@@ -54,13 +56,13 @@ export const usePrograms = () => {
       setIsModalOpen(false);
       await fetchPrograms();
     } catch (err) {
-      setError("Ошибка создания шаблона");
-      console.error("Error creating template:", err);
+      setError('Ошибка создания шаблона');
+      console.error('Error creating template:', err);
     }
   };
 
   const handleDeleteProgram = async (id: string) => {
-    if (!window.confirm("Вы уверены, что хотите удалить эту программу?")) {
+    if (!window.confirm('Вы уверены, что хотите удалить эту программу?')) {
       return;
     }
 
@@ -68,9 +70,16 @@ export const usePrograms = () => {
       await travelProgramService.delete(id);
       await fetchPrograms();
     } catch (err) {
-      setError("Ошибка удаления программы");
-      console.error("Error deleting program:", err);
+      setError('Ошибка удаления программы');
+      console.error('Error deleting program:', err);
     }
+  };
+
+  const handleProgramClick = (name_eng: string) => {
+    navigate(`/travel-programm/${name_eng}`);
+  };
+  const handleProgramEdit = (id: string) => {
+    //navigate(`/travel-programm/${id}`);
   };
 
   return {
@@ -86,5 +95,7 @@ export const usePrograms = () => {
     handleCreateTemplate,
     handleCreateTemplateSubmit,
     handleDeleteProgram,
+    handleProgramClick,
+    handleProgramEdit,
   };
 };

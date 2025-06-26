@@ -56,10 +56,8 @@ export const authService = {
   },
 
   async validateSession() {
-    console.log('file-auth.service.ts validateSession >>>>>>>>>>>:');
     try {
       const response = await AuthApi.validateSession();
-      console.log('file-auth.service.ts response:', response);
       store.dispatch(authActions.setUser(response.user));
       store.dispatch(authActions.setIsLoggedIn(true));
       return response.user;

@@ -2,12 +2,15 @@ import { useState, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
 import { hotelActions } from '../../../store/reducers/hotel';
-import { RootState } from '../../../store';
 import { IHotel, IHotelCreate } from '../../../types/hotel.types.ts';
+import { selectHotels } from '../../../store/selectors.ts';
+import { useNavigate } from 'react-router-dom';
 
 export const useHotelsCollect = () => {
   const dispatch = useDispatch();
-  const hotels = useSelector((state: RootState) => state.hotel.hotels);
+  const navigate = useNavigate();
+
+  const hotels = useSelector(selectHotels);
   const [isCreatingHotel, setIsCreatingHotel] = useState(false);
   const [newHotel, setNewHotel] = useState<IHotelCreate>({
     name: '',
@@ -55,7 +58,7 @@ export const useHotelsCollect = () => {
 
   const handleSortHotels = (field: keyof IHotel) => {
     if (sortField === field) {
-      setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -76,7 +79,7 @@ export const useHotelsCollect = () => {
   };
 
   const handleEditHotelChange = (field: keyof IHotel, value: string) => {
-    setEditingHotelData(prev => ({ ...prev, [field]: value }));
+    setEditingHotelData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveEditHotel = async () => {
@@ -124,7 +127,7 @@ export const useHotelsCollect = () => {
   };
 
   const handleNewHotelChange = (field: keyof IHotel, value: string) => {
-    setNewHotel(prev => ({ ...prev, [field]: value }));
+    setNewHotel((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSaveNewHotel = async () => {
@@ -155,6 +158,10 @@ export const useHotelsCollect = () => {
     setNewHotel({ name: '', country: '', address: '', region: '' });
   };
 
+  const handleNavigateToHotelPage = (id: string) => {
+    navigate(`/hotel/${id}`);
+  };
+
   return {
     hotels: sortedHotels,
     isCreatingHotel,
@@ -176,6 +183,7 @@ export const useHotelsCollect = () => {
     handleNewHotelChange,
     handleSaveNewHotel,
     handleCancelNewHotel,
+    handleNavigateToHotelPage,
     fetchHotels,
   };
 };

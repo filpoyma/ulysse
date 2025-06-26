@@ -20,6 +20,7 @@ export const HotelsCollectSection: FC = () => {
     handleNewHotelChange,
     handleSaveNewHotel,
     handleCancelNewHotel,
+    handleNavigateToHotelPage,
     fetchHotels,
   } = useHotelsCollect();
 
@@ -46,6 +47,7 @@ export const HotelsCollectSection: FC = () => {
           sortOrder={sortOrder}
           onSort={handleSortHotels}
           handleCreateHotelClick={handleCreateHotelClick}
+          handleNavigateToHotelPage={handleNavigateToHotelPage}
         />
       )}
     </>

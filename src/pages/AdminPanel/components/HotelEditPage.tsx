@@ -36,7 +36,7 @@ const HotelEditPage = ({
     if (hotelId) {
       if (hotels && hotels.length) {
         setIsLoading(false);
-        const hotel = hotels.find(h => h._id === hotelId);
+        const hotel = hotels.find((h) => h._id === hotelId);
         if (hotel) setHotel(hotel);
         else {
           alert('Отель не найден');
@@ -44,7 +44,7 @@ const HotelEditPage = ({
       } else {
         hotelService
           .getById(hotelId)
-          .then(hotel => {
+          .then((hotel) => {
             setHotel(hotel.data);
           })
           .catch(console.error)
@@ -62,7 +62,7 @@ const HotelEditPage = ({
     field: keyof IHotel | 'hotelInfo.about' | 'roomInfo.about',
     value: string | string[] | number[],
   ) => {
-    setHotel(hotel => {
+    setHotel((hotel) => {
       if (!hotel) return null;
 
       if (field === 'hotelInfo.about') {
@@ -115,16 +115,16 @@ const HotelEditPage = ({
     try {
       const updatedGallery =
         type === 'hotelInfo.gallery'
-          ? hotel.hotelInfo.gallery.filter(img => img._id !== imageId)
-          : hotel.roomInfo.gallery.filter(img => img._id !== imageId);
+          ? hotel.hotelInfo.gallery.filter((img) => img._id !== imageId)
+          : hotel.roomInfo.gallery.filter((img) => img._id !== imageId);
 
       await hotelService.updateGallery(
         hotel._id,
         type,
-        updatedGallery.map(img => img._id || ''),
+        updatedGallery.map((img) => img._id || ''),
       );
 
-      setHotel(prev => {
+      setHotel((prev) => {
         if (!prev) return null;
         if (type === 'hotelInfo.gallery') {
           return {
@@ -159,7 +159,7 @@ const HotelEditPage = ({
       return;
     }
 
-    const [lng, lat] = hotelCoord.split(' ').map(coord => parseFloat(coord.trim()));
+    const [lng, lat] = hotelCoord.split(' ').map((coord) => parseFloat(coord.trim()));
     const hotelWithParsedCoordinates = {
       ...hotel,
       coordinates: [lng, lat] as [number, number],
@@ -222,7 +222,7 @@ const HotelEditPage = ({
                   />
                   <button
                     className={styles.deleteButton}
-                    onClick={e => {
+                    onClick={(e) => {
                       e.stopPropagation();
                       if (image._id) {
                         handleDeleteImage(image._id, 'hotelInfo.gallery');
@@ -257,7 +257,7 @@ const HotelEditPage = ({
                   />
                   <button
                     className={styles.deleteButton}
-                    onClick={e => {
+                    onClick={(e) => {
                       e.stopPropagation();
                       if (image._id) {
                         handleDeleteImage(image._id, 'roomInfo.gallery');
@@ -299,14 +299,14 @@ const HotelEditPage = ({
               <input
                 type="text"
                 value={hotel.name}
-                onChange={e => handleInputChange('name', e.target.value)}
+                onChange={(e) => handleInputChange('name', e.target.value)}
               />
             </div>
             <div className={styles.field}>
               <label>Страна</label>
               <CountryAutocomplete
                 value={hotel.country || ''}
-                onChange={value => handleInputChange('country', value)}
+                onChange={(value) => handleInputChange('country', value)}
               />
             </div>
 
@@ -315,7 +315,7 @@ const HotelEditPage = ({
               <input
                 type="text"
                 value={hotel.region}
-                onChange={e => handleInputChange('region', e.target.value)}
+                onChange={(e) => handleInputChange('region', e.target.value)}
               />
             </div>
 
@@ -324,7 +324,7 @@ const HotelEditPage = ({
               <input
                 type="text"
                 value={hotel.address}
-                onChange={e => handleInputChange('address', e.target.value)}
+                onChange={(e) => handleInputChange('address', e.target.value)}
               />
             </div>
             <div className={styles.field}>
@@ -332,7 +332,7 @@ const HotelEditPage = ({
               <input
                 type="text"
                 value={hotel.link}
-                onChange={e => handleInputChange('link', e.target.value)}
+                onChange={(e) => handleInputChange('link', e.target.value)}
               />
             </div>
             <div className={styles.field}>
@@ -360,7 +360,7 @@ const HotelEditPage = ({
               <label>Описание</label>
               <textarea
                 value={hotel.hotelInfo.about}
-                onChange={e => handleInputChange('hotelInfo.about', e.target.value)}
+                onChange={(e) => handleInputChange('hotelInfo.about', e.target.value)}
               />
             </div>
           </div>
@@ -372,7 +372,7 @@ const HotelEditPage = ({
               <label>Описание номеров</label>
               <textarea
                 value={hotel.roomInfo?.about}
-                onChange={e => handleInputChange('roomInfo.about', e.target.value)}
+                onChange={(e) => handleInputChange('roomInfo.about', e.target.value)}
               />
             </div>
           </div>
@@ -385,11 +385,11 @@ const HotelEditPage = ({
               <input
                 type="text"
                 placeholder="WiFi Парковка Бассейн"
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     const input = e.currentTarget;
-                    const newItems = input.value.split(',').filter(item => item.trim());
+                    const newItems = input.value.split(',').filter((item) => item.trim());
                     if (newItems.length > 0) {
                       const updatedPros = [...(hotel.pros || []), ...newItems];
                       handleInputChange('pros', updatedPros);
@@ -424,11 +424,11 @@ const HotelEditPage = ({
               <input
                 type="text"
                 placeholder="WiFi Парковка Бассейн"
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     const input = e.currentTarget;
-                    const newItems = input.value.split(',').filter(item => item.trim());
+                    const newItems = input.value.split(',').filter((item) => item.trim());
                     if (newItems.length > 0) {
                       const updatedShortInfo = [...(hotel.shortInfo || []), ...newItems];
                       handleInputChange('shortInfo', updatedShortInfo);

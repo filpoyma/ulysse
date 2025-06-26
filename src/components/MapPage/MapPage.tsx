@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styles from './MapPage.module.css';
 import IconElipses from '../../assets/icons/mapIcons/list/elipses.svg';
 import { useSelector } from 'react-redux';
-import { selectLogisticsData, selectTravelProgram } from '../../store/selectors.ts';
+import { selectTravelProgram } from '../../store/selectors.ts';
 import iconsMapList from '../../assets/icons/mapIcons/list';
 import { X, Check, Edit, Plus, Trash2, MoveDown, MoveUp } from 'lucide-react';
 import { mapService } from '../../services/map.service';
 import { ILogistics, TRouteType, TSourceListIcon } from '../../types/travelProgram.types';
 import { validateCoordinates } from '../../utils/helpers.ts';
 import { validateClipboardCoordinates } from '../MapBox/map.utils.ts';
+import { selectLogisticsData } from '../../store/reSelect.ts';
 
 const routeTypeLabels: Record<string, string> = {
   driving: 'Автомобиль',

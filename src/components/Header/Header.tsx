@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, RefObject } from 'react';
 import { Share2, Sun, Menu } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Logo } from '../../assets/icons/Logo.tsx';
@@ -10,7 +10,7 @@ import { createArrayFromNumberWithId } from '../../utils/helpers.ts';
 
 interface HeaderProps {
   currentSection: string;
-  navRef: React.RefObject<HTMLElement>;
+  navRef: RefObject<HTMLElement>;
   scrollToMap: () => void;
   isLoggedIn: boolean;
   numOfDays: number;
@@ -26,13 +26,12 @@ const Header = ({ currentSection, navRef, scrollToMap, isLoggedIn, numOfDays }: 
       (activeElement as HTMLElement).scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
-        inline: 'center'
+        inline: 'center',
       });
     }
-  }, 300)
+  }, 300);
 
   scrollMenuToCenter();
-
 
   return (
     <header className={styles.header}>

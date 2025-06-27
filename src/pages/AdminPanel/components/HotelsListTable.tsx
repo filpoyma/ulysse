@@ -1,11 +1,10 @@
 import { FC, RefObject, useState } from 'react';
 import { Edit, Trash2, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 import styles from '../AdminPanel.module.css';
-import { IHotelsList } from '../../../services/hotelsList.service';
 import dayjs from 'dayjs';
 import { SectionHeader } from './SectionHeader.tsx';
-import HotelEditPage from './HotelEditPage.tsx';
 import HotelsListEditPage from './HotelsListEditPage.tsx';
+import { IHotelsList } from '../../../types/hotelsList.types.ts';
 
 interface HotelsListTableProps {
   hotelsLists: IHotelsList[];
@@ -53,8 +52,7 @@ const HotelsListTable: FC<HotelsListTableProps> = ({
     setListEditId(id);
   };
 
-  if (listEditId)
-    return <HotelsListEditPage id={listEditId} returnHandler={handleEditListPage} />;
+  if (listEditId) return <HotelsListEditPage id={listEditId} returnHandler={handleEditListPage} />;
 
   return (
     <>

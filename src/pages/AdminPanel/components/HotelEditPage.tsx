@@ -169,6 +169,7 @@ const HotelEditPage = ({
       await hotelService.update(hotelId, hotelWithParsedCoordinates);
       console.log('Saving hotel:', hotel);
       setCoordinateError(null);
+      returnHandler('');
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Произошла ошибка при сохранении отеля';

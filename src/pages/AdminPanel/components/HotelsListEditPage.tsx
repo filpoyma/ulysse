@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IHotel } from '../../../types/hotel.types';
-import { hotelsListService, IHotelsListWithHotels } from '../../../services/hotelsList.service';
+import { hotelsListService } from '../../../services/hotelsList.service';
 import styles from '../AdminPanel.module.css';
 import { Loader } from '../../../components/Loader/Loader';
 import { hotelService } from '../../../services/hotel.service.ts';

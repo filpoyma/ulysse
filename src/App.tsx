@@ -1,15 +1,16 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
+
 import AdminPanel from './pages/AdminPanel/AdminPanel';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import { Loader } from './components/Loader/Loader';
-import { authService } from './services';
-import { useDispatch } from 'react-redux';
-import { authActions } from './store/reducers/auth';
-import dayjs from 'dayjs';
-import 'dayjs/locale/ru';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { countriesService } from './services/countries.service.ts';
+import { authService } from './services';
+import { authActions } from './store/reducers/auth';
+import { useDispatch } from 'react-redux';
+
 dayjs.locale('ru');
 dayjs.extend(customParseFormat);
 
@@ -17,24 +18,19 @@ const TravelProgram = React.lazy(() => import('./pages/TravelProgram/TravelProgr
 const AdminLogin = React.lazy(() => import('./pages/AdminLogin/AdminSignIn.tsx'));
 const AdminRegister = React.lazy(() => import('./pages/AdminLogin/AdminSighUp.tsx'));
 const SingleHotel = React.lazy(() => import('./pages/Hotels/SingleHotel/SingleHotel.tsx'));
+const HotelsList = React.lazy(() => import('./pages/Hotels/HotelsList/HotelsList.tsx'));
 
 const App = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(authActions.setIsLoading(true));
-    const validateSession = async () => {
-      try {
-        const user = await authService.validateSession();
-        if (user) await countriesService.getAll();
-      } catch (err) {
-        console.error('Session validation error:', err);
-      } finally {
+    authService
+      .validateSession()
+      .catch(console.error)
+      .finally(() => {
         dispatch(authActions.setIsLoading(false));
-      }
-    };
-
-    validateSession();
+      });
   }, []);
 
   return (
@@ -42,6 +38,7 @@ const App = () => {
       <Routes>
         <Route path="/travel-programm/:programName" element={<TravelProgram />} />
         <Route path="/hotel/:id" element={<SingleHotel />} />
+        <Route path="/hotels/:id" element={<HotelsList />} />
         <Route path="/ulyseadmin" element={<AdminLogin />} />
         <Route path="/ulyseadmin/register" element={<AdminRegister />} />
         <Route path="/admin" element={<AdminPanel />} />

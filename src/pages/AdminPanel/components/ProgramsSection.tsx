@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { usePrograms } from '../hooks/usePrograms';
 import { SectionHeader } from './SectionHeader';
 import ProgramsTable from './ProgramsTable.tsx';
@@ -8,7 +7,6 @@ import { Loader } from '../../../components/Loader/Loader';
 import styles from '../AdminPanel.module.css';
 
 export const ProgramsSection: FC = () => {
-  const navigate = useNavigate();
   const {
     programs,
     loading,

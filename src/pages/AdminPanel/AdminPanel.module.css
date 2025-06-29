@@ -119,6 +119,20 @@ margin-top: 24px;
   background-color: var(--table-header-bg);
 }
 
+.actionButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.actionButton:disabled:hover {
+  background-color: transparent;
+}
+
+.actionButton svg {
+  width: 16px;
+  height: 16px;
+}
+
 .deleteButton {
   padding: 0.5rem;
   background: none;

@@ -5,6 +5,8 @@ import {
   IHotelsListStats,
   IUpdateHotelsListData,
 } from '../types/hotelsList.types.ts';
+import { store } from '../store';
+import { hotelActions } from '../store/reducers/hotel';
 
 export const hotelsListService = {
   getAll(params?: { active?: boolean; withHotels?: boolean }) {
@@ -14,6 +16,11 @@ export const hotelsListService = {
   // Получить список отелей по ID
   getById(id: string) {
     return hotelsListApi.getById(id);
+  },
+
+  async getFullById(id: string) {
+    const res = await hotelsListApi.getFullById(id);
+    store.dispatch(hotelActions.setHotels(res.data.hotels));
   },
 
   // Создать новый список отелей

@@ -1,4 +1,4 @@
-import ky, { HTTPError } from 'ky';
+import ky, { HTTPError, KyResponse } from 'ky';
 import { store } from '../store';
 import { API_URL } from '../constants/api.constants';
 import { authActions } from '../store/reducers/auth';
@@ -15,7 +15,8 @@ const tokenInterceptor = (request: Request) => {
 };
 
 const errorInterceptor = async (error: HTTPError) => {
-  const response = error.response;
+  const response: KyResponse<{ message: string; success: boolean; status: number }> =
+    error.response;
   // Handle 401 Unauthorized
   if (response.status === 401) {
     try {
@@ -24,7 +25,7 @@ const errorInterceptor = async (error: HTTPError) => {
         .json<{ data: { accessToken: string } }>();
       store.dispatch(authActions.setToken(data.accessToken));
       return error;
-    } catch  {
+    } catch {
       store.dispatch(authActions.clearAuthState());
       return error;
     }
@@ -33,9 +34,10 @@ const errorInterceptor = async (error: HTTPError) => {
   const contentType = response.headers.get('content-type');
   if (!contentType) return error;
   error.message = contentType?.includes('application/json')
-    ? await response.json()
+    ? (await response.json())?.message
     : await response.text();
-    return error;
+  console.log('file-baseApi.ts error.message:', error.message);
+  return error;
 };
 
 const api = baseApi.extend({
@@ -86,7 +88,7 @@ let refreshIntervalId: ReturnType<typeof setInterval> | null = null;
 store.subscribe(() => {
   const { isLoggedIn } = store.getState().auth;
   if (isLoggedIn) startRefreshInterval();
-   else stopRefreshInterval();
+  else stopRefreshInterval();
 });
 
 function startRefreshInterval() {

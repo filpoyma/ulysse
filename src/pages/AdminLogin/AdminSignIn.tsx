@@ -1,28 +1,31 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { authService } from "../../services";
-import styles from "./AdminLogin.module.css";
-import { Loader } from "../../components/Loader/Loader.tsx";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { authService } from '../../services';
+import styles from './AdminLogin.module.css';
+import { Loader } from '../../components/Loader/Loader.tsx';
+import { getErrorMessage } from '../../utils/helpers.ts';
+import { countriesService } from '../../services/countries.service.ts';
 
 const AdminSignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError('');
 
     try {
       setIsLoading(true);
       await authService.login({ email, password });
-      navigate("/admin");
+      await countriesService.getAll();
+      navigate('/admin');
     } catch (err) {
-      setError("Invalid email or password");
-      console.error("Login error:", err);
+      setError(getErrorMessage(err));
+      console.error('Login error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -60,9 +63,7 @@ const AdminSignIn = () => {
             Login
           </button>
           <div className={styles.links}>
-            <Link to="/ulyseadmin/register">
-              Don't have an account? Register
-            </Link>
+            <Link to="/ulyseadmin/register">Don't have an account? Register</Link>
           </div>
         </form>
       </div>

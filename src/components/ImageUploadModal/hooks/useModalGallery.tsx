@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { imageService } from '../../../services/image.service.ts';
 import { IUploadedImage } from '../../../types/uploadImage.types.ts';
+import { getErrorMessage } from '../../../utils/helpers.ts';
 
 const useModalGallery = ({ belongsToId, open }: { belongsToId?: string; open: boolean }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -17,7 +18,7 @@ const useModalGallery = ({ belongsToId, open }: { belongsToId?: string; open: bo
     console.log('file-useUploadOne.tsx getImagesByBelongId:', belongsToId);
     imageService
       .getAllImages(belongsToId)
-      .then(images => {
+      .then((images) => {
         setUploadedImages(images);
       })
       .catch(console.error);
@@ -46,16 +47,12 @@ const useModalGallery = ({ belongsToId, open }: { belongsToId?: string; open: bo
       const response = await imageService.uploadMultipleImages(Array.from(files), belongsToId);
 
       if (response && response.images && response.images.length > 0) {
-        setUploadedImages(prev => [...prev, ...response.images]);
+        setUploadedImages((prev) => [...prev, ...response.images]);
       }
 
       setSuccess(true);
-    } catch (e: unknown) {
-      let message = 'Ошибка загрузки';
-      if (typeof e === 'object' && e && 'message' in e) {
-        message = (e as { message: string }).message;
-      }
-      setError(message);
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -67,14 +64,10 @@ const useModalGallery = ({ belongsToId, open }: { belongsToId?: string; open: bo
     setLoading(true);
     try {
       await imageService.deleteImage(id);
-      setUploadedImages(prev => prev.filter(i => (i._id || i.id) !== id));
-      setSelectedImages(prev => prev.filter(i => (i._id || i.id) !== id));
-    } catch (e) {
-      let message = 'Ошибка удаления';
-      if (typeof e === 'object' && e && 'message' in e) {
-        message = (e as { message: string }).message;
-      }
-      setError(message);
+      setUploadedImages((prev) => prev.filter((i) => (i._id || i.id) !== id));
+      setSelectedImages((prev) => prev.filter((i) => (i._id || i.id) !== id));
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }

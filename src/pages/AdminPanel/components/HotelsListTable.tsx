@@ -1,5 +1,10 @@
 import { FC, RefObject, useState } from 'react';
-import { Edit, Trash2, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
+import Trash2 from '../../../assets/icons/trash2.svg';
+import Edit from '../../../assets/icons/edit.svg';
+import Check from '../../../assets/icons/check.svg';
+import X from '../../../assets/icons/x.svg';
+import ChevronDown from '../../../assets/icons/chevronDown.svg';
+import ChevronUp from '../../../assets/icons/chevronUp.svg';
 import styles from '../AdminPanel.module.css';
 import dayjs from 'dayjs';
 import { SectionHeader } from './SectionHeader.tsx';
@@ -40,9 +45,9 @@ const HotelsListTable: FC<HotelsListTableProps> = ({
   const renderSortIcon = (field: keyof IHotelsList) => {
     if (!sortField || sortField !== field) return null;
     return sortOrder === 'asc' ? (
-      <ChevronUp size={16} className={styles.sortArrow} />
+      <ChevronUp className={styles.sortArrow} />
     ) : (
-      <ChevronDown size={16} className={styles.sortArrow} />
+      <ChevronDown className={styles.sortArrow} />
     );
   };
 
@@ -85,10 +90,10 @@ const HotelsListTable: FC<HotelsListTableProps> = ({
                 <span className={styles.sortArrow}>{renderSortIcon('isActive')}</span>
               </th>
               <th
-                onClick={() => onSort && onSort('createdAt')}
+                onClick={() => onSort && onSort('updatedAt')}
                 style={{ cursor: 'pointer', minWidth: 120 }}>
-                Дата создания
-                <span className={styles.sortArrow}>{renderSortIcon('createdAt')}</span>
+                Дата обновления
+                <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
               </th>
               <th>Действия</th>
             </tr>
@@ -128,13 +133,13 @@ const HotelsListTable: FC<HotelsListTableProps> = ({
                       className={styles.actionButton}
                       onClick={onSaveNewList}
                       title="Сохранить">
-                      <Check size={16} />
+                      <Check />
                     </button>
                     <button
                       className={`${styles.actionButton} ${styles.deleteButton}`}
                       onClick={onCancelNewList}
                       title="Отмена">
-                      <X size={16} />
+                      <X />
                     </button>
                   </div>
                 </td>
@@ -154,20 +159,20 @@ const HotelsListTable: FC<HotelsListTableProps> = ({
                     {list.isActive ? 'Активен' : 'Неактивен'}
                   </span>
                 </td>
-                <td>{list.createdAt ? dayjs(list.createdAt).format('DD.MM.YYYY') : ''}</td>
+                <td>{list.updatedAt ? dayjs(list.updatedAt).format('DD.MM.YYYY') : ''}</td>
                 <td>
                   <div className={styles.actions}>
                     <button
                       className={styles.actionButton}
                       onClick={() => list._id && handleEditListPage(list._id)}
                       title="Редактировать список">
-                      <Edit size={16} />
+                      <Edit />
                     </button>
                     <button
                       className={`${styles.actionButton} ${styles.deleteButton}`}
                       onClick={() => list._id && onDeleteList(list._id)}
                       title="Удалить">
-                      <Trash2 size={16} />
+                      <Trash2 />
                     </button>
                   </div>
                 </td>

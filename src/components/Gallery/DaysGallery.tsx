@@ -10,6 +10,7 @@ import ImageUploadTravelProgram from '../ImageUploadModal/ImageUploadTravelProgr
 import { travelProgramService } from '../../services/travelProgram.service';
 import { selectTravelProgramGallery, selectTravelProgramImages } from '../../store/reSelect.ts';
 import { LeftNav, RightNav } from './NavIcons.tsx';
+import { getErrorMessage } from '../../utils/helpers.ts';
 const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const program = useSelector(selectTravelProgram);
@@ -26,7 +27,7 @@ const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
       await travelProgramService.updateGallery(program._id, imageIds);
     } catch (error) {
       console.error('Error deleting image:', error);
-      alert('Ошибка при удалении изображения');
+      alert(getErrorMessage(error));
     }
   };
 

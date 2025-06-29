@@ -1,23 +1,16 @@
-import { useCallback, useState, useRef, useMemo } from "react";
-import { restaurantService } from "../../../services/restaurant.service";
-import { RestaurantApiModel } from "../../../api/restaurant.api";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
+import { useCallback, useState, useRef, useMemo } from 'react';
+import { restaurantService } from '../../../services/restaurant.service';
+import { RestaurantApiModel } from '../../../api/restaurant.api';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
+import { getErrorMessage } from '../../../utils/helpers.ts';
 
-interface ApiError {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}
-
-const emptyRestaurant: Omit<RestaurantApiModel, "_id" | "createdAt" | "updatedAt"> = {
-  name: "",
-  country: "",
-  city: "",
-  region: "",
-  manager: "",
+const emptyRestaurant: Omit<RestaurantApiModel, '_id' | 'createdAt' | 'updatedAt'> = {
+  name: '',
+  country: '',
+  city: '',
+  region: '',
+  manager: '',
   stars: 1,
 };
 
@@ -29,18 +22,19 @@ export const useRestarauntsCollect = () => {
   const [isCreatingRestaraunt, setIsCreatingRestaraunt] = useState(false);
   const [newRestaraunt, setNewRestaraunt] = useState<typeof emptyRestaurant>(emptyRestaurant);
   const [editingRestarauntId, setEditingRestarauntId] = useState<string | null>(null);
-  const [editingRestarauntData, setEditingRestarauntData] = useState<typeof emptyRestaurant>(emptyRestaurant);
-  const [sortField, setSortField] = useState<keyof RestaurantApiModel>("name");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [editingRestarauntData, setEditingRestarauntData] =
+    useState<typeof emptyRestaurant>(emptyRestaurant);
+  const [sortField, setSortField] = useState<keyof RestaurantApiModel>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   const sortedRestaraunts = useMemo(() => {
     const arr = [...restaraunts];
     arr.sort((a, b) => {
-      const aValue = a[sortField] || "";
-      const bValue = b[sortField] || "";
-      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
+      const aValue = a[sortField] || '';
+      const bValue = b[sortField] || '';
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
     return arr;
@@ -48,10 +42,10 @@ export const useRestarauntsCollect = () => {
 
   const handleSortRestaraunts = (field: keyof RestaurantApiModel) => {
     if (sortField === field) {
-      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortField(field);
-      setSortOrder("asc");
+      setSortOrder('asc');
     }
   };
 
@@ -60,9 +54,8 @@ export const useRestarauntsCollect = () => {
     setError(null);
     try {
       await restaurantService.getAll();
-    } catch (e: unknown) {
-      const error = e as ApiError;
-      setError(error.response?.data?.message || "Ошибка загрузки ресторанов");
+    } catch (err) {
+      setError('Ошибка загрузки ресторанов: ' + getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -72,16 +65,13 @@ export const useRestarauntsCollect = () => {
     setIsCreatingRestaraunt(true);
     setNewRestaraunt({
       ...emptyRestaurant,
-      manager: userName || "",
+      manager: userName || '',
     });
     setError(null);
   };
 
-  const handleNewRestarauntChange = (
-    field: keyof RestaurantApiModel,
-    value: string | number
-  ) => {
-    if (field === "manager") return;
+  const handleNewRestarauntChange = (field: keyof RestaurantApiModel, value: string | number) => {
+    if (field === 'manager') return;
     setNewRestaraunt((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -92,9 +82,8 @@ export const useRestarauntsCollect = () => {
       setIsCreatingRestaraunt(false);
       setNewRestaraunt(emptyRestaurant);
       setError(null);
-    } catch (e: unknown) {
-      const error = e as ApiError;
-      setError(error.response?.data?.message || "Ошибка создания ресторана");
+    } catch (err) {
+      setError('Ошибка создания ресторана' + getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -112,11 +101,8 @@ export const useRestarauntsCollect = () => {
     setError(null);
   };
 
-  const handleEditRestarauntChange = (
-    field: keyof RestaurantApiModel,
-    value: string | number
-  ) => {
-    if (field === "manager") return;
+  const handleEditRestarauntChange = (field: keyof RestaurantApiModel, value: string | number) => {
+    if (field === 'manager') return;
     setEditingRestarauntData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -128,9 +114,8 @@ export const useRestarauntsCollect = () => {
       setEditingRestarauntId(null);
       setEditingRestarauntData(emptyRestaurant);
       setError(null);
-    } catch (e: unknown) {
-      const error = e as ApiError;
-      setError(error.response?.data?.message || "Ошибка обновления ресторана");
+    } catch (err) {
+      setError('Ошибка обновления ресторана: ' + getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -146,9 +131,8 @@ export const useRestarauntsCollect = () => {
       setLoading(true);
       await restaurantService.delete(id);
       setError(null);
-    } catch (e: unknown) {
-      const error = e as ApiError;
-      setError(error.response?.data?.message || "Ошибка удаления ресторана");
+    } catch (err) {
+      setError('Ошибка удаления ресторана: ' + getErrorMessage(err));
     } finally {
       setLoading(false);
     }

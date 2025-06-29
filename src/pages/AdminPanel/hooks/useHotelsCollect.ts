@@ -5,6 +5,14 @@ import { hotelActions } from '../../../store/reducers/hotel';
 import { IHotel, IHotelCreate } from '../../../types/hotel.types.ts';
 import { selectHotels } from '../../../store/selectors.ts';
 import { useNavigate } from 'react-router-dom';
+import { getErrorMessage } from '../../../utils/helpers.ts';
+
+const defaultHotel = {
+  name: '',
+  country: '',
+  city: '',
+  region: '',
+};
 
 export const useHotelsCollect = () => {
   const dispatch = useDispatch();
@@ -12,19 +20,9 @@ export const useHotelsCollect = () => {
 
   const hotels = useSelector(selectHotels);
   const [isCreatingHotel, setIsCreatingHotel] = useState(false);
-  const [newHotel, setNewHotel] = useState<IHotelCreate>({
-    name: '',
-    country: '',
-    address: '',
-    region: '',
-  });
+  const [newHotel, setNewHotel] = useState<IHotelCreate>(defaultHotel);
   const [editingHotelId, setEditingHotelId] = useState<string | null>(null);
-  const [editingHotelData, setEditingHotelData] = useState<IHotelCreate>({
-    name: '',
-    country: '',
-    address: '',
-    region: '',
-  });
+  const [editingHotelData, setEditingHotelData] = useState<IHotelCreate>(defaultHotel);
   const [sortField, setSortField] = useState<keyof IHotel>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [error, setError] = useState<string | null>(null);
@@ -32,15 +30,15 @@ export const useHotelsCollect = () => {
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   const sortedHotels = useMemo(() => {
-    const arr = [...hotels];
-    arr.sort((a, b) => {
+    const sortedHotels = [...hotels];
+    sortedHotels.sort((a, b) => {
       const aValue = a[sortField] || '';
       const bValue = b[sortField] || '';
       if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
       if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
-    return arr;
+    return sortedHotels;
   }, [hotels, sortField, sortOrder]);
 
   const fetchHotels = async () => {
@@ -49,7 +47,7 @@ export const useHotelsCollect = () => {
       setError(null);
       await hotelService.getAll();
     } catch (err) {
-      setError('Ошибка при загрузке отелей');
+      setError(getErrorMessage(err));
       console.error('Error fetching hotels:', err);
     } finally {
       setLoading(false);
@@ -72,7 +70,7 @@ export const useHotelsCollect = () => {
     setEditingHotelData({
       name: hotel.name,
       country: hotel.country,
-      address: hotel.address,
+      city: hotel.city,
       region: hotel.region,
     });
     //setTimeout(() => nameInputRef.current?.focus(), 0);
@@ -84,29 +82,24 @@ export const useHotelsCollect = () => {
 
   const handleSaveEditHotel = async () => {
     if (!editingHotelId) return;
-    if (
-      !editingHotelData.name ||
-      !editingHotelData.country ||
-      !editingHotelData.address ||
-      !editingHotelData.region
-    ) {
-      setError('Заполните все поля');
+    if (!editingHotelData.name || !editingHotelData.country || !editingHotelData.city) {
+      setError('Заполните все обязательные поля');
       return;
     }
     try {
       setError(null);
       await hotelService.update(editingHotelId, editingHotelData);
       setEditingHotelId(null);
-      setEditingHotelData({ name: '', country: '', address: '', region: '' });
+      setEditingHotelData(defaultHotel);
     } catch (err) {
-      setError('Ошибка при редактировании отеля');
+      setError('Ошибка при редактировании отеля: ' + getErrorMessage(err));
       console.error('Error editing hotel:', err);
     }
   };
 
   const handleCancelEditHotel = () => {
     setEditingHotelId(null);
-    setEditingHotelData({ name: '', country: '', address: '', region: '' });
+    setEditingHotelData(defaultHotel);
   };
 
   const handleDeleteHotel = async (id: string) => {
@@ -115,14 +108,14 @@ export const useHotelsCollect = () => {
       setError(null);
       await hotelService.delete(id);
     } catch (err) {
-      setError('Ошибка удаления отеля');
+      setError('Ошибка удаления отеля: ' + getErrorMessage(err));
       console.error('Error deleting hotel:', err);
     }
   };
 
   const handleCreateHotelClick = () => {
     setIsCreatingHotel(true);
-    setNewHotel({ name: '', country: '', address: '', region: '' });
+    setNewHotel(defaultHotel);
     setTimeout(() => nameInputRef.current?.focus(), 0);
   };
 
@@ -131,8 +124,8 @@ export const useHotelsCollect = () => {
   };
 
   const handleSaveNewHotel = async () => {
-    if (!newHotel.name || !newHotel.country || !newHotel.address || !newHotel.region) {
-      setError('Заполните все поля');
+    if (!newHotel.name || !newHotel.country || !newHotel.city) {
+      setError('Заполните обязательные поля');
       return;
     }
     try {
@@ -140,22 +133,22 @@ export const useHotelsCollect = () => {
       const res = await hotelService.create({
         name: newHotel.name,
         country: newHotel.country,
-        address: newHotel.address,
+        city: newHotel.city,
         region: newHotel.region,
       });
       dispatch(hotelActions.addHotel(res.data));
       setIsCreatingHotel(false);
-      setNewHotel({ name: '', country: '', address: '', region: '' });
+      setNewHotel({ name: '', country: '', city: '', region: '' });
     } catch (err) {
-      setError(`Ошибка при создании отеля ${JSON.stringify(err?.message)}`);
-      console.error('Error creating hotel:', err?.message);
+      setError(`Ошибка при создании отеля: ${getErrorMessage(err)}`);
+      console.error('Error creating hotel:', err);
     }
   };
 
   const handleCancelNewHotel = () => {
     setIsCreatingHotel(false);
     setError(null);
-    setNewHotel({ name: '', country: '', address: '', region: '' });
+    setNewHotel({ name: '', country: '', city: '', region: '' });
   };
 
   const handleNavigateToHotelPage = (id: string) => {

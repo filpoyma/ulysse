@@ -2,6 +2,7 @@ import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 import { hotelService } from '../../../services/hotel.service.ts';
 import { TGalleryType } from '../../../types/hotel.types.ts';
 import useModalGallery from './useModalGallery.tsx';
+import { getErrorMessage } from '../../../utils/helpers.ts';
 
 const useUploadHotelGallery = ({
   hotelId,
@@ -45,11 +46,11 @@ const useUploadHotelGallery = ({
       setLoading(true);
       if (isMany && galleryType) {
         // Для множественного выбора добавляем/удаляем изображение из выбранных
-        const isSelected = selectedImages.some(i => (i._id || i.id) === imageId);
+        const isSelected = selectedImages.some((i) => (i._id || i.id) === imageId);
         if (isSelected) {
-          setSelectedImages(prev => prev.filter(i => (i._id || i.id) !== imageId));
+          setSelectedImages((prev) => prev.filter((i) => (i._id || i.id) !== imageId));
         } else {
-          setSelectedImages(prev => [...prev, img]);
+          setSelectedImages((prev) => [...prev, img]);
         }
       } else {
         // Для одиночного выбора обновляем главное изображение
@@ -57,12 +58,8 @@ const useUploadHotelGallery = ({
         setSuccess(true);
         onClose();
       }
-    } catch (e) {
-      let message = 'Ошибка обновления картинки';
-      if (typeof e === 'object' && e && 'message' in e) {
-        message = (e as { message: string }).message;
-      }
-      setError(message);
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -74,17 +71,13 @@ const useUploadHotelGallery = ({
 
     try {
       setLoading(true);
-      const imageIds = selectedImages.map(img => img._id || img.id).filter(Boolean) as string[];
+      const imageIds = selectedImages.map((img) => img._id || img.id).filter(Boolean) as string[];
       await hotelService.updateGallery(hotelId, galleryType, imageIds);
       setSuccess(true);
       setSelectedImages([]);
       onClose();
-    } catch (e) {
-      let message = 'Ошибка сохранения галереи';
-      if (typeof e === 'object' && e && 'message' in e) {
-        message = (e as { message: string }).message;
-      }
-      setError(message);
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }

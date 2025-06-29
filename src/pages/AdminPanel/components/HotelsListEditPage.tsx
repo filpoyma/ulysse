@@ -6,6 +6,9 @@ import { Loader } from '../../../components/Loader/Loader';
 import { hotelService } from '../../../services/hotel.service.ts';
 import { useSelector } from 'react-redux';
 import { selectHotels } from '../../../store/selectors.ts';
+import { getErrorMessage } from '../../../utils/helpers.ts';
+import ChevronUp from '../../../assets/icons/chevronUp.svg';
+import ChevronDown from '../../../assets/icons/chevronDown.svg';
 
 const HotelsListEditPage = ({
   onSuccess,
@@ -38,8 +41,8 @@ const HotelsListEditPage = ({
         });
         //@ts-ignore
         setSelectedHotels(listRes.data.hotels);
-      } catch (e) {
-        setError('Ошибка загрузки данных');
+      } catch (err) {
+        setError(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -68,6 +71,26 @@ const HotelsListEditPage = ({
     setSelectedHotels((prev) => prev.filter((h) => h._id !== hotelId));
   };
 
+  const moveHotelUp = (index: number) => {
+    if (index === 0) return; // Нельзя поднять первый элемент
+    setIsEdited(true);
+    setSelectedHotels((prev) => {
+      const newHotels = [...prev];
+      [newHotels[index - 1], newHotels[index]] = [newHotels[index], newHotels[index - 1]];
+      return newHotels;
+    });
+  };
+
+  const moveHotelDown = (index: number) => {
+    if (index === selectedHotels.length - 1) return; // Нельзя опустить последний элемент
+    setIsEdited(true);
+    setSelectedHotels((prev) => {
+      const newHotels = [...prev];
+      [newHotels[index], newHotels[index + 1]] = [newHotels[index + 1], newHotels[index]];
+      return newHotels;
+    });
+  };
+
   const handleSave = async () => {
     if (!id) return;
     if (!listHeaders.name.trim() || selectedHotels.length === 0) {
@@ -84,8 +107,9 @@ const HotelsListEditPage = ({
       });
       if (onSuccess) onSuccess();
       setIsEdited(false);
-    } catch (e) {
-      setError('Ошибка при сохранении списка');
+      returnHandler('');
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setSaving(false);
     }
@@ -135,16 +159,35 @@ const HotelsListEditPage = ({
                 <tr>
                   <th>Название</th>
                   <th>Страна</th>
-                  <th>Адрес</th>
+                  <th>Город</th>
+                  <th>Порядок</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {selectedHotels.map((hotel) => (
+                {selectedHotels.map((hotel, index) => (
                   <tr key={hotel._id}>
                     <td>{hotel.name}</td>
                     <td>{hotel.country}</td>
-                    <td>{hotel.address}</td>
+                    <td>{hotel.city}</td>
+                    <td>
+                      <div className={styles.actions}>
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => moveHotelUp(index)}
+                          disabled={index === 0}
+                          title="Поднять выше">
+                          <ChevronUp />
+                        </button>
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => moveHotelDown(index)}
+                          disabled={index === selectedHotels.length - 1}
+                          title="Опустить ниже">
+                          <ChevronDown />
+                        </button>
+                      </div>
+                    </td>
                     <td>
                       <button
                         className={styles.deleteButton}
@@ -180,7 +223,7 @@ const HotelsListEditPage = ({
                 <tr>
                   <th>Название</th>
                   <th>Страна</th>
-                  <th>Адрес</th>
+                  <th>Город</th>
                   <th></th>
                 </tr>
               </thead>
@@ -189,7 +232,7 @@ const HotelsListEditPage = ({
                   <tr key={hotel._id}>
                     <td>{hotel.name}</td>
                     <td>{hotel.country}</td>
-                    <td>{hotel.address}</td>
+                    <td>{hotel.city}</td>
                     <td>
                       <button
                         className={styles.actionButton}

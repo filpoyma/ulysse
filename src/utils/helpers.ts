@@ -35,7 +35,7 @@ export const validateCoordinates = (
 ): { isValid: boolean; error: string | null; fieldNumber: number } => {
   let fieldNumber = 0;
   for (const item of coordinates) {
-    const [lng, lat] = item.split(' ').map(coord => parseFloat(coord.trim()));
+    const [lng, lat] = item.split(' ').map((coord) => parseFloat(coord.trim()));
     // Проверяем, что значения являются числами
     if (isNaN(lat) || isNaN(lng)) {
       return {
@@ -62,7 +62,7 @@ export const validateCoordinates = (
 export const validateHotelCoordinates = (
   coordinates: string,
 ): { isValid: boolean; error: string | null } => {
-  const [lng, lat] = coordinates.split(' ').map(coord => parseFloat(coord.trim()));
+  const [lng, lat] = coordinates.split(' ').map((coord) => parseFloat(coord.trim()));
   // Проверяем, что значения являются числами
   if (isNaN(lat) || isNaN(lng)) {
     return {
@@ -80,4 +80,11 @@ export const validateHotelCoordinates = (
   }
 
   return { isValid: true, error: null };
+};
+
+export const getErrorMessage = (err: unknown) => {
+  if (typeof err === 'object' && err && 'message' in err) {
+    return (err as { message: string }).message;
+  }
+  return 'Что то пошло не так...';
 };

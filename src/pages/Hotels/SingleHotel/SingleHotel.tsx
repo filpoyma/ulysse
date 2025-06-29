@@ -11,16 +11,18 @@ import InfoCircle from '../../../assets/icons/infoInCircle.svg';
 import { ROOT_URL } from '../../../constants/api.constants.ts';
 import styles from './SingleHotel.module.css';
 import { LeftNav, RightNav } from '../../../components/Gallery/NavIcons.tsx';
+import SingleHotelComponent from './SingleHotel.component.tsx';
 
-const SingleHotel = () => {
+const SingleHotel = ({ hotelId }: { hotelId: string }) => {
+  console.log('file-SingleHotel.tsx hotelId:>>>>>>>>>>>>>>>>>>>>>>>>>>>>', hotelId);
   const { id } = useParams();
   const [isLoading, setIsLoading] = React.useState(true);
   const [hotel, setHotel] = useState<IHotel | null>(null);
 
   React.useEffect(() => {
-    if (id)
+    if (id || hotelId)
       hotelService
-        .getById(id)
+        .getById(id || hotelId)
         .then((hotel) => {
           console.log('Hotel data received:', hotel);
           setHotel(hotel.data);
@@ -29,127 +31,12 @@ const SingleHotel = () => {
           console.error('Error fetching hotel:', error);
         })
         .finally(() => setIsLoading(false));
-  }, [id]);
-
-  console.log('Current hotel state:', hotel);
-  console.log('Hotel name:', hotel?.name);
-  console.log('Hotel hotelInfo:', hotel?.hotelInfo);
-  console.log('Hotel roomInfo:', hotel?.roomInfo);
+  }, [id, hotelId]);
 
   if (isLoading) return <Loader />;
   if (!hotel) return <NotFoundPage />;
 
-  // Подготовка галереи для react-image-gallery
-  const hotelGalleryImages =
-    hotel.hotelInfo?.gallery?.map((img) => ({
-      original: `${ROOT_URL}/${img.path?.replace(/^\//, '')}`,
-      thumbnail: `${ROOT_URL}/${img.path?.replace(/^\//, '')}`,
-    })) || [];
-
-  const roomGalleryImages =
-    hotel.roomInfo?.gallery?.map((img) => ({
-      original: `${ROOT_URL}/${img.path?.replace(/^\//, '')}`,
-      thumbnail: `${ROOT_URL}/${img.path?.replace(/^\//, '')}`,
-    })) || [];
-
-  return (
-    <div className={styles.container}>
-      {/* Левая секция - главное изображение */}
-      <div className={styles.leftSection}>
-        <img
-          src={`${ROOT_URL}/${hotel.mainImage?.path?.replace(/^\//, '')}`}
-          alt={hotel.name}
-          className={styles.mainImage}
-        />
-      </div>
-
-      {/* Правая секция - информация об отеле */}
-      <div className={styles.rightSection}>
-        {/* Заголовок */}
-        <h1 className={styles.title}>{hotel.name}</h1>
-        <div className={styles.divider}></div>
-
-        {/* Информация об отеле */}
-        <h2 className={styles.subtitle}>Информация об отеле</h2>
-        <div className={styles.about}>{hotel.hotelInfo?.about || 'Описание отсутствует'}</div>
-
-        {/* Галерея отеля */}
-        {hotel.hotelInfo?.gallery && hotel.hotelInfo.gallery.length > 0 && (
-          <div className={styles.gallery}>
-            <ImageGallery
-              items={hotelGalleryImages}
-              showFullscreenButton={false}
-              showPlayButton={false}
-              showNav={true}
-              showThumbnails={false}
-              slideOnThumbnailOver={true}
-              showBullets={true}
-              renderLeftNav={(onClick: () => void, disabled: boolean) => (
-                <LeftNav onClick={onClick} disabled={disabled} />
-              )}
-              renderRightNav={(onClick: () => void, disabled: boolean) => (
-                <RightNav onClick={onClick} disabled={disabled} />
-              )}
-            />
-          </div>
-        )}
-
-        <div className={styles.divider}></div>
-
-        {/* Проживание */}
-        <h2 className={styles.subtitle}>Проживание</h2>
-        <h3 className={styles.subtitle}>Комнаты</h3>
-        <div className={styles.about}>{hotel.roomInfo?.about || 'Описание комнат отсутствует'}</div>
-
-        {/* Галерея комнат */}
-        {hotel.roomInfo?.gallery && hotel.roomInfo.gallery.length > 0 && (
-          <div className={styles.gallery}>
-            <ImageGallery
-              items={roomGalleryImages}
-              showFullscreenButton={false}
-              showPlayButton={false}
-              showNav={true}
-              showThumbnails={false}
-              slideOnThumbnailOver={true}
-              showBullets={true}
-              renderLeftNav={(onClick: () => void, disabled: boolean) => (
-                <LeftNav onClick={onClick} disabled={disabled} />
-              )}
-              renderRightNav={(onClick: () => void, disabled: boolean) => (
-                <RightNav onClick={onClick} disabled={disabled} />
-              )}
-            />
-          </div>
-        )}
-
-        <div className={styles.divider}></div>
-
-        {/* Основная информация */}
-        <h3 className={styles.subtitle}>Основная информация:</h3>
-
-        {/* Преимущества */}
-
-        <div className={styles.infoContainer}>
-          <PlusCircle height={31} width={31} />
-          <div>Преимущества</div>
-        </div>
-        <ul className={styles.infoList}>
-          {hotel.pros.map((pro, index) => (
-            <li key={index}>{pro}</li>
-          ))}
-        </ul>
-
-        {/* Краткая информация */}
-        <div className={styles.infoContainer}>
-          <InfoCircle height={31} width={31} />
-          <div>Краткая информация</div>
-        </div>
-        <ul className={styles.infoList}>
-          {hotel.shortInfo?.map((info, index) => <li key={index}>{info}</li>)}
-        </ul>
-      </div>
-    </div>
-  );
+  return <SingleHotelComponent hotel={hotel} />;
 };
 
 export default SingleHotel;

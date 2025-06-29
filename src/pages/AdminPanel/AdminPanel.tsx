@@ -12,6 +12,7 @@ import { RestarauntsCollectSection } from './components/RestarauntsCollectSectio
 import { Loader } from '../../components/Loader/Loader';
 import { NavItem } from '../../types/adminPanel.types.ts';
 import HotelsListSection from './components/HotelsListSection.tsx';
+import { getErrorMessage } from '../../utils/helpers.ts';
 
 const AdminPanel: FC = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -27,7 +28,7 @@ const AdminPanel: FC = () => {
       navigate('/ulyseadmin');
     } catch (err) {
       console.error('Logout error:', err);
-      setError('Ошибка при выходе из системы');
+      setError(getErrorMessage(err));
     }
   };
 

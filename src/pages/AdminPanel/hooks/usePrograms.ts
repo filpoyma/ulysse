@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { travelProgramService } from '../../../services/travelProgram.service';
 import { ITravelProgramResponse } from '../../../types/travelProgram.types';
 import { useNavigate } from 'react-router-dom';
+import { getErrorMessage } from '../../../utils/helpers.ts';
 
 export const usePrograms = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export const usePrograms = () => {
       const response = await travelProgramService.getAll();
       setPrograms(response.data || []);
     } catch (err) {
-      setError('Ошибка при загрузке программ');
+      setError('Ошибка при загрузке программ: ' + getErrorMessage(err));
       console.error('Error fetching programs:', err);
     } finally {
       setLoading(false);
@@ -56,7 +57,7 @@ export const usePrograms = () => {
       setIsModalOpen(false);
       await fetchPrograms();
     } catch (err) {
-      setError('Ошибка создания шаблона');
+      setError('Ошибка создания шаблона: ' + getErrorMessage(err));
       console.error('Error creating template:', err);
     }
   };
@@ -70,7 +71,7 @@ export const usePrograms = () => {
       await travelProgramService.delete(id);
       await fetchPrograms();
     } catch (err) {
-      setError('Ошибка удаления программы');
+      setError('Ошибка удаления программы: ' + getErrorMessage(err));
       console.error('Error deleting program:', err);
     }
   };

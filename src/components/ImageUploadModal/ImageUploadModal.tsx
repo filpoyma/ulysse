@@ -5,7 +5,7 @@ import { ROOT_URL } from '../../constants/api.constants';
 import { useSelector, useDispatch } from 'react-redux';
 import { travelProgramActions } from '../../store/reducers/travelProgram';
 import { RootState } from '../../store';
-import { createArrayFromNumber } from '../../utils/helpers.ts';
+import { createArrayFromNumber, getErrorMessage } from '../../utils/helpers.ts';
 import { IUploadedImage } from '../../types/uploadImage.types.ts';
 
 interface Props {
@@ -60,23 +60,19 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
 
     setLoading(true);
     try {
-      const uploadPromises = Array.from(files).map(file => imageService.uploadImage(file));
+      const uploadPromises = Array.from(files).map((file) => imageService.uploadImage(file));
       const responses = await Promise.all(uploadPromises);
 
       const newImages = responses
-        .filter(response => response && response.image && response.image.path)
-        .map(response => response.image);
+        .filter((response) => response && response.image && response.image.path)
+        .map((response) => response.image);
 
       if (newImages.length > 0) {
-        setUploadedImages(prev => [...prev, ...newImages]);
+        setUploadedImages((prev) => [...prev, ...newImages]);
       }
       setSuccess(true);
-    } catch (e: unknown) {
-      let message = 'Ошибка загрузки';
-      if (typeof e === 'object' && e && 'message' in e) {
-        message = (e as { message: string }).message;
-      }
-      setError(message);
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -88,9 +84,9 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
     setLoading(true);
     try {
       await imageService.deleteImage(id);
-      setUploadedImages(prev => prev.filter(i => (i._id || i.id) !== id));
-    } catch {
-      setError('Ошибка удаления');
+      setUploadedImages((prev) => prev.filter((i) => (i._id || i.id) !== id));
+    } catch (err) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -121,8 +117,8 @@ const ImageUploadModal: React.FC<Props> = ({ open, onClose, programName, imageNu
         };
         dispatch(travelProgramActions.setBgImages(newBgImages));
       }
-    } catch {
-      setError('Ошибка выбора фоновой картинки');
+    } catch (err) {
+      setError(getErrorMessage(err));
     }
   };
 

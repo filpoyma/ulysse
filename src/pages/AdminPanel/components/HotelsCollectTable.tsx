@@ -79,10 +79,10 @@ const HotelsTable: FC<HotelsTableProps> = ({
                 <span className={styles.sortArrow}>{renderSortIcon('country')}</span>
               </th>
               <th
-                onClick={() => onSort && onSort('address')}
+                onClick={() => onSort && onSort('city')}
                 style={{ cursor: 'pointer', minWidth: 100 }}>
-                Адрес
-                <span className={styles.sortArrow}>{renderSortIcon('address')}</span>
+                Город
+                <span className={styles.sortArrow}>{renderSortIcon('city')}</span>
               </th>
               <th
                 onClick={() => onSort && onSort('region')}
@@ -91,10 +91,10 @@ const HotelsTable: FC<HotelsTableProps> = ({
                 <span className={styles.sortArrow}>{renderSortIcon('region')}</span>
               </th>
               <th
-                onClick={() => onSort && onSort('createdAt')}
+                onClick={() => onSort && onSort('updatedAt')}
                 style={{ cursor: 'pointer', minWidth: 120 }}>
-                Дата создания
-                <span className={styles.sortArrow}>{renderSortIcon('createdAt')}</span>
+                Дата обновления
+                <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
               </th>
               <th>Действия</th>
             </tr>
@@ -109,7 +109,7 @@ const HotelsTable: FC<HotelsTableProps> = ({
                     type="text"
                     value={newHotel.name || ''}
                     onChange={(e) => onNewHotelChange && onNewHotelChange('name', e.target.value)}
-                    placeholder="Название"
+                    placeholder="Название *"
                   />
                 </td>
                 <td>
@@ -123,11 +123,9 @@ const HotelsTable: FC<HotelsTableProps> = ({
                   <input
                     className={styles.hotelCreateInput}
                     type="text"
-                    value={newHotel.address || ''}
-                    onChange={(e) =>
-                      onNewHotelChange && onNewHotelChange('address', e.target.value)
-                    }
-                    placeholder="Адрес"
+                    value={newHotel.city || ''}
+                    onChange={(e) => onNewHotelChange && onNewHotelChange('city', e.target.value)}
+                    placeholder="Город *"
                   />
                 </td>
                 <td>
@@ -166,9 +164,9 @@ const HotelsTable: FC<HotelsTableProps> = ({
                   {hotel.name}
                 </td>
                 <td>{hotel.country}</td>
-                <td>{hotel.address}</td>
+                <td>{hotel.city}</td>
                 <td>{hotel.region}</td>
-                <td>{hotel.createdAt ? dayjs(hotel.createdAt).format('DD.MM.YYYY') : ''}</td>
+                <td>{hotel.updatedAt ? dayjs(hotel.updatedAt).format('DD.MM.YYYY') : ''}</td>
                 <td>
                   <div className={styles.actions}>
                     <button

@@ -8,7 +8,7 @@ import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadH
 import { ROOT_URL } from '../../../constants/api.constants.ts';
 import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
-import { validateHotelCoordinates } from '../../../utils/helpers.ts';
+import { getErrorMessage, validateHotelCoordinates } from '../../../utils/helpers.ts';
 
 const HotelEditPage = ({
   hotelId,
@@ -144,9 +144,9 @@ const HotelEditPage = ({
           };
         }
       });
-    } catch (error) {
-      console.error('Error deleting image:', error);
-      alert('Ошибка при удалении изображения');
+    } catch (err) {
+      console.error('Error deleting image:', err);
+      alert(getErrorMessage(err));
     }
   };
 
@@ -170,11 +170,8 @@ const HotelEditPage = ({
       console.log('Saving hotel:', hotel);
       setCoordinateError(null);
       returnHandler('');
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Произошла ошибка при сохранении отеля';
-      console.log('file-HotelEditPage.tsx error:', error);
-      alert(errorMessage);
+    } catch (err) {
+      alert(getErrorMessage(err));
     } finally {
       setIsLoading(false);
     }
@@ -296,7 +293,7 @@ const HotelEditPage = ({
           <div className={styles.section}>
             <h2>Основная информация</h2>
             <div className={styles.field}>
-              <label>Название отеля</label>
+              <label>Название отеля *</label>
               <input
                 type="text"
                 value={hotel.name}
@@ -304,10 +301,19 @@ const HotelEditPage = ({
               />
             </div>
             <div className={styles.field}>
-              <label>Страна</label>
+              <label>Страна *</label>
               <CountryAutocomplete
                 value={hotel.country || ''}
                 onChange={(value) => handleInputChange('country', value)}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label>Город</label>
+              <input
+                type="text"
+                value={hotel.city}
+                onChange={(e) => handleInputChange('city', e.target.value)}
               />
             </div>
 

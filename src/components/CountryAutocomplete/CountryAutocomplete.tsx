@@ -14,7 +14,7 @@ interface Props {
 export const CountryAutocomplete: FC<Props> = ({
   value,
   onChange,
-  placeholder = 'Страна',
+  placeholder = 'Страна *',
   className = '',
 }) => {
   const [suggestions, setSuggestions] = useState<ICountriesApiModel[]>([]);
@@ -65,7 +65,7 @@ export const CountryAutocomplete: FC<Props> = ({
 
     if (inputValue.length > 0) {
       const filteredCountries = countries.filter(
-        country =>
+        (country) =>
           country.name_ru.toLowerCase().startsWith(inputValue.toLowerCase()) ||
           country.name.toLowerCase().startsWith(inputValue.toLowerCase()),
       );

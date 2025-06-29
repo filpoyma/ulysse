@@ -1,6 +1,8 @@
 import { useState, useRef, useMemo } from 'react';
-import { hotelsListService, IHotelsList, IHotelsListWithHotels, ICreateHotelsListData } from '../../../services/hotelsList.service';
+import { hotelsListService } from '../../../services/hotelsList.service';
 import { useNavigate } from 'react-router-dom';
+import { getErrorMessage } from '../../../utils/helpers.ts';
+import { ICreateHotelsListData, IHotelsList } from '../../../types/hotelsList.types.ts';
 
 export const useHotelsList = () => {
   const navigate = useNavigate();
@@ -40,15 +42,16 @@ export const useHotelsList = () => {
       setError(null);
       const response = await hotelsListService.getAll();
       // Приводим к базовому типу IHotelsList
-      const lists = (response.data as IHotelsList[]).map(list => ({
+      const lists = (response.data as IHotelsList[]).map((list) => ({
         ...list,
-        hotels: Array.isArray(list.hotels) && typeof list.hotels[0] === 'string' 
-          ? list.hotels 
-          : (list.hotels as any[]).map((hotel: any) => hotel._id || hotel)
+        hotels:
+          Array.isArray(list.hotels) && typeof list.hotels[0] === 'string'
+            ? list.hotels
+            : (list.hotels as any[]).map((hotel: any) => hotel._id || hotel),
       }));
       setHotelsLists(lists);
-    } catch (err: any) {
-      setError('Ошибка при загрузке списков отелей');
+    } catch (err) {
+      setError('Ошибка при загрузке списков отелей: ' + getErrorMessage(err));
       console.error('Error fetching hotels lists:', err);
     } finally {
       setLoading(false);
@@ -90,8 +93,8 @@ export const useHotelsList = () => {
       setEditingListId(null);
       setEditingListData({ name: '', description: '' });
       await fetchHotelsLists(); // Обновляем список
-    } catch (err: any) {
-      setError('Ошибка при редактировании списка');
+    } catch (err) {
+      setError('Ошибка при редактировании списка: ' + getErrorMessage(err));
       console.error('Error editing list:', err);
     }
   };
@@ -108,7 +111,7 @@ export const useHotelsList = () => {
       await hotelsListService.delete(id);
       await fetchHotelsLists(); // Обновляем список
     } catch (err: any) {
-      setError('Ошибка удаления списка');
+      setError('Ошибка удаления списка: ' + getErrorMessage(err));
       console.error('Error deleting list:', err);
     }
   };
@@ -134,9 +137,9 @@ export const useHotelsList = () => {
       setIsCreatingList(false);
       setNewList({ name: '', description: '' });
       await fetchHotelsLists(); // Обновляем список
-    } catch (err: any) {
-      setError(`Ошибка при создании списка ${err?.message || 'Неизвестная ошибка'}`);
-      console.error('Error creating list:', err?.message);
+    } catch (err) {
+      setError(`Ошибка при создании списка ${getErrorMessage(err)}`);
+      console.error('Error creating list:', err);
     }
   };
 
@@ -147,7 +150,7 @@ export const useHotelsList = () => {
   };
 
   const handleNavigateToListPage = (id: string) => {
-    navigate(`/hotels-list/${id}`);
+    navigate(`/hotels/${id}`);
   };
 
   return {
@@ -174,4 +177,4 @@ export const useHotelsList = () => {
     handleNavigateToListPage,
     fetchHotelsLists,
   };
-}; 
+};

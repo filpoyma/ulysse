@@ -1,9 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RestaurantApiModel } from "../../../api/restaurant.api";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IRestaurant } from '../../../types/restaurant.types';
 
 interface RestaurantState {
-  restaurants: RestaurantApiModel[];
-  restaurant: RestaurantApiModel | null;
+  restaurants: IRestaurant[];
+  restaurant: IRestaurant | null;
 }
 
 const initialState: RestaurantState = {
@@ -12,24 +12,24 @@ const initialState: RestaurantState = {
 };
 
 const { reducer: restaurantReducer, actions: restaurantActions } = createSlice({
-  name: "restaurantsData",
+  name: 'restaurantsData',
   initialState,
   reducers: {
-    setRestaurants(state, action: PayloadAction<RestaurantApiModel[]>) {
+    setRestaurants(state, action: PayloadAction<IRestaurant[]>) {
       state.restaurants = action.payload;
     },
-    setRestaurant(state, action: PayloadAction<RestaurantApiModel | null>) {
+    setRestaurant(state, action: PayloadAction<IRestaurant | null>) {
       state.restaurant = action.payload;
     },
-    updateRestaurant(state, action: PayloadAction<RestaurantApiModel>) {
+    updateRestaurant(state, action: PayloadAction<IRestaurant>) {
       state.restaurants = state.restaurants.map((rest) =>
-        rest._id === action.payload._id ? action.payload : rest
+        rest._id === action.payload._id ? action.payload : rest,
       );
       if (state.restaurant && state.restaurant._id === action.payload._id) {
         state.restaurant = action.payload;
       }
     },
-    addRestaurant(state, action: PayloadAction<RestaurantApiModel>) {
+    addRestaurant(state, action: PayloadAction<IRestaurant>) {
       state.restaurants.unshift(action.payload);
     },
     removeRestaurant(state, action: PayloadAction<string>) {
@@ -39,4 +39,4 @@ const { reducer: restaurantReducer, actions: restaurantActions } = createSlice({
   },
 });
 
-export { restaurantReducer, restaurantActions }; 
+export { restaurantReducer, restaurantActions };

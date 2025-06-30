@@ -40,11 +40,11 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     error: string | null;
     fieldNumber: number;
   } | null>(null);
-  const [coordinates, setCoordinates] = useState(['', '']);
+  const [coordinates, setCoordinates] = useState<string[]>([]);
   const [isNewPoint, setIsNewPoint] = useState(false);
 
   useEffect(() => {
-    setCoordinates(logistics.map(item => `${item.coordinates[0]} ${item.coordinates[1]}`));
+    setCoordinates(logistics.map((item) => `${item.coordinates[1]} ${item.coordinates[0]}`));
   }, [logistics]);
 
   const handleEdit = () => {
@@ -67,10 +67,10 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     // Преобразуем текстовые координаты в числа перед валидацией
     const logisticsWithParsedCoordinates = editedLogistics.map((item, i) => ({
       ...item,
-      coordinates: coordinates[i]?.split(' ').map(coord => parseFloat(coord.trim())) as [
-        number,
-        number,
-      ],
+      coordinates: coordinates[i]
+        ?.split(' ')
+        .map((coord) => parseFloat(coord.trim()))
+        .reverse() as [number, number],
     }));
 
     try {
@@ -94,14 +94,14 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   };
 
   const handleDelete = (index: number) => {
-    setEditedLogistics(prev => prev.filter((_, i) => i !== index));
-    setCoordinates(prev => prev.filter((_, i) => i !== index));
+    setEditedLogistics((prev) => prev.filter((_, i) => i !== index));
+    setCoordinates((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleMoveUp = (index: number) => {
     if (index === 0) return; // Can't move first item up
 
-    setEditedLogistics(prev => {
+    setEditedLogistics((prev) => {
       const newLogistics = [...prev];
       [newLogistics[index - 1], newLogistics[index]] = [
         newLogistics[index],
@@ -110,7 +110,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       return newLogistics;
     });
 
-    setCoordinates(prev => {
+    setCoordinates((prev) => {
       const newCoordinates = [...prev];
       [newCoordinates[index - 1], newCoordinates[index]] = [
         newCoordinates[index],
@@ -123,7 +123,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const handleMoveDown = (index: number) => {
     if (index === editedLogistics.length - 1) return; // Can't move last item down
 
-    setEditedLogistics(prev => {
+    setEditedLogistics((prev) => {
       const newLogistics = [...prev];
       [newLogistics[index], newLogistics[index + 1]] = [
         newLogistics[index + 1],
@@ -132,7 +132,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       return newLogistics;
     });
 
-    setCoordinates(prev => {
+    setCoordinates((prev) => {
       const newCoordinates = [...prev];
       [newCoordinates[index], newCoordinates[index + 1]] = [
         newCoordinates[index + 1],
@@ -155,19 +155,19 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       distance: '',
     };
 
-    setEditedLogistics(prev => [...prev, newLogisticsItem as ILogistics]);
-    setCoordinates(prev => [...prev, '0 0']);
+    setEditedLogistics((prev) => [...prev, newLogisticsItem as ILogistics]);
+    setCoordinates((prev) => [...prev, '0 0']);
   };
 
   const handleInputChange = (id: string, field: string, value: string | number[] | TRouteType) => {
-    setEditedLogistics(prev =>
-      prev.map(item => (item._id === id ? { ...item, [field]: value } : item)),
+    setEditedLogistics((prev) =>
+      prev.map((item) => (item._id === id ? { ...item, [field]: value } : item)),
     );
   };
 
   const handleCoordinatesChange = (id: number, value: string) => {
-    setCoordinates(prev => prev.map((coord, i) => (i === id ? value : coord)));
-    setCoordinateError(prev => (coordinateError?.fieldNumber === id ? null : prev));
+    setCoordinates((prev) => prev.map((coord, i) => (i === id ? value : coord)));
+    setCoordinateError((prev) => (coordinateError?.fieldNumber === id ? null : prev));
   };
 
   const handleCoordinatesClick = async (index: number) => {
@@ -209,14 +209,14 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                   <input
                     type="text"
                     value={coordinates[i] === '0 0' ? '' : coordinates[i]}
-                    onChange={e => handleCoordinatesChange(i, e.target.value)}
+                    onChange={(e) => handleCoordinatesChange(i, e.target.value)}
                     onClick={() => handleCoordinatesClick(i)}
                     placeholder="Координаты"
                     className={coordinateError?.fieldNumber === i ? styles.error : styles.input}
                   />
                   <select
                     value={item.sourceListIcon}
-                    onChange={e => handleInputChange(item._id, 'sourceListIcon', e.target.value)}
+                    onChange={(e) => handleInputChange(item._id, 'sourceListIcon', e.target.value)}
                     className={styles.select}
                     style={!item.sourceListIcon ? { opacity: 0.7 } : {}}>
                     {!item.sourceListIcon && <option value={''}>Маркер</option>}
@@ -229,14 +229,14 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                   <input
                     type="text"
                     value={item.city}
-                    onChange={e => handleInputChange(item._id, 'city', e.target.value)}
+                    onChange={(e) => handleInputChange(item._id, 'city', e.target.value)}
                     placeholder="Место"
                     className={styles.input}
                   />
                   <input
                     type="text"
                     value={item.hotel}
-                    onChange={e => handleInputChange(item._id, 'hotel', e.target.value)}
+                    onChange={(e) => handleInputChange(item._id, 'hotel', e.target.value)}
                     placeholder="Отель"
                     className={styles.input}
                   />
@@ -265,7 +265,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                   </div>
                   <select
                     value={item.routeType}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleInputChange(item._id, 'routeType', e.target.value as TRouteType)
                     }
                     className={styles.select}
@@ -280,14 +280,14 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                   <input
                     type="text"
                     value={item.time}
-                    onChange={e => handleInputChange(item._id, 'time', e.target.value)}
+                    onChange={(e) => handleInputChange(item._id, 'time', e.target.value)}
                     placeholder="Час : Мин"
                     className={styles.input}
                   />
                   <input
                     type="text"
                     value={item.distance}
-                    onChange={e => handleInputChange(item._id, 'distance', e.target.value)}
+                    onChange={(e) => handleInputChange(item._id, 'distance', e.target.value)}
                     placeholder="Км"
                     className={styles.input}
                   />

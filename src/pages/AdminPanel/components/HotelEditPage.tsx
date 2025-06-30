@@ -5,10 +5,9 @@ import { useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
 import { selectHotels } from '../../../store/selectors';
 import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadHotels.tsx';
-import { ROOT_URL } from '../../../constants/api.constants.ts';
 import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
-import { getErrorMessage, validateHotelCoordinates } from '../../../utils/helpers.ts';
+import { getErrorMessage, getImagePath, validateHotelCoordinates } from '../../../utils/helpers.ts';
 
 const HotelEditPage = ({
   hotelId,
@@ -54,7 +53,7 @@ const HotelEditPage = ({
   }, [hotelId, hotels]);
 
   useEffect(() => {
-    if (hotel) setHotelCoord(`${hotel.coordinates[0]} ${hotel.coordinates[1]}`);
+    if (hotel) setHotelCoord(`${hotel.coordinates[1]} ${hotel.coordinates[0]}`);
     setCoordinateError(null);
   }, [hotel]);
 
@@ -159,12 +158,19 @@ const HotelEditPage = ({
       return;
     }
 
-    const [lng, lat] = hotelCoord.split(' ').map((coord) => parseFloat(coord.trim()));
+    const [lng, lat] = hotelCoord
+      .split(' ')
+      .map((coord) => parseFloat(coord.trim()))
+      .reverse();
     const hotelWithParsedCoordinates = {
       ...hotel,
       coordinates: [lng, lat] as [number, number],
     };
     setIsLoading(true);
+    console.log(
+      'file-HotelEditPage.tsx hotelWithParsedCoordinates:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
+      hotelWithParsedCoordinates.coordinates,
+    );
     try {
       await hotelService.update(hotelId, hotelWithParsedCoordinates);
       console.log('Saving hotel:', hotel);
@@ -197,10 +203,7 @@ const HotelEditPage = ({
           <div className={styles.gallery}>
             {hotel.mainImage ? (
               <div className={styles.imageItem} onClick={handleSelectOneImage}>
-                <img
-                  src={`${ROOT_URL}/${hotel.mainImage?.path?.replace(/^\//, '')}`}
-                  alt={`Hotel image`}
-                />
+                <img src={getImagePath(hotel.mainImage?.path)} alt={`Hotel image`} />
               </div>
             ) : (
               <div className={styles.placeholder} onClick={handleSelectOneImage} />
@@ -214,10 +217,7 @@ const HotelEditPage = ({
             {hotelGallery.length > 0 ? (
               hotelGallery.map((image: IUploadedImage, index: number) => (
                 <div key={image._id} className={styles.imageItem}>
-                  <img
-                    src={`${ROOT_URL}/${image.path?.replace(/^\//, '')}`}
-                    alt={`Hotel image ${index + 1}`}
-                  />
+                  <img src={getImagePath(image.path)} alt={`Hotel image ${index + 1}`} />
                   <button
                     className={styles.deleteButton}
                     onClick={(e) => {
@@ -249,10 +249,7 @@ const HotelEditPage = ({
             {roomsGallery.length > 0 ? (
               roomsGallery.map((image: IUploadedImage, index: number) => (
                 <div key={image._id} className={styles.imageItem}>
-                  <img
-                    src={`${ROOT_URL}/${image.path?.replace(/^\//, '')}`}
-                    alt={`Room image ${index + 1}`}
-                  />
+                  <img src={getImagePath(image.path)} alt={`Room image ${index + 1}`} />
                   <button
                     className={styles.deleteButton}
                     onClick={(e) => {
@@ -343,18 +340,21 @@ const HotelEditPage = ({
               />
             </div>
             <div className={styles.field}>
-              <label>Координаты через пробел (81.85 25.44)</label>
+              <label>Координаты через пробел (25.44 81.85)</label>
               <div className={coordinateError ? styles.coordinateFieldErr : styles.coordinateField}>
                 <input
                   pattern="^[0-9\s.]+$"
-                  placeholder="Долгота Широта"
+                  placeholder="Широта Долгота"
                   value={hotelCoord || ''}
                   onChange={handleInputChangeCoord}
                 />
                 {coordinateError ? (
                   <div className={styles.helperTextErr}>{coordinateError.error}</div>
                 ) : (
-                  <div className={styles.helperText}>Долгота:-180°...180°. Широта: -90°...90°</div>
+                  <div className={styles.helperText}>
+                    {' '}
+                    Широта: -90°...90°. Долгота:-180°...180°.
+                  </div>
                 )}
               </div>
             </div>

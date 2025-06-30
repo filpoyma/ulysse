@@ -1,30 +1,34 @@
 import { useCallback, useState, useRef, useMemo } from 'react';
 import { restaurantService } from '../../../services/restaurant.service';
-import { RestaurantApiModel } from '../../../api/restaurant.api';
+import { IRestaurant } from '../../../types/restaurant.types';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
 import { getErrorMessage } from '../../../utils/helpers.ts';
+import { selectAdminName, selectRestaurants } from '../../../store/selectors.ts';
 
-const emptyRestaurant: Omit<RestaurantApiModel, '_id' | 'createdAt' | 'updatedAt'> = {
+const emptyRestaurant: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'> = {
   name: '',
   country: '',
   city: '',
   region: '',
+  link: '',
   manager: '',
+  address: '',
+  description: '',
+  coordinates: [0, 0],
+  gallery: [],
+  titleImage: {} as any,
   stars: 1,
 };
 
 export const useRestarauntsCollect = () => {
-  const restaraunts = useSelector((state: RootState) => state.restaurantsData.restaurants);
-  const userName = useSelector((state: RootState) => state.auth.user?.name);
+  const restaraunts = useSelector(selectRestaurants);
+  const userName = useSelector(selectAdminName);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isCreatingRestaraunt, setIsCreatingRestaraunt] = useState(false);
   const [newRestaraunt, setNewRestaraunt] = useState<typeof emptyRestaurant>(emptyRestaurant);
   const [editingRestarauntId, setEditingRestarauntId] = useState<string | null>(null);
-  const [editingRestarauntData, setEditingRestarauntData] =
-    useState<typeof emptyRestaurant>(emptyRestaurant);
-  const [sortField, setSortField] = useState<keyof RestaurantApiModel>('name');
+  const [sortField, setSortField] = useState<keyof IRestaurant>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -40,7 +44,7 @@ export const useRestarauntsCollect = () => {
     return arr;
   }, [restaraunts, sortField, sortOrder]);
 
-  const handleSortRestaraunts = (field: keyof RestaurantApiModel) => {
+  const handleSortRestaraunts = (field: keyof IRestaurant) => {
     if (sortField === field) {
       setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
@@ -70,7 +74,7 @@ export const useRestarauntsCollect = () => {
     setError(null);
   };
 
-  const handleNewRestarauntChange = (field: keyof RestaurantApiModel, value: string | number) => {
+  const handleNewRestarauntChange = (field: keyof IRestaurant, value: string | number) => {
     if (field === 'manager') return;
     setNewRestaraunt((prev) => ({ ...prev, [field]: value }));
   };
@@ -94,38 +98,6 @@ export const useRestarauntsCollect = () => {
     setNewRestaraunt(emptyRestaurant);
   };
 
-  const handleRestarauntClick = (id: string) => {
-    setEditingRestarauntId(id);
-    const rest = restaraunts.find((r: RestaurantApiModel) => r._id === id);
-    setEditingRestarauntData(rest ? { ...rest } : emptyRestaurant);
-    setError(null);
-  };
-
-  const handleEditRestarauntChange = (field: keyof RestaurantApiModel, value: string | number) => {
-    if (field === 'manager') return;
-    setEditingRestarauntData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSaveEditRestaraunt = async () => {
-    if (!editingRestarauntId) return;
-    try {
-      setLoading(true);
-      await restaurantService.update(editingRestarauntId, editingRestarauntData);
-      setEditingRestarauntId(null);
-      setEditingRestarauntData(emptyRestaurant);
-      setError(null);
-    } catch (err) {
-      setError('Ошибка обновления ресторана: ' + getErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCancelEditRestaraunt = () => {
-    setEditingRestarauntId(null);
-    setEditingRestarauntData(emptyRestaurant);
-  };
-
   const handleDeleteRestaraunt = async (id: string) => {
     try {
       setLoading(true);
@@ -138,27 +110,31 @@ export const useRestarauntsCollect = () => {
     }
   };
 
+  const handleRestarauntEdit = (id: string) => {
+    if (id === '') {
+      setEditingRestarauntId(null);
+    } else {
+      setEditingRestarauntId(id);
+    }
+  };
+
   return {
     restaraunts: sortedRestaraunts,
     isCreatingRestaraunt,
     newRestaraunt,
     editingRestarauntId,
-    editingRestarauntData,
     sortField,
     sortOrder,
     error,
     loading,
     nameInputRef,
     handleSortRestaraunts,
-    handleRestarauntClick,
-    handleEditRestarauntChange,
-    handleSaveEditRestaraunt,
-    handleCancelEditRestaraunt,
     handleDeleteRestaraunt,
     handleCreateRestarauntClick,
     handleNewRestarauntChange,
     handleSaveNewRestaraunt,
     handleCancelNewRestaraunt,
+    handleRestarauntEdit,
     fetchRestaraunts,
   };
 };

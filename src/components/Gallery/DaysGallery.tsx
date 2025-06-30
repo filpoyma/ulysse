@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import ImageGallery from 'react-image-gallery';
-import { ROOT_URL } from '../../constants/api.constants';
+import { useSelector } from 'react-redux';
 
 import styles from './Days.module.css';
-
-import { useSelector } from 'react-redux';
 import { selectTravelProgram } from '../../store/selectors.ts';
 import ImageUploadTravelProgram from '../ImageUploadModal/ImageUploadTravelProgram.tsx';
 import { travelProgramService } from '../../services/travelProgram.service';
 import { selectTravelProgramGallery, selectTravelProgramImages } from '../../store/reSelect.ts';
 import { LeftNav, RightNav } from './NavIcons.tsx';
-import { getErrorMessage } from '../../utils/helpers.ts';
+import { getErrorMessage, getImagePath } from '../../utils/helpers.ts';
 const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const program = useSelector(selectTravelProgram);
@@ -47,7 +45,7 @@ const DaysGallery = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           {images.map((image, index) => (
             <div key={image._id} className={styles.imageWrapper}>
               <img
-                src={`${ROOT_URL}/${image.path.replace(/^\//, '')}`}
+                src={getImagePath(image.path)}
                 alt={`Image ${index + 1}`}
                 className={styles.scrollableImage}
               />

@@ -1,6 +1,5 @@
 import React from 'react';
-import { createArrayFromNumber } from '../../utils/helpers.ts';
-import { ROOT_URL } from '../../constants/api.constants.ts';
+import { createArrayFromNumber, getImagePath } from '../../utils/helpers.ts';
 import { IUploadedImage } from '../../types/uploadImage.types.ts';
 
 interface IModalGallery {
@@ -69,14 +68,14 @@ const ModalGallery: React.FC<IModalGallery> = ({
               const isSelected =
                 img &&
                 selectedImages.some(
-                  selected => (selected._id || selected.id) === (img._id || img.id),
+                  (selected) => (selected._id || selected.id) === (img._id || img.id),
                 );
               return (
                 <div className="modal-cell" key={id}>
                   {img ? (
                     <>
                       <img
-                        src={`${ROOT_URL}/` + img.path.replace(/^\//, '')}
+                        src={getImagePath(img.path)}
                         alt="preview"
                         onClick={() => handlePreviewClick(img)}
                         style={{

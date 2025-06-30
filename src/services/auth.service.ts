@@ -10,12 +10,10 @@ export const authService = {
       store.dispatch(authActions.setToken(response.accessToken));
       store.dispatch(authActions.setUser(response.user));
       store.dispatch(authActions.setIsLoggedIn(true));
-
       return response;
     } catch (error) {
       console.error('Login error:', error);
       store.dispatch(authActions.clearAuthState());
-      throw error;
     }
   },
 
@@ -25,7 +23,6 @@ export const authService = {
       return response;
     } catch (error) {
       console.error('Registration error:', error);
-      throw error;
     }
   },
 
@@ -37,21 +34,16 @@ export const authService = {
       return response.accessToken;
     } catch (error) {
       console.error('Refresh token error:', error);
-      await this.logout(true);
-      throw error;
+      await this.logout();
     }
   },
 
-  async logout(silent = false) {
+  async logout() {
     try {
-      console.log('file-auth.service.ts logout >>>:');
       await AuthApi.logout();
       store.dispatch(authActions.clearAuthState());
     } catch (error) {
-      if (!silent) {
-        console.error('Logout error:', error);
-      }
-      throw error;
+      console.error('Logout error:', error);
     }
   },
 

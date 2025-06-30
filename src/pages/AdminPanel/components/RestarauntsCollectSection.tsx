@@ -4,6 +4,7 @@ import RestarauntsCollectTable from "./RestarauntsCollectTable";
 import { useRestarauntsCollect } from "../hooks/useRestarauntsCollect";
 import styles from "../AdminPanel.module.css";
 import { Loader } from "../../../components/Loader/Loader";
+import RestaurantEditPage from "./RestaurantEditPage";
 
 export const RestarauntsCollectSection: FC = () => {
   const {
@@ -12,27 +13,27 @@ export const RestarauntsCollectSection: FC = () => {
     error,
     isCreatingRestaraunt,
     newRestaraunt,
-    editingRestarauntId,
-    editingRestarauntData,
     sortField,
     sortOrder,
     nameInputRef,
     handleSortRestaraunts,
-    handleRestarauntClick,
-    handleEditRestarauntChange,
-    handleSaveEditRestaraunt,
-    handleCancelEditRestaraunt,
     handleDeleteRestaraunt,
     handleCreateRestarauntClick,
     handleNewRestarauntChange,
     handleSaveNewRestaraunt,
     handleCancelNewRestaraunt,
     fetchRestaraunts,
+    handleRestarauntEdit,
+    editingRestarauntId
   } = useRestarauntsCollect();
 
   useEffect(() => {
     if (!restaraunts.length) fetchRestaraunts();
   }, []);
+
+  if(editingRestarauntId) {
+    return <RestaurantEditPage restaurantId={editingRestarauntId} returnHandler={handleRestarauntEdit} />
+  }
 
   return (
     <div className={styles.section}>
@@ -47,7 +48,7 @@ export const RestarauntsCollectSection: FC = () => {
       ) : (
         <RestarauntsCollectTable
           restaraunts={restaraunts}
-          onRestarauntClick={handleRestarauntClick}
+          onRestarauntEdit={handleRestarauntEdit}
           onDeleteRestaraunt={handleDeleteRestaraunt}
           isCreatingRestaraunt={isCreatingRestaraunt}
           newRestaraunt={newRestaraunt}
@@ -55,11 +56,6 @@ export const RestarauntsCollectSection: FC = () => {
           onSaveNewRestaraunt={handleSaveNewRestaraunt}
           onCancelNewRestaraunt={handleCancelNewRestaraunt}
           nameInputRef={nameInputRef}
-          editingRestarauntId={editingRestarauntId}
-          editingRestarauntData={editingRestarauntData}
-          onEditRestarauntChange={handleEditRestarauntChange}
-          onSaveEditRestaraunt={handleSaveEditRestaraunt}
-          onCancelEditRestaraunt={handleCancelEditRestaraunt}
           sortField={sortField}
           sortOrder={sortOrder}
           onSort={handleSortRestaraunts}

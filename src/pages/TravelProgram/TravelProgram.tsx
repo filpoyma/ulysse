@@ -4,7 +4,6 @@ import Header from '../../components/Header/Header.tsx';
 import ImageUploadModal from '../../components/ImageUploadModal/ImageUploadModal.tsx';
 import { useSelector } from 'react-redux';
 import { travelProgramService } from '../../services/travelProgram.service.ts';
-import { ROOT_URL } from '../../constants/api.constants.ts';
 import { IFirstPageData as FirstPageType } from '../../types/travelProgram.types.ts';
 import { selectIsLoggedIn, selectTravelProgram } from '../../store/selectors.ts';
 import useIsMobile from '../../hooks/useIsMobile.tsx';
@@ -13,6 +12,7 @@ import MobileLayout from './components/MobileLayout';
 import DesktopLayout from './components/DesktopLayout';
 import { Loader } from '../../components/Loader/Loader.tsx';
 import NotFoundPage from '../NotFoundPage/NotFoundPage.tsx';
+import { getImagePath } from '../../utils/helpers.ts';
 
 const DEFAULT_FIRST_PAGE: FirstPageType = {
   title: '',
@@ -172,13 +172,13 @@ const TravelProgram: React.FC = () => {
     ];
 
     const observer = new window.IntersectionObserver(
-      entries => {
+      (entries) => {
         const visible = entries
-          .filter(e => e.isIntersecting)
+          .filter((e) => e.isIntersecting)
           .sort((a, b) => b.boundingClientRect.top - a.boundingClientRect.top);
         if (visible.length > 0) {
           const entry = visible[0];
-          const found = sections.find(s => s.el === entry.target);
+          const found = sections.find((s) => s.el === entry.target);
           if (found) {
             switch (found.name) {
               case 'hero':
@@ -192,7 +192,6 @@ const TravelProgram: React.FC = () => {
                 break;
             }
             setCurrentSection(found.name);
-            console.log('file-TravelProgram.tsx found.name:', found.name);
           }
         }
       },
@@ -202,23 +201,17 @@ const TravelProgram: React.FC = () => {
       },
     );
 
-    sections.forEach(s => {
+    sections.forEach((s) => {
       if (s.el) observer.observe(s.el);
     });
 
     return () => observer.disconnect();
   }, [isMobile, isLoading]);
 
-  const firstPageBg = program?.bgImages?.[0]?.path
-    ? `${ROOT_URL}/${program.bgImages[0].path.replace(/^\//, '')}`
-    : 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg?auto=compress&cs=tinysrgb&w=1920';
-
-  const secondPageBg = program?.bgImages?.[1]?.path
-    ? `${ROOT_URL}/${program.bgImages[1].path.replace(/^\//, '')}`
-    : 'https://images.pexels.com/photos/4577791/pexels-photo-4577791.jpeg?auto=compress&cs=tinysrgb&w=1920';
+  const firstPageBg = getImagePath(program?.bgImages[0]?.path);
+  const secondPageBg = getImagePath(program?.bgImages[1]?.path);
 
   if (isLoading) return <Loader />;
-
   if (!program) return <NotFoundPage />;
 
   return (

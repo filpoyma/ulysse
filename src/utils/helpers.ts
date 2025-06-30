@@ -1,3 +1,5 @@
+import { ROOT_URL } from '../constants/api.constants.ts';
+
 const generateId = (length = 8) => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -35,7 +37,10 @@ export const validateCoordinates = (
 ): { isValid: boolean; error: string | null; fieldNumber: number } => {
   let fieldNumber = 0;
   for (const item of coordinates) {
-    const [lng, lat] = item.split(' ').map((coord) => parseFloat(coord.trim()));
+    const [lng, lat] = item
+      .split(' ')
+      .map((coord) => parseFloat(coord.trim()))
+      .reverse();
     // Проверяем, что значения являются числами
     if (isNaN(lat) || isNaN(lng)) {
       return {
@@ -62,7 +67,10 @@ export const validateCoordinates = (
 export const validateHotelCoordinates = (
   coordinates: string,
 ): { isValid: boolean; error: string | null } => {
-  const [lng, lat] = coordinates.split(' ').map((coord) => parseFloat(coord.trim()));
+  const [lng, lat] = coordinates
+    .split(' ')
+    .map((coord) => parseFloat(coord.trim()))
+    .reverse();
   // Проверяем, что значения являются числами
   if (isNaN(lat) || isNaN(lng)) {
     return {
@@ -75,7 +83,7 @@ export const validateHotelCoordinates = (
   if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
     return {
       isValid: false,
-      error: 'Некорректные координаты: долгота от -180 до 180, широта от -90 до 90',
+      error: 'Некорректные координаты:  широта от -90 до 90, долгота от -180 до 180',
     };
   }
 
@@ -87,4 +95,9 @@ export const getErrorMessage = (err: unknown) => {
     return (err as { message: string }).message;
   }
   return 'Что то пошло не так...';
+};
+
+export const getImagePath = (path?: string) => {
+  if (!path) return `${location.protocol}//${location.host}/placeholder.jpg`;
+  return `${ROOT_URL}/${path?.replace(/^\//, '')}`;
 };

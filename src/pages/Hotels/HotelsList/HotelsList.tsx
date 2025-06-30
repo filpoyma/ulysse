@@ -16,7 +16,7 @@ const HotelsList = () => {
   return (
     <div>
       {hotels.map((hotel) => {
-        return <SingleHotelComponent hotel={hotel} />;
+        return <SingleHotelComponent key={hotel._id} hotel={hotel} />;
       })}
     </div>
   );

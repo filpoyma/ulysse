@@ -4,7 +4,6 @@ import { authService } from '../../services';
 import styles from './AdminLogin.module.css';
 import { Loader } from '../../components/Loader/Loader.tsx';
 import { getErrorMessage } from '../../utils/helpers.ts';
-import { countriesService } from '../../services/countries.service.ts';
 
 const AdminSignIn = () => {
   const [email, setEmail] = useState('');
@@ -21,7 +20,6 @@ const AdminSignIn = () => {
     try {
       setIsLoading(true);
       await authService.login({ email, password });
-      await countriesService.getAll();
       navigate('/admin');
     } catch (err) {
       setError(getErrorMessage(err));

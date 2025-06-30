@@ -1,16 +1,5 @@
 import api from './baseApi';
-
-export interface RestaurantApiModel {
-  _id?: string;
-  name: string;
-  country: string;
-  city: string;
-  region: string;
-  manager: string;
-  stars: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import { IRestaurant } from '../types/restaurant.types.ts';
 
 const RestaurantApi = {
   basePath: 'restaurants',
@@ -19,25 +8,43 @@ const RestaurantApi = {
     return path ? `${this.basePath}/${path}` : this.basePath;
   },
 
-  getAll(): Promise<{ data: RestaurantApiModel[] }> {
-    return api.get(this.getUrl(), { timeout: 10000 }).json();
+  getAll(): Promise<{ data: IRestaurant[] }> {
+    return api.get(this.getUrl()).json();
   },
 
-  getById(id: string): Promise<{ data: RestaurantApiModel }> {
-    return api.get(this.getUrl(id), { timeout: 10000 }).json();
+  getById(id: string): Promise<{ data: IRestaurant }> {
+    return api.get(this.getUrl(id)).json();
   },
 
-  create(data: Omit<RestaurantApiModel, '_id' | 'createdAt' | 'updatedAt'>): Promise<{ data: RestaurantApiModel }> {
-    return api.post(this.getUrl(), { json: data, timeout: 10000 }).json();
+  create(
+    data: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<{ data: IRestaurant }> {
+    return api.post(this.getUrl(), { json: data }).json();
   },
 
-  update(id: string, data: Partial<RestaurantApiModel>): Promise<{ data: RestaurantApiModel }> {
-    return api.put(this.getUrl(id), { json: data, timeout: 10000 }).json();
+  update(id: string, data: Partial<IRestaurant>): Promise<{ data: IRestaurant }> {
+    return api.put(this.getUrl(id), { json: data }).json();
   },
 
   delete(id: string): Promise<{ message: string }> {
-    return api.delete(this.getUrl(id), { timeout: 10000 }).json();
+    return api.delete(this.getUrl(id)).json();
+  },
+
+  updateTitleImage(restaurantId: string, imageId: string): Promise<{ data: IRestaurant }> {
+    return api
+      .put(this.getUrl('update-title-image'), {
+        json: { restaurantId, imageId },
+      })
+      .json();
+  },
+
+  updateGallery(restaurantId: string, imageIds: string[]): Promise<{ data: IRestaurant }> {
+    return api
+      .put(this.getUrl('update-gallery'), {
+        json: { restaurantId, imageIds },
+      })
+      .json();
   },
 };
 
-export default RestaurantApi; 
+export default RestaurantApi;

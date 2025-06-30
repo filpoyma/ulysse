@@ -4,7 +4,7 @@ import styles from './MapBox.module.css';
 
 export const copyToClipboardWithTooltip = (map: any, lngLat: LngLat) => {
   console.log('Координаты клика:', lngLat.lng, lngLat.lat);
-  copyToClipboard(`${lngLat.lng.toFixed(5)} ${lngLat.lat.toFixed(5)}`);
+  copyToClipboard(`${lngLat.lat.toFixed(5)} ${lngLat.lng.toFixed(5)}`);
   const popup = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false,
@@ -39,7 +39,7 @@ export const validateClipboardCoordinates = (str: string) => {
     throw new Error('Неверный формат координат. Используйте формат: "12.234 29.4545"');
 
   // Разбиваем строку на координаты
-  const [lng, lat] = str.split(' ').map(Number);
+  const [lng, lat] = str.split(' ').map(Number).reverse();
   // Проверяем диапазоны координат
   if (lat < -90 || lat > 90) throw new Error('Широта должна быть в диапазоне от -90 до 90');
 

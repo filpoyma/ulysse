@@ -1,24 +1,23 @@
-import React from 'react';
 import styles from './SingleHotel.module.css';
-import { ROOT_URL } from '../../../constants/api.constants.ts';
 import ImageGallery from 'react-image-gallery';
 import { LeftNav, RightNav } from '../../../components/Gallery/NavIcons.tsx';
 import PlusCircle from '../../../assets/icons/plusInCircle.svg';
 import InfoCircle from '../../../assets/icons/infoInCircle.svg';
 import { IHotel } from '../../../types/hotel.types.ts';
+import { getImagePath } from '../../../utils/helpers.ts';
 
 const SingleHotelComponent = ({ hotel }: { hotel: IHotel }) => {
   // Подготовка галереи для react-image-gallery
   const hotelGalleryImages =
     hotel.hotelInfo?.gallery?.map((img) => ({
-      original: `${ROOT_URL}/${img.path?.replace(/^\//, '')}`,
-      thumbnail: `${ROOT_URL}/${img.path?.replace(/^\//, '')}`,
+      original: getImagePath(img.path),
+      thumbnail: getImagePath(img.path),
     })) || [];
 
   const roomGalleryImages =
     hotel.roomInfo?.gallery?.map((img) => ({
-      original: `${ROOT_URL}/${img.path?.replace(/^\//, '')}`,
-      thumbnail: `${ROOT_URL}/${img.path?.replace(/^\//, '')}`,
+      original: getImagePath(img.path),
+      thumbnail: getImagePath(img.path),
     })) || [];
 
   return (
@@ -26,7 +25,7 @@ const SingleHotelComponent = ({ hotel }: { hotel: IHotel }) => {
       {/* Левая секция - главное изображение */}
       <div className={styles.leftSection}>
         <img
-          src={`${ROOT_URL}/${hotel.mainImage?.path?.replace(/^\//, '')}`}
+          src={getImagePath(hotel.mainImage?.path)}
           alt={hotel.name}
           className={styles.mainImage}
         />

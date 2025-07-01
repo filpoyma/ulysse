@@ -23,7 +23,6 @@ const AdminSignIn = () => {
       navigate('/admin');
     } catch (err) {
       setError(getErrorMessage(err));
-      console.error('Login error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -58,7 +57,7 @@ const AdminSignIn = () => {
             />
           </div>
           <button type="submit" className={styles.button}>
-            Login
+            Logins
           </button>
           <div className={styles.links}>
             <Link to="/ulyseadmin/register">Don't have an account? Register</Link>

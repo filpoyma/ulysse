@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IRestaurant } from '../../../types/restaurant.types';
+import { IRestaurantsList } from '../../../types/restaurantsList.types.ts';
 
 interface RestaurantState {
   restaurants: IRestaurant[];
   restaurant: IRestaurant | null;
+  restaurantsList: IRestaurantsList[];
 }
 
 const initialState: RestaurantState = {
   restaurants: [],
+  restaurantsList: [],
   restaurant: null,
 };
 
@@ -17,6 +20,14 @@ const { reducer: restaurantReducer, actions: restaurantActions } = createSlice({
   reducers: {
     setRestaurants(state, action: PayloadAction<IRestaurant[]>) {
       state.restaurants = action.payload;
+    },
+    setRestaurantsList(state, action: PayloadAction<IRestaurantsList[]>) {
+      state.restaurantsList = action.payload;
+    },
+    updateRestaurantList(state, action: PayloadAction<IRestaurantsList>) {
+      state.restaurantsList = state.restaurantsList.map((rest) =>
+        rest._id === action.payload._id ? action.payload : rest,
+      );
     },
     setRestaurant(state, action: PayloadAction<IRestaurant | null>) {
       state.restaurant = action.payload;

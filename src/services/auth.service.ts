@@ -14,6 +14,7 @@ export const authService = {
     } catch (error) {
       console.error('Login error:', error);
       store.dispatch(authActions.clearAuthState());
+      throw error;
     }
   },
 
@@ -23,6 +24,7 @@ export const authService = {
       return response;
     } catch (error) {
       console.error('Registration error:', error);
+      throw error;
     }
   },
 
@@ -35,6 +37,7 @@ export const authService = {
     } catch (error) {
       console.error('Refresh token error:', error);
       await this.logout();
+      throw error;
     }
   },
 
@@ -44,6 +47,7 @@ export const authService = {
       store.dispatch(authActions.clearAuthState());
     } catch (error) {
       console.error('Logout error:', error);
+      throw error;
     }
   },
 

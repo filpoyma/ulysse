@@ -3,11 +3,13 @@ import { hotelsListService } from '../../../services/hotelsList.service';
 import { useNavigate } from 'react-router-dom';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import { ICreateHotelsListData, IHotelsList } from '../../../types/hotelsList.types.ts';
+import { useSelector } from 'react-redux';
+import { selectHotelsList } from '../../../store/selectors.ts';
 
 export const useHotelsList = () => {
   const navigate = useNavigate();
 
-  const [hotelsLists, setHotelsLists] = useState<IHotelsList[]>([]);
+  const hotelsLists = useSelector(selectHotelsList);
   const [isCreatingList, setIsCreatingList] = useState(false);
   const [newList, setNewList] = useState<ICreateHotelsListData>({
     name: '',
@@ -40,16 +42,7 @@ export const useHotelsList = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await hotelsListService.getAll();
-      // Приводим к базовому типу IHotelsList
-      const lists = (response.data as IHotelsList[]).map((list) => ({
-        ...list,
-        hotels:
-          Array.isArray(list.hotels) && typeof list.hotels[0] === 'string'
-            ? list.hotels
-            : (list.hotels as any[]).map((hotel: any) => hotel._id || hotel),
-      }));
-      setHotelsLists(lists);
+      await hotelsListService.getAll();
     } catch (err) {
       setError('Ошибка при загрузке списков отелей: ' + getErrorMessage(err));
       console.error('Error fetching hotels lists:', err);

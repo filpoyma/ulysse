@@ -13,6 +13,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { NavItem } from '../../types/adminPanel.types.ts';
 import HotelsListSection from './components/HotelsListSection.tsx';
 import { getErrorMessage } from '../../utils/helpers.ts';
+import RestaurantsListSection from './components/RestaurantsListSection.tsx';
 
 const AdminPanel: FC = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -50,6 +51,7 @@ const AdminPanel: FC = () => {
       {activeNavItem === 'hotels-collections' && <HotelsCollectSection />}
       {activeNavItem === 'hotels-pages' && <HotelsListSection />}
       {activeNavItem === 'restaurants-collections' && <RestarauntsCollectSection />}
+      {activeNavItem === 'restaurants-pages' && <RestaurantsListSection />}
     </div>
   );
 };

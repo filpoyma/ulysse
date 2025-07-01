@@ -9,8 +9,17 @@ import { store } from '../store';
 import { hotelActions } from '../store/reducers/hotel';
 
 export const hotelsListService = {
-  getAll(params?: { active?: boolean; withHotels?: boolean }) {
-    return hotelsListApi.getAll(params);
+  async getAll(params?: { active?: boolean; withHotels?: boolean }) {
+    const response = await hotelsListApi.getAll(params);
+    // Приводим к базовому типу IHotelsList
+    const lists = (response.data as IHotelsList[]).map((list) => ({
+      ...list,
+      hotels:
+        Array.isArray(list.hotels) && typeof list.hotels[0] === 'string'
+          ? list.hotels
+          : (list.hotels as any[]).map((hotel: any) => hotel._id || hotel),
+    }));
+    store.dispatch(hotelActions.setHotelsList(lists));
   },
 
   // Получить список отелей по ID
@@ -29,8 +38,9 @@ export const hotelsListService = {
   },
 
   // Обновить список отелей
-  update(id: string, data: IUpdateHotelsListData): Promise<{ data: IHotelsList }> {
-    return hotelsListApi.update(id, data);
+  async update(id: string, data: IUpdateHotelsListData) {
+    const resp = await hotelsListApi.update(id, data);
+    store.dispatch(hotelActions.updateHotelsList(resp.data));
   },
 
   // Удалить список отелей

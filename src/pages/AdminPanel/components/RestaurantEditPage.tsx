@@ -81,7 +81,7 @@ const RestaurantEditPage = ({
     setIsModalOpen(true);
   };
 
-  const handleDeleteImage = async (imageId: string, type: 'gallery') => {
+  const handleDeleteImage = async (imageId: string) => {
     if (!restaurant || !imageId || !restaurant._id) return;
 
     try {
@@ -175,7 +175,7 @@ const RestaurantEditPage = ({
                     onClick={(e) => {
                       e.stopPropagation();
                       if (image._id) {
-                        handleDeleteImage(image._id, 'gallery');
+                        handleDeleteImage(image._id);
                       }
                     }}>
                     ×

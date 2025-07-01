@@ -36,7 +36,7 @@ const errorInterceptor = async (error: HTTPError) => {
   error.message = contentType?.includes('application/json')
     ? (await response.json())?.message
     : await response.text();
-  console.log('file-baseApi.ts error.message:', error.message);
+  console.log('>>>baseApi error.message:<<<', error.message);
   return error;
 };
 

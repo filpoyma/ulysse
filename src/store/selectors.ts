@@ -11,5 +11,7 @@ export const selectTravelProgram = (state: RootState) => state.travelProgram.pro
 export const selectMapData = (state: RootState) => state.travelProgram.program?.thirdPageMap;
 
 export const selectHotels = (state: RootState) => state.hotelsData.hotels;
+export const selectHotelsList = (state: RootState) => state.hotelsData.hotelsList;
 
 export const selectRestaurants = (state: RootState) => state.restaurantsData.restaurants;
+export const selectRestaurantsList = (state: RootState) => state.restaurantsData.restaurantsList;

@@ -10,7 +10,8 @@ import { restaurantActions } from '../store/reducers/restaurant';
 export const restaurantsListService = {
   async getAll(params?: { active?: boolean; withRestaurants?: boolean }) {
     const res = await restaurantsListApi.getAll(params);
-    store.dispatch(restaurantActions.setRestaurantsList(res.data as IRestaurantsList[]));
+    if (res.data)
+      store.dispatch(restaurantActions.setRestaurantsList(res.data as IRestaurantsList[]));
   },
 
   getById(id: string) {
@@ -23,7 +24,7 @@ export const restaurantsListService = {
 
   async update(id: string, data: IUpdateRestaurantsListData) {
     const res = await restaurantsListApi.update(id, data);
-    store.dispatch(restaurantActions.updateRestaurantList(res.data));
+    if (res.data) store.dispatch(restaurantActions.updateRestaurantList(res.data));
   },
 
   delete(id: string) {

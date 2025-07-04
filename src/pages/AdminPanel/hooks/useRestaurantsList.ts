@@ -101,7 +101,7 @@ export const useRestaurantsList = () => {
   };
 
   const handleNavigateToListPage = (id: string) => {
-    navigate(`/restaurants-list/${id}`);
+    navigate(`/restaurants/${id}`);
   };
 
   return {

@@ -1,7 +1,10 @@
 import { IRestaurant } from '../../../types/restaurant.types.ts';
-import styles from '../../Hotels/SingleHotel/SingleHotel.module.css';
+import styles from './styles.module.css';
 import { getImagePath } from '../../../utils/helpers.ts';
-import ForkAndSpoon from '../../../assets/icons/forkAndSpoon.svg';
+import RestHeader from './RestHeader.tsx';
+import RestIcon from '../../../assets/icons/forkAndSpoon.svg';
+import FlowerIcon from '../../../assets/icons/flower.svg';
+import CookerIcon from '../../../assets/icons/cooker.svg';
 
 const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) => {
   return (
@@ -18,34 +21,38 @@ const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) 
       {/* Правая секция - информация о ресторане */}
       <div className={styles.rightSection}>
         {/* Имя ресторана */}
-        <h1 className={styles.title}>{restaurant.name}</h1>
-        <div className={styles.divider}></div>
+        <div className={styles.title}>{restaurant.name}</div>
 
-        {/* Описание */}
+        <RestHeader title={'РЕСТОРАН'} Icon={RestIcon} />
         <div className={styles.about}>{restaurant.description || 'Описание отсутствует'}</div>
-        <div className={styles.divider}></div>
 
-        {/* 2 картинки из gallery */}
-        {restaurant.gallery && restaurant.gallery.length > 0 && (
-          <div style={{ display: 'flex', gap: 16, marginBottom: 24, width: '100%', }}>
-            {restaurant.gallery.slice(0, 2).map((img, idx) => (
-              <img
-                key={img._id || idx}
-                src={getImagePath(img.path)}
-                alt={`Restaurant gallery ${idx + 1}`}
-                style={{ flex: 1, height: 220, objectFit: 'cover', borderRadius: 8, minWidth: 0 }}
-              />
+        <RestHeader title={'ШЕВ-ПОВАР'} Icon={CookerIcon} />
+        <div className={styles.about}>{restaurant.cookDescription || 'Описание отсутствует'}</div>
+
+        <RestHeader title={'ИНФОРМАЦИЯ'} Icon={FlowerIcon} />
+        {restaurant.shortInfo && restaurant.shortInfo.length > 0 && (
+          <ul className={styles.infoListCustom}>
+            {restaurant.shortInfo.map((item, idx) => (
+              <li key={idx}>{item}</li>
             ))}
-          </div>
+          </ul>
         )}
 
-        {/* Важная информация */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24, marginTop: 24 }}>
-          <ForkAndSpoon height={40} width={40}/>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: 24, marginBottom: 4 }}>Важная информация</div>
-            <div style={{ fontSize: 22 }}>Адрес: {restaurant.address}</div>
-          </div>
+        <RestHeader title={'ГАЛЛЕРЕЯ'} />
+        <div >
+          {/* 2 картинки из gallery */}
+          {restaurant.gallery && restaurant.gallery.length > 0 && (
+            <div className={styles.galleryContainer}>
+              {restaurant.gallery.slice(0, 2).map((img, idx) => (
+                <img
+                  key={img._id || idx}
+                  src={getImagePath(img.path)}
+                  alt={`Restaurant gallery ${idx + 1}`}
+                  className={styles.galleryImage}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

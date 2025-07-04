@@ -11,11 +11,9 @@ import ChevronUp from '../../../assets/icons/chevronUp.svg';
 import ChevronDown from '../../../assets/icons/chevronDown.svg';
 
 const RestaurantsListEditPage = ({
-  onSuccess,
   id,
   returnHandler,
 }: {
-  onSuccess?: () => void;
   id: string;
   returnHandler: (id: string) => void;
 }) => {

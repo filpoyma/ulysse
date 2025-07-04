@@ -307,6 +307,57 @@ const RestaurantEditPage = ({
             </div>
           </div>
 
+          {/* Информация о поваре */}
+          <div className={styles.section}>
+            <h2>Информация о поваре</h2>
+            <div className={styles.field}>
+              <label>Описание повара</label>
+              <textarea
+                value={restaurant.cookDescription}
+                onChange={(e) => handleInputChange('cookDescription', e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Краткая информация */}
+          <div className={styles.section}>
+            <h2>Краткая информация</h2>
+            <div className={styles.field}>
+              <label>Разделяйте запятыми. Нажмите Enter.</label>
+              <input
+                type="text"
+                placeholder="WiFi Парковка Бассейн"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const input = e.currentTarget;
+                    const newItems = input.value.split(',').filter((item) => item.trim());
+                    if (newItems.length > 0) {
+                      const updatedShortInfo = [...(restaurant.shortInfo || []), ...newItems];
+                      handleInputChange('shortInfo', updatedShortInfo);
+                      input.value = '';
+                    }
+                  }
+                }}
+              />
+            </div>
+            <div className={styles.list}>
+              {restaurant.shortInfo?.map((info, index) => (
+                <div key={index} className={styles.listItem}>
+                  <span>{info}</span>
+                  <button
+                    className={styles.removeButton}
+                    onClick={() => {
+                      const newShortInfo = restaurant.shortInfo?.filter((_, i) => i !== index) || [];
+                      handleInputChange('shortInfo', newShortInfo);
+                    }}>
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <button className={styles.saveButton} onClick={handleSave} disabled={isLoading}>
             Сохранить изменения
           </button>

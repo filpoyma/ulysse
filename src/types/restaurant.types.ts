@@ -10,10 +10,12 @@ export interface IRestaurant {
   manager: string;
   address: string;
   description: string;
+  cookDescription: string;
   coordinates: [number, number];
   gallery: IUploadedImage[];
   titleImage: IUploadedImage;
   stars: number;
+  shortInfo: string[];
   createdAt?: string;
   updatedAt?: string;
 }

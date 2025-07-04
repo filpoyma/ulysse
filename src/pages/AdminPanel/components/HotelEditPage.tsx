@@ -167,10 +167,6 @@ const HotelEditPage = ({
       coordinates: [lng, lat] as [number, number],
     };
     setIsLoading(true);
-    console.log(
-      'file-HotelEditPage.tsx hotelWithParsedCoordinates:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',
-      hotelWithParsedCoordinates.coordinates,
-    );
     try {
       await hotelService.update(hotelId, hotelWithParsedCoordinates);
       console.log('Saving hotel:', hotel);

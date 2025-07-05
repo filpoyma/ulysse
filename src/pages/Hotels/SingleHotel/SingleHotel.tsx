@@ -8,14 +8,14 @@ import NotFoundPage from '../../NotFoundPage/NotFoundPage.tsx';
 import SingleHotelComponent from './SingleHotel.component.tsx';
 
 const SingleHotel = () => {
-  const { id } = useParams();
+  const { name } = useParams();
   const [isLoading, setIsLoading] = React.useState(true);
   const [hotel, setHotel] = useState<IHotel | null>(null);
 
   React.useEffect(() => {
-    if (id)
+    if (name)
       hotelService
-        .getById(id)
+        .getByName(name)
         .then((hotel) => {
           console.log('Hotel data received:', hotel);
           setHotel(hotel.data);
@@ -24,7 +24,7 @@ const SingleHotel = () => {
           console.error('Error fetching hotel:', error);
         })
         .finally(() => setIsLoading(false));
-  }, [id]);
+  }, [name]);
 
   if (isLoading) return <Loader />;
   if (!hotel) return <NotFoundPage />;

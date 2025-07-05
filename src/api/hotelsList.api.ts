@@ -71,6 +71,11 @@ const hotelsListApi = {
     return api.delete(this.getUrl(`${listId}/hotels/${hotelId}`)).json();
   },
 
+  // Удалить отель из всех списков
+  removeHotelsFromLists(hotelId: string): Promise<{ data: IHotelsList }> {
+    return api.delete(this.getUrl(`lists/${hotelId}`)).json();
+  },
+
   // Получить статистику списков отелей
   getStats(): Promise<{ data: IHotelsListStats }> {
     return api.get(this.getUrl('stats')).json();

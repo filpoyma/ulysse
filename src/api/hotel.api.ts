@@ -16,6 +16,10 @@ const HotelApi = {
     return api.get(this.getUrl(id)).json();
   },
 
+  getByName(name: string): Promise<{ data: IHotel }> {
+    return api.get(this.getUrl(`name/${name}`)).json();
+  },
+
   create(data: IHotelCreate): Promise<{ data: IHotel }> {
     return api.post(this.getUrl(), { json: data }).json();
   },

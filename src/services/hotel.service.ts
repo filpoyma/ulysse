@@ -2,6 +2,8 @@ import HotelApi from '../api/hotel.api';
 import { store } from '../store';
 import { hotelActions } from '../store/reducers/hotel';
 import { IHotel, IHotelCreate, TGalleryType } from '../types/hotel.types.ts';
+import HotelsListApi from '../api/hotelsList.api.ts';
+import { hotelsListService } from './hotelsList.service.ts';
 
 export const hotelService = {
   async getAll() {
@@ -12,6 +14,9 @@ export const hotelService = {
     return HotelApi.getById(id);
     //store.dispatch(hotelActions.setHotel(response.data || []));
   },
+  async getByName(name_eng: string) {
+    return HotelApi.getByName(name_eng);
+  },
   async create(data: IHotelCreate) {
     return HotelApi.create(data);
   },
@@ -20,7 +25,9 @@ export const hotelService = {
     store.dispatch(hotelActions.updateHotel(res.data));
   },
   async delete(id: string) {
+    await HotelsListApi.removeHotelsFromLists(id);
     await HotelApi.delete(id);
+    await hotelsListService.getAll();
     store.dispatch(hotelActions.removeHotel(id));
   },
   async updateMainImage(hotelId: string, imageId: string) {

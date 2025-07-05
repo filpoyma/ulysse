@@ -153,7 +153,7 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
               <tr key={hotel._id}>
                 <td
                   className={styles.programName}
-                  onClick={() => handleNavigateToHotelPage(hotel._id)}>
+                  onClick={() => handleNavigateToHotelPage(hotel.name_eng)}>
                   {hotel.name}
                 </td>
                 <td>{hotel.country}</td>

@@ -1,4 +1,3 @@
-import { FC, useEffect } from 'react';
 import { usePrograms } from '../hooks/usePrograms';
 import { SectionHeader } from './SectionHeader';
 import ProgramsTable from './ProgramsTable.tsx';
@@ -6,7 +5,7 @@ import CreateTemplateModal from '../../../components/CreateTemplateModal/CreateT
 import { Loader } from '../../../components/Loader/Loader';
 import styles from '../adminLayout.module.css';
 
-const ProgramsSection: FC = () => {
+const ProgramsSection = () => {
   const {
     programs,
     loading,

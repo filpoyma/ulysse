@@ -21,6 +21,8 @@ import InfoSection from './pages/AdminPanel/components/InfoSection.tsx';
 import ReferencesSection from './pages/AdminPanel/components/ReferencesSection.tsx';
 import HotelEditPage from './pages/AdminPanel/components/HotelEditPage.tsx';
 import RestaurantEditPage from './pages/AdminPanel/components/RestaurantEditPage.tsx';
+import HotelsListEditPage from './pages/AdminPanel/components/HotelsListEditPage.tsx';
+import RestaurantsListEditPage from './pages/AdminPanel/components/RestaurantsListEditPage.tsx';
 
 dayjs.locale('ru');
 dayjs.extend(customParseFormat);
@@ -70,12 +72,14 @@ const App = () => {
           <Route path="hotels">
             <Route index element={<HotelsCollectSection />} />
             <Route path="lists" element={<HotelsListSection />} />
-            <Route path="edit/:id" element={<HotelEditPage />} />
+            <Route path="hotel/edit/:id" element={<HotelEditPage />} />
+            <Route path="list/edit/:id" element={<HotelsListEditPage />} />
           </Route>
           <Route path="restaurants">
             <Route index element={<RestaurantsCollectSection />} />
             <Route path="lists" element={<RestaurantsListSection />} />
-            <Route path="edit/:id" element={<RestaurantEditPage />} />
+            <Route path="restaurant/edit/:id" element={<RestaurantEditPage />} />
+            <Route path="list/edit/:id" element={<RestaurantsListEditPage />} />
           </Route>
           <Route path="info" element={<InfoSection />} />
           <Route path="references" element={<ReferencesSection />} />

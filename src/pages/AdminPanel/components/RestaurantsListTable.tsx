@@ -1,4 +1,4 @@
-import { FC, RefObject, useState } from 'react';
+import { FC, RefObject } from 'react';
 import Trash2 from '../../../assets/icons/trash2.svg';
 import Edit from '../../../assets/icons/edit.svg';
 import Check from '../../../assets/icons/check.svg';
@@ -9,7 +9,7 @@ import styles from '../adminLayout.module.css';
 import dayjs from 'dayjs';
 import { SectionHeader } from './SectionHeader.tsx';
 import { IRestaurantsList } from '../../../types/restaurantsList.types';
-import RestaurantsListEditPage from './RestaurantsListEditPage.tsx';
+import { useNavigate } from 'react-router-dom';
 
 interface RestaurantsListTableProps {
   restaurantsLists: IRestaurantsList[];
@@ -25,7 +25,6 @@ interface RestaurantsListTableProps {
   sortField?: keyof IRestaurantsList;
   sortOrder?: 'asc' | 'desc';
   onSort?: (field: keyof IRestaurantsList) => void;
-  onEditSuccess?: () => void;
 }
 
 const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
@@ -42,9 +41,8 @@ const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
   onSort,
   handleCreateListClick,
   handleNavigateToListPage,
-  onEditSuccess,
 }) => {
-  const [listEditId, setListEditId] = useState<string | null>(null);
+  const navigate = useNavigate();
   const renderSortIcon = (field: keyof IRestaurantsList) => {
     if (!sortField || sortField !== field) return null;
     return sortOrder === 'asc' ? (
@@ -54,23 +52,7 @@ const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
     );
   };
 
-  const handleEditListPage = (id: string) => {
-    setListEditId(id);
-  };
-
-  const handleEditSuccess = () => {
-    // Обновляем список после успешного редактирования
-    onEditSuccess?.();
-  };
-
-  if (listEditId)
-    return (
-      <RestaurantsListEditPage
-        id={listEditId}
-        returnHandler={handleEditListPage}
-        onSuccess={handleEditSuccess}
-      />
-    );
+  const handleEditListPage = (id: string) => navigate(`/admin/restaurants/list/edit/${id}`);
 
   return (
     <>

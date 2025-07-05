@@ -1,9 +1,7 @@
-
 import { Link } from 'react-router-dom';
 import styles from './styles.module.css';
 import { useSelector } from 'react-redux';
 import { selectIsLoggedIn } from '../../../store/selectors.ts';
-import { NavItem } from '../../../types/adminPanel.types.ts';
 
 const EditButton = ({
   restaurantListId,
@@ -13,15 +11,17 @@ const EditButton = ({
   restaurantId?: string;
 }) => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const tab: NavItem = restaurantId ? 'restaurants-collections' : 'restaurants-pages';
   const id = restaurantId || restaurantListId;
+  const navTo = restaurantId
+    ? `/admin/restaurants/restaurant/edit/${id}`
+    : `/admin/restaurants/list/edit/${id}`;
+
+  if (!isLoggedIn || !id) return null;
   return (
     <div>
-      {isLoggedIn ? (
-        <Link to={`/admin/?tab=${tab}&id=${id}`} className={styles.editButton}>
-          ✎
-        </Link>
-      ) : null}
+      <Link to={navTo} className={styles.editButton}>
+        ✎
+      </Link>
     </div>
   );
 };

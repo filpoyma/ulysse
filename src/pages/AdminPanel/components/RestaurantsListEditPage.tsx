@@ -9,15 +9,13 @@ import { selectRestaurants } from '../../../store/selectors.ts';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import ChevronUp from '../../../assets/icons/chevronUp.svg';
 import ChevronDown from '../../../assets/icons/chevronDown.svg';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const RestaurantsListEditPage = ({
-  id,
-  returnHandler,
-}: {
-  id: string;
-  returnHandler: (id: string) => void;
-}) => {
+const RestaurantsListEditPage = () => {
+  const { id } = useParams();
   const allRestaurants = useSelector(selectRestaurants);
+  const navigate = useNavigate();
+
   const [selectedRestaurants, setSelectedRestaurants] = useState<IRestaurant[]>([]);
   const [search, setSearch] = useState('');
   const [listHeaders, setListHeaders] = useState({ name: '', description: '' });
@@ -28,25 +26,24 @@ const RestaurantsListEditPage = ({
 
   // Загрузка списка и всех ресторанов
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        await restaurantService.getAll();
-        const listRes = await restaurantsListService.getById(id);
-        console.log('file-RestaurantsListEditPage.tsx listRes:', listRes);
-        setListHeaders({
-          name: listRes.data.name || '',
-          description: listRes.data.description || '',
-        });
-        //@ts-ignore
-        setSelectedRestaurants(listRes.data.restaurants);
-      } catch (err) {
-        setError(getErrorMessage(err));
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
+    if (id)
+      (async () => {
+        setLoading(true);
+        try {
+          await restaurantService.getAll();
+          const listRes = await restaurantsListService.getById(id);
+          setListHeaders({
+            name: listRes.data.name || '',
+            description: listRes.data.description || '',
+          });
+          //@ts-ignore
+          setSelectedRestaurants(listRes.data.restaurants);
+        } catch (err) {
+          setError(getErrorMessage(err));
+        } finally {
+          setLoading(false);
+        }
+      })();
   }, [id]);
 
   // Фильтрация по поиску и исключение уже выбранных
@@ -69,6 +66,8 @@ const RestaurantsListEditPage = ({
     setIsEdited(true);
     setSelectedRestaurants((prev) => prev.filter((r) => r._id !== restaurantId));
   };
+
+  const handlerReturnToRestLists = () => navigate('/admin/restaurants/lists');
 
   const moveRestaurantUp = (index: number) => {
     if (index === 0) return; // Нельзя поднять первый элемент
@@ -113,7 +112,7 @@ const RestaurantsListEditPage = ({
           .filter((id): id is string => id !== undefined),
       });
       setIsEdited(false);
-      returnHandler('');
+      handlerReturnToRestLists();
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -128,9 +127,9 @@ const RestaurantsListEditPage = ({
           className={styles.backButton}
           onClick={() => {
             if (isEdited && window.confirm('Сохранить изменения?')) handleSave();
-            else returnHandler('');
+            else handlerReturnToRestLists();
           }}>
-          Назад
+          К списку
         </button>
       </div>
       <h2>Редактировать список ресторанов</h2>

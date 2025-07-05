@@ -114,7 +114,7 @@ export const useRestarauntsCollect = () => {
   };
 
   const handleRestarauntEdit = (id: string) => {
-    navigate(`/admin/restaurants/edit/${id}`);
+    navigate(`/admin/restaurants/restaurant/edit/${id}`);
   };
 
   return {

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectFullDataListRestaurants } from '../../../store/selectors.ts';
 import SingleRestaurantComponent from '../SingleRestaurant/SingleRestaurant.component.tsx';
+import EditButton from '../SingleRestaurant/EditButton.tsx';
 
 const RestaurantsList = () => {
   const { id } = useParams();
@@ -15,6 +16,7 @@ const RestaurantsList = () => {
 
   return (
     <div>
+      <EditButton restaurantListId={id} />
       {restaurantsListFull.map((restaurant) => {
         return <SingleRestaurantComponent key={restaurant._id} restaurant={restaurant} />;
       })}

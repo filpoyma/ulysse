@@ -81,7 +81,7 @@ export const useHotelsCollect = () => {
   };
 
   const handleHotelEdit = (id: string) => {
-    navigate(`/admin/hotels/edit/${id}`);
+    navigate(`/admin/hotels/hotel/edit/${id}`);
   };
 
   const handleSaveEditHotel = async () => {

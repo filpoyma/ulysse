@@ -1,4 +1,4 @@
-import { FC, RefObject, useState } from 'react';
+import { FC, RefObject } from 'react';
 import Trash2 from '../../../assets/icons/trash2.svg';
 import Edit from '../../../assets/icons/edit.svg';
 import Check from '../../../assets/icons/check.svg';
@@ -8,8 +8,8 @@ import ChevronUp from '../../../assets/icons/chevronUp.svg';
 import styles from '../adminLayout.module.css';
 import dayjs from 'dayjs';
 import { SectionHeader } from './SectionHeader.tsx';
-import HotelsListEditPage from './HotelsListEditPage.tsx';
 import { IHotelsList } from '../../../types/hotelsList.types.ts';
+import { useNavigate } from 'react-router-dom';
 
 interface HotelsListTableProps {
   hotelsLists: IHotelsList[];
@@ -42,6 +42,8 @@ const HotelsListTable: FC<HotelsListTableProps> = ({
   handleCreateListClick,
   handleNavigateToListPage,
 }) => {
+  const navigate = useNavigate();
+
   const renderSortIcon = (field: keyof IHotelsList) => {
     if (!sortField || sortField !== field) return null;
     return sortOrder === 'asc' ? (
@@ -51,13 +53,7 @@ const HotelsListTable: FC<HotelsListTableProps> = ({
     );
   };
 
-  const [listEditId, setListEditId] = useState('');
-
-  const handleEditListPage = (id: string) => {
-    setListEditId(id);
-  };
-
-  if (listEditId) return <HotelsListEditPage id={listEditId} returnHandler={handleEditListPage} />;
+  const handleEditListPage = (id: string) => navigate(`/admin/hotels/list/edit/${id}`);
 
   return (
     <>

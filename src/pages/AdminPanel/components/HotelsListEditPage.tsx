@@ -9,18 +9,14 @@ import { selectHotels } from '../../../store/selectors.ts';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import ChevronUp from '../../../assets/icons/chevronUp.svg';
 import ChevronDown from '../../../assets/icons/chevronDown.svg';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const HotelsListEditPage = ({
-  onSuccess,
-  id,
-  returnHandler,
-}: {
-  onSuccess?: () => void;
-  id: string;
-  returnHandler: (id: string) => void;
-}) => {
+const HotelsListEditPage = () => {
+  const { id } = useParams();
   const allHotels = useSelector(selectHotels);
   const [selectedHotels, setSelectedHotels] = useState<IHotel[]>([]);
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState('');
   const [listHeaders, setListHeaders] = useState({ name: '', description: '' });
   const [loading, setLoading] = useState(true);
@@ -30,7 +26,7 @@ const HotelsListEditPage = ({
 
   // Загрузка списка и всех отелей
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData(id: string) {
       setLoading(true);
       try {
         await hotelService.getAll();
@@ -47,7 +43,7 @@ const HotelsListEditPage = ({
         setLoading(false);
       }
     }
-    fetchData();
+    if (id) fetchData(id);
   }, [id]);
 
   // Фильтрация по поиску и исключение уже выбранных
@@ -70,6 +66,8 @@ const HotelsListEditPage = ({
     setIsEdited(true);
     setSelectedHotels((prev) => prev.filter((h) => h._id !== hotelId));
   };
+
+  const handleReturnToHotelsList = () => navigate('/admin/hotels/lists');
 
   const moveHotelUp = (index: number) => {
     if (index === 0) return; // Нельзя поднять первый элемент
@@ -105,9 +103,8 @@ const HotelsListEditPage = ({
         description: listHeaders.description,
         hotels: selectedHotels.map((h) => h._id),
       });
-      if (onSuccess) onSuccess();
       setIsEdited(false);
-      returnHandler('');
+      handleReturnToHotelsList();
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -122,9 +119,9 @@ const HotelsListEditPage = ({
           className={styles.backButton}
           onClick={() => {
             if (isEdited && window.confirm('Сохранить изменеия?')) handleSave();
-            else returnHandler('');
+            else handleReturnToHotelsList();
           }}>
-          Назад
+          К списку
         </button>
       </div>
       <h2>Редактировать список отелей</h2>

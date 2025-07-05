@@ -52,7 +52,6 @@ const RestaurantsListSection: FC = () => {
           onSort={handleSortLists}
           handleCreateListClick={handleCreateListClick}
           handleNavigateToListPage={handleNavigateToListPage}
-          onEditSuccess={handleEditSuccess}
         />
       )}
     </>

@@ -18,6 +18,11 @@ export const restaurantsListService = {
     return restaurantsListApi.getById(id);
   },
 
+  async getFullById(id: string) {
+    const res = await restaurantsListApi.getFullById(id);
+    store.dispatch(restaurantActions.setRestaurantsListFull(res.data.restaurants));
+  },
+
   create(data: ICreateRestaurantsListData) {
     return restaurantsListApi.create(data);
   },

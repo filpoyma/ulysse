@@ -20,14 +20,14 @@ const emptyRestaurant: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'> = {
   stars: 1,
 };
 
-export const useRestarauntsCollect = () => {
+export const useRestarauntsCollect = (id: string | null) => {
   const restaraunts = useSelector(selectRestaurants);
   const userName = useSelector(selectAdminName);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isCreatingRestaraunt, setIsCreatingRestaraunt] = useState(false);
   const [newRestaraunt, setNewRestaraunt] = useState<typeof emptyRestaurant>(emptyRestaurant);
-  const [editingRestarauntId, setEditingRestarauntId] = useState<string | null>(null);
+  const [editingRestarauntId, setEditingRestarauntId] = useState<string | null>(id);
   const [sortField, setSortField] = useState<keyof IRestaurant>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const nameInputRef = useRef<HTMLInputElement>(null);

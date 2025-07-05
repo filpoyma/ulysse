@@ -5,6 +5,7 @@ import NotFoundPage from '../../NotFoundPage/NotFoundPage.tsx';
 import { restaurantService } from '../../../services/restaurant.service.ts';
 import { IRestaurant } from '../../../types/restaurant.types.ts';
 import SingleRestaurantComponent from './SingleRestaurant.component.tsx';
+import EditButton from './EditButton.tsx';
 
 const SingleRestaurant = () => {
   const { id } = useParams();
@@ -28,7 +29,12 @@ const SingleRestaurant = () => {
   if (isLoading) return <Loader />;
   if (!restaurant) return <NotFoundPage />;
 
-  return <SingleRestaurantComponent restaurant={restaurant} />;
+  return (
+    <>
+      <EditButton restaurantId={restaurant._id} />
+      <SingleRestaurantComponent restaurant={restaurant} />
+    </>
+  );
 };
 
 export default SingleRestaurant;

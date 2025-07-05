@@ -348,7 +348,8 @@ const RestaurantEditPage = ({
                   <button
                     className={styles.removeButton}
                     onClick={() => {
-                      const newShortInfo = restaurant.shortInfo?.filter((_, i) => i !== index) || [];
+                      const newShortInfo =
+                        restaurant.shortInfo?.filter((_, i) => i !== index) || [];
                       handleInputChange('shortInfo', newShortInfo);
                     }}>
                     ×

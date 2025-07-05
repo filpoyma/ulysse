@@ -5,6 +5,7 @@ import {
   IRestaurantsListWithRestaurants,
   IUpdateRestaurantsListData,
 } from '../types/restaurantsList.types';
+import { IRestaurant } from '../types/restaurant.types.ts';
 
 const restaurantsListApi = {
   basePath: 'restaurants-lists',
@@ -13,8 +14,16 @@ const restaurantsListApi = {
     return path ? `${this.basePath}/${path}` : this.basePath;
   },
 
+  getFullById(id: string): Promise<{ data: { restaurants: IRestaurant[] } }> {
+    const url = this.getUrl(id);
+    return api.get(url, { searchParams: { fullData: true } }).json();
+  },
+
   // Получить все списки ресторанов
-  getAll(params?: { active?: boolean; withRestaurants?: boolean }): Promise<{ data: IRestaurantsList[] | IRestaurantsListWithRestaurants[] }> {
+  getAll(params?: {
+    active?: boolean;
+    withRestaurants?: boolean;
+  }): Promise<{ data: IRestaurantsList[] | IRestaurantsListWithRestaurants[] }> {
     const searchParams = new URLSearchParams();
     if (params?.active !== undefined) {
       searchParams.append('active', params.active.toString());
@@ -60,4 +69,4 @@ const restaurantsListApi = {
   },
 };
 
-export default restaurantsListApi; 
+export default restaurantsListApi;

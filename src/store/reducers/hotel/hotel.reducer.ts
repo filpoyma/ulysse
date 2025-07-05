@@ -4,6 +4,7 @@ import { IHotelsList } from '../../../types/hotelsList.types.ts';
 
 interface HotelState {
   hotels: IHotel[];
+  hotelsListFull: IHotel[];
   hotel: IHotel | null;
   hotelsList: IHotelsList[];
 }
@@ -12,6 +13,7 @@ const initialState: HotelState = {
   hotels: [],
   hotel: null,
   hotelsList: [],
+  hotelsListFull: [],
 };
 
 const { reducer: hotelReducer, actions: hotelActions } = createSlice({
@@ -20,6 +22,9 @@ const { reducer: hotelReducer, actions: hotelActions } = createSlice({
   reducers: {
     setHotels(state, action: PayloadAction<IHotel[]>) {
       state.hotels = action.payload;
+    },
+    setHotelsListFull(state, action: PayloadAction<IHotel[]>) {
+      state.hotelsListFull = action.payload;
     },
     setHotel(state, action: PayloadAction<IHotel | null>) {
       state.hotel = action.payload;

@@ -1,10 +1,11 @@
+
 import { IRestaurant } from '../../../types/restaurant.types.ts';
-import styles from './styles.module.css';
 import { getImagePath } from '../../../utils/helpers.ts';
 import RestHeader from './RestHeader.tsx';
 import RestIcon from '../../../assets/icons/forkAndSpoon.svg';
 import FlowerIcon from '../../../assets/icons/flower.svg';
 import CookerIcon from '../../../assets/icons/cooker.svg';
+import styles from './styles.module.css';
 
 const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) => {
   return (
@@ -39,7 +40,7 @@ const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) 
         )}
 
         <RestHeader title={'ГАЛЛЕРЕЯ'} />
-        <div >
+        <div>
           {/* 2 картинки из gallery */}
           {restaurant.gallery && restaurant.gallery.length > 0 && (
             <div className={styles.galleryContainer}>

@@ -56,7 +56,7 @@ const App = () => {
         <Route path="/ulyseadmin" element={<AdminLogin />} />
         <Route path="/ulyseadmin/register" element={<AdminRegister />} />
         <Route path="/admin" element={<AdminPanel />} />
-        <Route path="*" element={<AdminPanel />} />
+        {/*<Route path="*" element={<AdminPanel />} />*/}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
@@ -67,3 +67,5 @@ export default App;
 
 //todo
 // продумать порядок катинок при выборе в галерее
+
+//оставить в галлереях только 2 поля

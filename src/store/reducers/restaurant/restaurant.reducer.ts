@@ -6,11 +6,13 @@ interface RestaurantState {
   restaurants: IRestaurant[];
   restaurant: IRestaurant | null;
   restaurantsList: IRestaurantsList[];
+  restaurantsListFull: IRestaurant[];
 }
 
 const initialState: RestaurantState = {
   restaurants: [],
   restaurantsList: [],
+  restaurantsListFull: [],
   restaurant: null,
 };
 
@@ -23,6 +25,9 @@ const { reducer: restaurantReducer, actions: restaurantActions } = createSlice({
     },
     setRestaurantsList(state, action: PayloadAction<IRestaurantsList[]>) {
       state.restaurantsList = action.payload;
+    },
+    setRestaurantsListFull(state, action: PayloadAction<IRestaurant[]>) {
+      state.restaurantsListFull = action.payload;
     },
     updateRestaurantList(state, action: PayloadAction<IRestaurantsList>) {
       state.restaurantsList = state.restaurantsList.map((rest) =>

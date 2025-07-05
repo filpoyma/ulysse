@@ -29,7 +29,7 @@ export const hotelsListService = {
 
   async getFullById(id: string) {
     const res = await hotelsListApi.getFullById(id);
-    store.dispatch(hotelActions.setHotels(res.data.hotels));
+    store.dispatch(hotelActions.setHotelsListFull(res.data.hotels));
   },
 
   // Создать новый список отелей

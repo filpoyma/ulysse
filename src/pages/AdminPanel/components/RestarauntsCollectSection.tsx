@@ -6,7 +6,7 @@ import styles from "../AdminPanel.module.css";
 import { Loader } from "../../../components/Loader/Loader";
 import RestaurantEditPage from "./RestaurantEditPage";
 
-export const RestarauntsCollectSection: FC = () => {
+export const RestarauntsCollectSection: FC<{ id: string | null }> = ({ id }) => {
   const {
     restaraunts,
     loading,
@@ -25,7 +25,7 @@ export const RestarauntsCollectSection: FC = () => {
     fetchRestaraunts,
     handleRestarauntEdit,
     editingRestarauntId
-  } = useRestarauntsCollect();
+  } = useRestarauntsCollect(id);
 
   useEffect(() => {
     if (!restaraunts.length) fetchRestaraunts();

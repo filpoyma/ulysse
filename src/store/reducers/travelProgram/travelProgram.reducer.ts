@@ -4,6 +4,7 @@ import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 
 interface ITravelProgramState {
   program: ITravelProgramResponse | null;
+  programs: ITravelProgramResponse[];
 }
 
 interface IUpdateActivityIconPayload {
@@ -14,6 +15,7 @@ interface IUpdateActivityIconPayload {
 
 const initialState: ITravelProgramState = {
   program: null,
+  programs: [],
 };
 
 const { reducer: travelProgramReducer, actions: travelProgramActions } = createSlice({
@@ -22,6 +24,9 @@ const { reducer: travelProgramReducer, actions: travelProgramActions } = createS
   reducers: {
     setProgram(state: ITravelProgramState, action: PayloadAction<ITravelProgramResponse | null>) {
       state.program = action.payload;
+    },
+    setPrograms(state: ITravelProgramState, action: PayloadAction<ITravelProgramResponse[]>) {
+      state.programs = action.payload;
     },
     updateProgram(
       state: ITravelProgramState,
@@ -33,6 +38,24 @@ const { reducer: travelProgramReducer, actions: travelProgramActions } = createS
           ...action.payload,
         };
       }
+    },
+    updatePrograms(state: ITravelProgramState,
+      action: PayloadAction<Partial<ITravelProgramResponse> & { id: string }>) {
+        state.programs = state.programs.map(program => {
+            if (program.id === action.payload.id) {
+                return {
+                    ...program,
+                    ...action.payload,
+                }
+            }
+            return program; 
+        })
+    },
+    addProgram(state: ITravelProgramState, action: PayloadAction<ITravelProgramResponse>) {
+      state.programs.push(action.payload);
+    },
+    removeProgram(state: ITravelProgramState, action: PayloadAction<string>) {
+      state.programs = state.programs.filter(program => program.id !== action.payload);
     },
     setBgImages(state: ITravelProgramState, action: PayloadAction<IUploadedImage[]>) {
       if (state.program) {

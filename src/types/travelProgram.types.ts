@@ -45,6 +45,7 @@ export interface ITravelProgramResponse {
   id: string;
   name: string;
   name_eng: string;
+  manager: string;
   days: number;
   bgImages: IUploadedImage[];
   firstPage: {

@@ -4,26 +4,25 @@ import { store } from '../store';
 import { IFirstPageData, IFourthDayData } from '../types/travelProgram.types.ts';
 
 export const travelProgramService = {
-  getAll() {
-    return travelProgramApi.getAll();
+  async getAll() {
+    const resp = await travelProgramApi.getAll();
+    if (resp?.data) store.dispatch(travelProgramActions.setPrograms(resp.data));
   },
-  createTemplate(name: string) {
-    return travelProgramApi.createTemplate(name);
+  async createTemplate(name: string) {
+    const resp = await travelProgramApi.createTemplate(name);
+    if (resp?.data) store.dispatch(travelProgramActions.addProgram(resp.data));
   },
   async getById(id: string) {
     const res = await travelProgramApi.getById(id);
-    if (res?.data) {
-      store.dispatch(travelProgramActions.setProgram(res.data));
-    }
+    if (res?.data) store.dispatch(travelProgramActions.setProgram(res.data));
   },
   async getByName(name: string) {
     const res = await travelProgramApi.getByName(name);
-    if (res?.data) {
-      store.dispatch(travelProgramActions.setProgram(res.data));
-    }
+    if (res?.data) store.dispatch(travelProgramActions.setProgram(res.data));
   },
   async delete(id: string) {
-    return travelProgramApi.delete(id);
+    await travelProgramApi.delete(id);
+    store.dispatch(travelProgramActions.removeProgram(id));
   },
   async updateFirstPage(programName: string, data: IFirstPageData) {
     const res = await travelProgramApi.updateFirstPage(programName, data);

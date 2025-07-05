@@ -7,6 +7,7 @@ export const selectAdminName = (state: RootState) => state.auth.user?.name;
 export const selectCountries = (state: RootState) => state.countries.data;
 
 export const selectTravelProgram = (state: RootState) => state.travelProgram.program;
+export const selectTravelPrograms = (state: RootState) => state.travelProgram.programs;
 
 export const selectMapData = (state: RootState) => state.travelProgram.program?.thirdPageMap;
 

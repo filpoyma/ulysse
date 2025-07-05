@@ -4,6 +4,7 @@ import RestHeader from './RestHeader.tsx';
 import RestIcon from '../../../assets/icons/forkAndSpoon.svg';
 import FlowerIcon from '../../../assets/icons/flower.svg';
 import CookerIcon from '../../../assets/icons/cooker.svg';
+import GalleryIcon from '../../../assets/icons/gallery.svg';
 import styles from './styles.module.css';
 
 const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) => {
@@ -51,7 +52,7 @@ const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) 
 
         {restaurant.gallery && restaurant.gallery.length > 0 && (
           <>
-            <RestHeader title={'ГАЛЛЕРЕЯ'} />
+            <RestHeader title={'ГАЛЛЕРЕЯ'} Icon={GalleryIcon} />
             <div>
               {/* 2 картинки из gallery */}
 

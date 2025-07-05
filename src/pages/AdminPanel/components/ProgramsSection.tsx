@@ -16,7 +16,6 @@ const ProgramsSection: FC = () => {
     sortField,
     sortOrder,
     handleSortPrograms,
-    fetchPrograms,
     handleCreateTemplate,
     handleCreateTemplateSubmit,
     handleDeleteProgram,
@@ -24,27 +23,22 @@ const ProgramsSection: FC = () => {
     handleProgramEdit,
   } = usePrograms();
 
-  useEffect(() => {
-    fetchPrograms();
-  }, []);
+  if (loading) return <Loader />;
 
   return (
     <>
       <SectionHeader title="Список программ путешествий" onCreateClick={handleCreateTemplate} />
       {error && <div className={styles.error}>{error}</div>}
-      {loading ? (
-        <Loader />
-      ) : (
-        <ProgramsTable
-          programs={programs}
-          onProgramClick={handleProgramClick}
-          onProgramEdit={handleProgramEdit}
-          onDeleteProgram={handleDeleteProgram}
-          sortField={sortField}
-          sortOrder={sortOrder}
-          onSort={handleSortPrograms}
-        />
-      )}
+      <ProgramsTable
+        programs={programs}
+        onProgramClick={handleProgramClick}
+        onProgramEdit={handleProgramEdit}
+        onDeleteProgram={handleDeleteProgram}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onSort={handleSortPrograms}
+      />
+
       <CreateTemplateModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}

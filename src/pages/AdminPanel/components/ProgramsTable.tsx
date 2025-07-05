@@ -55,10 +55,10 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
               <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
             </th>
             <th
-              onClick={() => onSort && onSort('bgImages')}
+              onClick={() => onSort && onSort('manager')}
               style={{ cursor: 'pointer', minWidth: 120 }}>
-              Кол-во фоновых картинок
-              <span className={styles.sortArrow}>{renderSortIcon('bgImages')}</span>
+              Менеджер
+              <span className={styles.sortArrow}>{renderSortIcon('manager')}</span>
             </th>
             <th>Действия</th>
           </tr>
@@ -75,7 +75,7 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
               </td>
               <td>{new Date(program.createdAt).toLocaleString()}</td>
               <td>{new Date(program.updatedAt).toLocaleString()}</td>
-              <td>{program.bgImages?.length || 0}</td>
+              <td>{program.manager}</td>
               <td>
                 <div className={styles.actions}>
                   <button

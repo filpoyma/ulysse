@@ -100,7 +100,7 @@ const RestarauntsCollectTable: FC<Props> = ({
                   onChange={(e) =>
                     onNewRestarauntChange && onNewRestarauntChange('name', e.target.value)
                   }
-                  placeholder="Название"
+                  placeholder="Название *"
                 />
               </td>
               <td>
@@ -120,7 +120,7 @@ const RestarauntsCollectTable: FC<Props> = ({
                   onChange={(e) =>
                     onNewRestarauntChange && onNewRestarauntChange('city', e.target.value)
                   }
-                  placeholder="Город"
+                  placeholder="Город *"
                 />
               </td>
               <td>

@@ -3,6 +3,7 @@ import { IUploadedImage } from './uploadImage.types.ts';
 export interface IRestaurant {
   _id?: string;
   name: string;
+  name_eng: string;
   country: string;
   city: string;
   region: string;

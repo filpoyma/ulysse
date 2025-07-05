@@ -174,30 +174,30 @@ const RestarauntsCollectTable: FC<Props> = ({
               </td>
             </tr>
           )}
-          {restaraunts.map((r) => (
-            <tr key={r._id}>
+          {restaraunts.map((restaraunt) => (
+            <tr key={restaraunt._id}>
               <td
                 className={styles.programName}
                 style={{ cursor: 'pointer' }}
-                onClick={() => r._id && navigate(`/restaurant/${r._id}`)}>
-                {r.name}
+                onClick={() => restaraunt._id && navigate(`/restaurant/${restaraunt.name_eng}`)}>
+                {restaraunt.name}
               </td>
-              <td>{r.country}</td>
-              <td>{r.city}</td>
-              <td>{r.region}</td>
-              <td>{r.manager}</td>
-              <td>{r.stars}</td>
+              <td>{restaraunt.country}</td>
+              <td>{restaraunt.city}</td>
+              <td>{restaraunt.region}</td>
+              <td>{restaraunt.manager}</td>
+              <td>{restaraunt.stars}</td>
               <td>
                 <div className={styles.actions}>
                   <button
                     className={styles.actionButton}
-                    onClick={() => r._id && onRestarauntEdit(r._id)}
+                    onClick={() => restaraunt._id && onRestarauntEdit(restaraunt._id)}
                     title="Редактировать">
                     <Edit size={16} />
                   </button>
                   <button
                     className={`${styles.actionButton} ${styles.deleteButton}`}
-                    onClick={() => r._id && onDeleteRestaraunt?.(r._id)}
+                    onClick={() => restaraunt._id && onDeleteRestaraunt?.(restaraunt._id)}
                     title="Удалить">
                     <Trash2 size={16} />
                   </button>

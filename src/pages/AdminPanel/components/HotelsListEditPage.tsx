@@ -158,7 +158,7 @@ const HotelsListEditPage = () => {
                   <th>Страна</th>
                   <th>Город</th>
                   <th>Порядок</th>
-                  <th></th>
+                  <th>Действия</th>
                 </tr>
               </thead>
               <tbody>

@@ -13,6 +13,10 @@ export const restaurantService = {
   async getById(id: string) {
     return RestaurantApi.getById(id);
   },
+
+  async getByName(name: string) {
+    return RestaurantApi.getByName(name);
+  },
   async create(data: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'>) {
     const res = await RestaurantApi.create(data);
     store.dispatch(restaurantActions.addRestaurant(res.data));

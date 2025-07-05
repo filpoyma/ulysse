@@ -8,14 +8,14 @@ import SingleRestaurantComponent from './SingleRestaurant.component.tsx';
 import EditButton from './EditButton.tsx';
 
 const SingleRestaurant = () => {
-  const { id } = useParams();
+  const { name } = useParams();
   const [isLoading, setIsLoading] = React.useState(true);
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
 
   React.useEffect(() => {
-    if (id)
+    if (name)
       restaurantService
-        .getById(id)
+        .getByName(name)
         .then((restaurant) => {
           console.log('Hotel data received:', restaurant);
           setRestaurant(restaurant.data);
@@ -24,7 +24,7 @@ const SingleRestaurant = () => {
           console.error('Error fetching restaurant:', error);
         })
         .finally(() => setIsLoading(false));
-  }, [id]);
+  }, [name]);
 
   if (isLoading) return <Loader />;
   if (!restaurant) return <NotFoundPage />;

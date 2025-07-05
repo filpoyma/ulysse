@@ -16,6 +16,10 @@ const RestaurantApi = {
     return api.get(this.getUrl(id)).json();
   },
 
+  getByName(name: string): Promise<{ data: IRestaurant }> {
+    return api.get(this.getUrl(`name/${name}`)).json();
+  },
+
   create(
     data: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'>,
   ): Promise<{ data: IRestaurant }> {

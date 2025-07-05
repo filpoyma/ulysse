@@ -1,54 +1,91 @@
-import { FC, useState } from 'react';
-import styles from '../AdminPanel.module.css';
+import { FC, useState, useEffect } from 'react';
+import styles from '../adminLayout.module.css';
 import IconExit from '../../../assets/icons/exit.svg';
-import { NavItem } from '../../../types/adminPanel.types.ts';
+import { NavLink, useLocation } from 'react-router-dom';
 
 interface AdminNavProps {
-  activeNavItem: NavItem;
-  onNavItemChange: (item: NavItem) => void;
-  onLogout: () => void;
+  handleLogout: () => void;
 }
 
-const AdminNav: FC<AdminNavProps> = ({ activeNavItem, onNavItemChange, onLogout }) => {
+const AdminNav: FC<AdminNavProps> = ({ handleLogout }) => {
+  const location = useLocation();
   const [isHotelsMenuOpen, setIsHotelsMenuOpen] = useState(false);
   const [isRestaurantsMenuOpen, setIsRestaurantsMenuOpen] = useState(false);
 
-  const handleHotelsClick = () => {
+  // Определяем активные состояния
+  const isHotelsActive = location.pathname.startsWith('/admin/hotels');
+  const isRestaurantsActive = location.pathname.startsWith('/admin/restaurants');
+  const isItinerariesActive = location.pathname === '/admin' || location.pathname === '/admin/';
+
+  // Закрываем выпадающие меню при клике вне их области
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      const nav = target.closest(`.${styles.nav}`);
+
+      if (nav) {
+        const hotelsContainer = nav.querySelector(`.${styles.dropdownContainer}:nth-child(2)`);
+        const restaurantsContainer = nav.querySelector(`.${styles.dropdownContainer}:nth-child(3)`);
+
+        // Если клик не в области выпадающих меню, закрываем их
+        if (!hotelsContainer?.contains(target) && !restaurantsContainer?.contains(target)) {
+          setIsHotelsMenuOpen(false);
+          setIsRestaurantsMenuOpen(false);
+        }
+      } else {
+        // Если клик вне навигации, закрываем все меню
+        setIsHotelsMenuOpen(false);
+        setIsRestaurantsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // Функции для управления выпадающими меню
+  const handleHotelsClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Предотвращаем всплытие события
     setIsHotelsMenuOpen(!isHotelsMenuOpen);
-    setIsRestaurantsMenuOpen(false);
+    setIsRestaurantsMenuOpen(false); // Закрываем другое меню
   };
 
-  const handleRestaurantsClick = () => {
+  const handleRestaurantsClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Предотвращаем всплытие события
     setIsRestaurantsMenuOpen(!isRestaurantsMenuOpen);
+    setIsHotelsMenuOpen(false); // Закрываем другое меню
+  };
+
+  const handleHotelsItemClick = () => {
     setIsHotelsMenuOpen(false);
   };
 
-  const handleHotelsItemClick = (item: NavItem) => {
-    onNavItemChange(item);
-    setIsHotelsMenuOpen(false);
-  };
-
-  const handleRestaurantsItemClick = (item: NavItem) => {
-    onNavItemChange(item);
+  const handleRestaurantsItemClick = () => {
     setIsRestaurantsMenuOpen(false);
   };
 
-  const handleOtherNavItemClick = (item: NavItem) => {
-    onNavItemChange(item);
+  const handleCloseDropdowns = () => {
     setIsHotelsMenuOpen(false);
     setIsRestaurantsMenuOpen(false);
   };
 
   return (
     <nav className={styles.nav}>
-      <button
-        className={`${styles.navItem} ${activeNavItem === 'itineraries' ? styles.active : ''}`}
-        onClick={() => handleOtherNavItemClick('itineraries')}>
+      <NavLink
+        to="/admin"
+        className={({ isActive }) =>
+          `${styles.navItem} ${isActive || isItinerariesActive ? styles.active : ''}`
+        }
+        end
+        onClick={handleCloseDropdowns}>
         Itineraries
-      </button>
+      </NavLink>
+
       <div className={styles.dropdownContainer}>
         <button
-          className={`${styles.navItem} ${activeNavItem.startsWith('hotels') ? styles.active : ''}`}
+          className={`${styles.navItem} ${isHotelsActive ? styles.active : ''}`}
           onClick={handleHotelsClick}>
           Hotels
         </button>
@@ -56,27 +93,24 @@ const AdminNav: FC<AdminNavProps> = ({ activeNavItem, onNavItemChange, onLogout 
           className={`${styles.dropdownMenu} ${
             isHotelsMenuOpen ? styles.dropdownMenuVisible : ''
           }`}>
-          <button
-            className={`${styles.dropdownItem} ${
-              activeNavItem === 'hotels-collections' ? styles.active : ''
-            }`}
-            onClick={() => handleHotelsItemClick('hotels-collections')}>
+          <NavLink
+            to="/admin/hotels"
+            className={({ isActive }) => `${styles.dropdownItem} ${isActive ? styles.active : ''}`}
+            onClick={handleHotelsItemClick}>
             Single Hotel
-          </button>
-          <button
-            className={`${styles.dropdownItem} ${
-              activeNavItem === 'hotels-pages' ? styles.active : ''
-            }`}
-            onClick={() => handleHotelsItemClick('hotels-pages')}>
+          </NavLink>
+          <NavLink
+            to="/admin/hotels/lists"
+            className={({ isActive }) => `${styles.dropdownItem} ${isActive ? styles.active : ''}`}
+            onClick={handleHotelsItemClick}>
             Hotels List
-          </button>
+          </NavLink>
         </div>
       </div>
+
       <div className={styles.dropdownContainer}>
         <button
-          className={`${styles.navItem} ${
-            activeNavItem.startsWith('restaurants') ? styles.active : ''
-          }`}
+          className={`${styles.navItem} ${isRestaurantsActive ? styles.active : ''}`}
           onClick={handleRestaurantsClick}>
           Restaurants
         </button>
@@ -84,33 +118,36 @@ const AdminNav: FC<AdminNavProps> = ({ activeNavItem, onNavItemChange, onLogout 
           className={`${styles.dropdownMenu} ${
             isRestaurantsMenuOpen ? styles.dropdownMenuVisible : ''
           }`}>
-          <button
-            className={`${styles.dropdownItem} ${
-              activeNavItem === 'restaurants-collections' ? styles.active : ''
-            }`}
-            onClick={() => handleRestaurantsItemClick('restaurants-collections')}>
+          <NavLink
+            to="/admin/restaurants"
+            className={({ isActive }) => `${styles.dropdownItem} ${isActive ? styles.active : ''}`}
+            onClick={handleRestaurantsItemClick}>
             Single Rest
-          </button>
-          <button
-            className={`${styles.dropdownItem} ${
-              activeNavItem === 'restaurants-pages' ? styles.active : ''
-            }`}
-            onClick={() => handleRestaurantsItemClick('restaurants-pages')}>
+          </NavLink>
+          <NavLink
+            to="/admin/restaurants/lists"
+            className={({ isActive }) => `${styles.dropdownItem} ${isActive ? styles.active : ''}`}
+            onClick={handleRestaurantsItemClick}>
             Rest List
-          </button>
+          </NavLink>
         </div>
       </div>
-      <button
-        className={`${styles.navItem} ${activeNavItem === 'info' ? styles.active : ''}`}
-        onClick={() => handleOtherNavItemClick('info')}>
+
+      <NavLink
+        to="/admin/info"
+        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
+        onClick={handleCloseDropdowns}>
         Info
-      </button>
-      <button
-        className={`${styles.navItem} ${activeNavItem === 'references' ? styles.active : ''}`}
-        onClick={() => handleOtherNavItemClick('references')}>
+      </NavLink>
+
+      <NavLink
+        to="/admin/references"
+        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
+        onClick={handleCloseDropdowns}>
         References
-      </button>
-      <button className={styles.logoutButton} onClick={onLogout} title="Выйти">
+      </NavLink>
+
+      <button className={styles.logoutButton} onClick={handleLogout}>
         <IconExit width={24} height={24} />
       </button>
     </nav>

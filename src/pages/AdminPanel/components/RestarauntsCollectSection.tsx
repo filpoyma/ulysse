@@ -1,12 +1,11 @@
-import { FC, useEffect } from "react";
-import { SectionHeader } from "./SectionHeader";
-import RestarauntsCollectTable from "./RestarauntsCollectTable";
-import { useRestarauntsCollect } from "../hooks/useRestarauntsCollect";
-import styles from "../AdminPanel.module.css";
-import { Loader } from "../../../components/Loader/Loader";
-import RestaurantEditPage from "./RestaurantEditPage";
+import { useEffect } from 'react';
+import { SectionHeader } from './SectionHeader';
+import RestarauntsCollectTable from './RestarauntsCollectTable';
+import { useRestarauntsCollect } from '../hooks/useRestarauntsCollect';
+import styles from '../adminLayout.module.css';
+import { Loader } from '../../../components/Loader/Loader';
 
-export const RestarauntsCollectSection: FC<{ id: string | null }> = ({ id }) => {
+const RestaurantsCollectSection = () => {
   const {
     restaraunts,
     loading,
@@ -24,16 +23,11 @@ export const RestarauntsCollectSection: FC<{ id: string | null }> = ({ id }) => 
     handleCancelNewRestaraunt,
     fetchRestaraunts,
     handleRestarauntEdit,
-    editingRestarauntId
-  } = useRestarauntsCollect(id);
+  } = useRestarauntsCollect();
 
   useEffect(() => {
     if (!restaraunts.length) fetchRestaraunts();
   }, []);
-
-  if(editingRestarauntId) {
-    return <RestaurantEditPage restaurantId={editingRestarauntId} returnHandler={handleRestarauntEdit} />
-  }
 
   return (
     <div className={styles.section}>
@@ -64,3 +58,5 @@ export const RestarauntsCollectSection: FC<{ id: string | null }> = ({ id }) => 
     </div>
   );
 };
+
+export default RestaurantsCollectSection;

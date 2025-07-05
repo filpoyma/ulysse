@@ -8,15 +8,14 @@ import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
 import { getErrorMessage, getImagePath, validateHotelCoordinates } from '../../../utils/helpers.ts';
 import ImageUploadRestaurants from '../../../components/ImageUploadModal/ImageUploadRestaurants.tsx';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const RestaurantEditPage = ({
-  restaurantId,
-  returnHandler,
-}: {
-  restaurantId: string;
-  returnHandler: (id: string) => void;
-}) => {
+const RestaurantEditPage = () => {
+  const { id: restaurantId } = useParams();
+
   const restaurants = useSelector(selectRestaurants);
+  const navigate = useNavigate();
+
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [restaurantCoord, setRestaurantCoord] = useState('');
@@ -81,6 +80,8 @@ const RestaurantEditPage = ({
     setIsModalOpen(true);
   };
 
+  const handleReturnToRestList = () => navigate('/admin/restaurants');
+
   const handleDeleteImage = async (imageId: string) => {
     if (!restaurant || !imageId || !restaurant._id) return;
 
@@ -106,7 +107,7 @@ const RestaurantEditPage = ({
   };
 
   const handleSave = async () => {
-    if (!restaurant) return;
+    if (!restaurant || !restaurantId) return;
     const validation = validateHotelCoordinates(restaurantCoord);
     if (!validation.isValid) {
       setCoordinateError(validation);
@@ -125,9 +126,8 @@ const RestaurantEditPage = ({
     setIsLoading(true);
     try {
       await restaurantService.update(restaurantId, restaurantWithParsedCoordinates);
-      console.log('Saving restaurant:', restaurant);
       setCoordinateError(null);
-      returnHandler('');
+      handleReturnToRestList();
     } catch (err) {
       alert(getErrorMessage(err));
     } finally {
@@ -199,10 +199,10 @@ const RestaurantEditPage = ({
       {/* Правая панель - форма редактирования */}
       <div className={styles.rightPanel}>
         <div className={styles.header}>
-          <button className={styles.backButton} onClick={() => returnHandler('')}>
-            ← Назад
+          <button className={styles.backButton} onClick={handleReturnToRestList}>
+            ← к списку
           </button>
-          <h1>Редактирование ресторана</h1>
+          <h2>Редактирование ресторана</h2>
         </div>
 
         <div className={styles.form}>

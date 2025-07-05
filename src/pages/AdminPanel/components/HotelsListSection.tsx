@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { useHotelsList } from '../hooks/useHotelsList.ts';
 import HotelsListTable from './HotelsListTable.tsx';
 import { Loader } from '../../../components/Loader/Loader';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 
 const HotelsListSection: FC = () => {
   const {

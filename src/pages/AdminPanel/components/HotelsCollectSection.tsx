@@ -2,9 +2,9 @@ import { FC, useEffect } from 'react';
 import { useHotelsCollect } from '../hooks/useHotelsCollect.ts';
 import HotelsCollectTable from './HotelsCollectTable.tsx';
 import { Loader } from '../../../components/Loader/Loader';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 
-export const HotelsCollectSection: FC = () => {
+const HotelsCollectSection: FC = () => {
   const {
     hotels,
     isCreatingHotel,
@@ -21,6 +21,7 @@ export const HotelsCollectSection: FC = () => {
     handleSaveNewHotel,
     handleCancelNewHotel,
     handleNavigateToHotelPage,
+    handleHotelEdit,
     fetchHotels,
   } = useHotelsCollect();
 
@@ -28,28 +29,29 @@ export const HotelsCollectSection: FC = () => {
     if (!hotels.length) fetchHotels();
   }, []);
 
+  if (loading) return <Loader />;
+
   return (
     <>
       {error && <div className={styles.error}>{error}</div>}
-      {loading ? (
-        <Loader />
-      ) : (
-        <HotelsCollectTable
-          hotels={hotels}
-          onDeleteHotel={handleDeleteHotel}
-          isCreatingHotel={isCreatingHotel}
-          newHotel={newHotel}
-          onNewHotelChange={handleNewHotelChange}
-          onSaveNewHotel={handleSaveNewHotel}
-          onCancelNewHotel={handleCancelNewHotel}
-          nameInputRef={nameInputRef}
-          sortField={sortField}
-          sortOrder={sortOrder}
-          onSort={handleSortHotels}
-          handleCreateHotelClick={handleCreateHotelClick}
-          handleNavigateToHotelPage={handleNavigateToHotelPage}
-        />
-      )}
+      <HotelsCollectTable
+        hotels={hotels}
+        onDeleteHotel={handleDeleteHotel}
+        isCreatingHotel={isCreatingHotel}
+        newHotel={newHotel}
+        onNewHotelChange={handleNewHotelChange}
+        onSaveNewHotel={handleSaveNewHotel}
+        onCancelNewHotel={handleCancelNewHotel}
+        nameInputRef={nameInputRef}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onSort={handleSortHotels}
+        handleCreateHotelClick={handleCreateHotelClick}
+        handleNavigateToHotelPage={handleNavigateToHotelPage}
+        handleHotelEdit={handleHotelEdit}
+      />
     </>
   );
 };
+
+export default HotelsCollectSection;

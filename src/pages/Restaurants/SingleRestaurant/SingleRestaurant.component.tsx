@@ -1,4 +1,3 @@
-
 import { IRestaurant } from '../../../types/restaurant.types.ts';
 import { getImagePath } from '../../../utils/helpers.ts';
 import RestHeader from './RestHeader.tsx';
@@ -24,37 +23,51 @@ const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) 
         {/* Имя ресторана */}
         <div className={styles.title}>{restaurant.name}</div>
 
-        <RestHeader title={'РЕСТОРАН'} Icon={RestIcon} />
-        <div className={styles.about}>{restaurant.description || 'Описание отсутствует'}</div>
-
-        <RestHeader title={'ШЕВ-ПОВАР'} Icon={CookerIcon} />
-        <div className={styles.about}>{restaurant.cookDescription || 'Описание отсутствует'}</div>
-
-        <RestHeader title={'ИНФОРМАЦИЯ'} Icon={FlowerIcon} />
-        {restaurant.shortInfo && restaurant.shortInfo.length > 0 && (
-          <ul className={styles.infoListCustom}>
-            {restaurant.shortInfo.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
+        {restaurant.description && (
+          <>
+            <RestHeader title={'РЕСТОРАН'} Icon={RestIcon} />
+            <div className={styles.about}>{restaurant.description}</div>
+          </>
         )}
 
-        <RestHeader title={'ГАЛЛЕРЕЯ'} />
-        <div>
-          {/* 2 картинки из gallery */}
-          {restaurant.gallery && restaurant.gallery.length > 0 && (
-            <div className={styles.galleryContainer}>
-              {restaurant.gallery.slice(0, 2).map((img, idx) => (
-                <img
-                  key={img._id || idx}
-                  src={getImagePath(img.path)}
-                  alt={`Restaurant gallery ${idx + 1}`}
-                  className={styles.galleryImage}
-                />
+        {restaurant.cookDescription && (
+          <>
+            <RestHeader title={'ШЕВ-ПОВАР'} Icon={CookerIcon} />
+            <div className={styles.about}>{restaurant.cookDescription}</div>
+          </>
+        )}
+
+        {restaurant.shortInfo && restaurant.shortInfo.length > 0 && (
+          <>
+            <RestHeader title={'ИНФОРМАЦИЯ'} Icon={FlowerIcon} />
+
+            <ul className={styles.infoListCustom}>
+              {restaurant.shortInfo.map((item, idx) => (
+                <li key={idx}>{item}</li>
               ))}
+            </ul>
+          </>
+        )}
+
+        {restaurant.gallery && restaurant.gallery.length > 0 && (
+          <>
+            <RestHeader title={'ГАЛЛЕРЕЯ'} />
+            <div>
+              {/* 2 картинки из gallery */}
+
+              <div className={styles.galleryContainer}>
+                {restaurant.gallery.slice(0, 2).map((img, idx) => (
+                  <img
+                    key={img._id || idx}
+                    src={getImagePath(img.path)}
+                    alt={`Restaurant gallery ${idx + 1}`}
+                    className={styles.galleryImage}
+                  />
+                ))}
+              </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

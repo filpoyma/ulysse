@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import Plus from '../../../assets/icons/plus.svg';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 
 interface SectionHeaderProps {
   title: string;

@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IRestaurant } from '../../../types/restaurant.types';
 import { restaurantsListService } from '../../../services/restaurantsList.service';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 import { Loader } from '../../../components/Loader/Loader';
 import { restaurantService } from '../../../services/restaurant.service.ts';
 import { useSelector } from 'react-redux';

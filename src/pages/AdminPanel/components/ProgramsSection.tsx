@@ -4,9 +4,9 @@ import { SectionHeader } from './SectionHeader';
 import ProgramsTable from './ProgramsTable.tsx';
 import CreateTemplateModal from '../../../components/CreateTemplateModal/CreateTemplateModal';
 import { Loader } from '../../../components/Loader/Loader';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 
-export const ProgramsSection: FC = () => {
+const ProgramsSection: FC = () => {
   const {
     programs,
     loading,
@@ -53,3 +53,5 @@ export const ProgramsSection: FC = () => {
     </>
   );
 };
+
+export default ProgramsSection;

@@ -1,10 +1,9 @@
-import { FC, RefObject, useState } from 'react';
+import { FC, RefObject } from 'react';
 import { Edit, Trash2, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 import { IHotel } from '../../../types/hotel.types.ts';
 import dayjs from 'dayjs';
 import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete';
-import HotelEditPage from './HotelEditPage.tsx';
 import { SectionHeader } from './SectionHeader.tsx';
 
 interface HotelsTableProps {
@@ -16,6 +15,7 @@ interface HotelsTableProps {
   onSaveNewHotel?: () => void;
   handleCreateHotelClick: () => void;
   handleNavigateToHotelPage: (id: string) => void;
+  handleHotelEdit: (id: string) => void;
   onCancelNewHotel?: () => void;
   nameInputRef?: RefObject<HTMLInputElement>;
   sortField?: keyof IHotel;
@@ -23,7 +23,7 @@ interface HotelsTableProps {
   onSort?: (field: keyof IHotel) => void;
 }
 
-const HotelsTable: FC<HotelsTableProps> = ({
+const HotelsCollectTable: FC<HotelsTableProps> = ({
   hotels,
   onDeleteHotel,
   isCreatingHotel = false,
@@ -37,9 +37,8 @@ const HotelsTable: FC<HotelsTableProps> = ({
   onSort,
   handleCreateHotelClick,
   handleNavigateToHotelPage,
+  handleHotelEdit,
 }) => {
-  const [hotelEditId, setHotelEditId] = useState('');
-
   const renderSortIcon = (field: keyof IHotel) => {
     if (!sortField || sortField !== field) return null;
     return sortOrder === 'asc' ? (
@@ -48,12 +47,6 @@ const HotelsTable: FC<HotelsTableProps> = ({
       <ChevronDown size={16} className={styles.sortArrow} />
     );
   };
-
-  const handleHotelClick = (id: string) => {
-    setHotelEditId(id);
-  };
-
-  if (hotelEditId) return <HotelEditPage hotelId={hotelEditId} returnHandler={handleHotelClick} />;
 
   return (
     <>
@@ -171,7 +164,7 @@ const HotelsTable: FC<HotelsTableProps> = ({
                   <div className={styles.actions}>
                     <button
                       className={styles.actionButton}
-                      onClick={() => hotel._id && handleHotelClick(hotel._id)}
+                      onClick={() => hotel._id && handleHotelEdit(hotel._id)}
                       title="Редактировать">
                       <Edit size={16} />
                     </button>
@@ -192,4 +185,4 @@ const HotelsTable: FC<HotelsTableProps> = ({
   );
 };
 
-export default HotelsTable;
+export default HotelsCollectTable;

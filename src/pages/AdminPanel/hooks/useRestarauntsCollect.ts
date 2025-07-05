@@ -4,6 +4,7 @@ import { IRestaurant } from '../../../types/restaurant.types';
 import { useSelector } from 'react-redux';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import { selectAdminName, selectRestaurants } from '../../../store/selectors.ts';
+import { useNavigate } from 'react-router-dom';
 
 const emptyRestaurant: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'> = {
   name: '',
@@ -18,16 +19,18 @@ const emptyRestaurant: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'> = {
   gallery: [],
   titleImage: {} as any,
   stars: 1,
+  cookDescription: '',
+  shortInfo: [],
 };
 
-export const useRestarauntsCollect = (id: string | null) => {
+export const useRestarauntsCollect = () => {
+  const navigate = useNavigate();
   const restaraunts = useSelector(selectRestaurants);
   const userName = useSelector(selectAdminName);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isCreatingRestaraunt, setIsCreatingRestaraunt] = useState(false);
   const [newRestaraunt, setNewRestaraunt] = useState<typeof emptyRestaurant>(emptyRestaurant);
-  const [editingRestarauntId, setEditingRestarauntId] = useState<string | null>(id);
   const [sortField, setSortField] = useState<keyof IRestaurant>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -111,18 +114,13 @@ export const useRestarauntsCollect = (id: string | null) => {
   };
 
   const handleRestarauntEdit = (id: string) => {
-    if (id === '') {
-      setEditingRestarauntId(null);
-    } else {
-      setEditingRestarauntId(id);
-    }
+    navigate(`/admin/restaurants/edit/${id}`);
   };
 
   return {
     restaraunts: sortedRestaraunts,
     isCreatingRestaraunt,
     newRestaraunt,
-    editingRestarauntId,
     sortField,
     sortOrder,
     error,

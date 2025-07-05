@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IHotel } from '../../../types/hotel.types';
 import { hotelsListService } from '../../../services/hotelsList.service';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 import { Loader } from '../../../components/Loader/Loader';
 import { hotelService } from '../../../services/hotel.service.ts';
 import { useSelector } from 'react-redux';

@@ -5,7 +5,7 @@ import Check from '../../../assets/icons/check.svg';
 import X from '../../../assets/icons/x.svg';
 import ChevronDown from '../../../assets/icons/chevronDown.svg';
 import ChevronUp from '../../../assets/icons/chevronUp.svg';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 import dayjs from 'dayjs';
 import { SectionHeader } from './SectionHeader.tsx';
 import { IRestaurantsList } from '../../../types/restaurantsList.types';

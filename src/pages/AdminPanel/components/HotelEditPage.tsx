@@ -8,14 +8,11 @@ import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadH
 import { IUploadedImage } from '../../../types/uploadImage.types.ts';
 import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
 import { getErrorMessage, getImagePath, validateHotelCoordinates } from '../../../utils/helpers.ts';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const HotelEditPage = ({
-  hotelId,
-  returnHandler,
-}: {
-  hotelId: string;
-  returnHandler: (id: string) => void;
-}) => {
+const HotelEditPage = () => {
+  const { id: hotelId } = useParams();
+  const navigate = useNavigate();
   const hotels = useSelector(selectHotels);
   const [hotel, setHotel] = useState<IHotel | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -105,6 +102,8 @@ const HotelEditPage = ({
     setIsModalOpen(true);
   };
 
+  const handleReturnToHotelsList = () => navigate('/admin/hotels');
+
   const handleDeleteImage = async (
     imageId: string,
     type: 'hotelInfo.gallery' | 'roomInfo.gallery',
@@ -150,7 +149,7 @@ const HotelEditPage = ({
   };
 
   const handleSave = async () => {
-    if (!hotel) return;
+    if (!hotel || !hotelId) return;
     const validation = validateHotelCoordinates(hotelCoord);
     if (!validation.isValid) {
       setCoordinateError(validation);
@@ -169,9 +168,8 @@ const HotelEditPage = ({
     setIsLoading(true);
     try {
       await hotelService.update(hotelId, hotelWithParsedCoordinates);
-      console.log('Saving hotel:', hotel);
       setCoordinateError(null);
-      returnHandler('');
+      handleReturnToHotelsList();
     } catch (err) {
       alert(getErrorMessage(err));
     } finally {
@@ -275,10 +273,10 @@ const HotelEditPage = ({
       {/* Правая панель - форма редактирования */}
       <div className={styles.rightPanel}>
         <div className={styles.header}>
-          <button className={styles.backButton} onClick={() => returnHandler('')}>
-            ← Назад
+          <button className={styles.backButton} onClick={handleReturnToHotelsList}>
+            ← к списку
           </button>
-          <h1>Редактирование отеля</h1>
+          <h2>Редактирование отеля</h2>
         </div>
 
         <div className={styles.form}>

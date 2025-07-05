@@ -153,6 +153,7 @@ margin-top: 24px;
   padding: 1.5rem 2rem;
   margin: -2rem -2rem 2rem -2rem;
   display: flex;
+  align-items: center;
   gap: 3rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -172,6 +173,10 @@ margin-top: 24px;
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  line-height: 1;
 }
 
 .navItem:hover {
@@ -212,6 +217,15 @@ margin-top: 24px;
 
 .dropdownContainer {
   position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dropdownContainer button {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  line-height: 1;
 }
 
 .dropdownMenu {
@@ -368,4 +382,11 @@ margin-top: 24px;
  display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+  line-height: 1;
 }

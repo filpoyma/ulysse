@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 
-import AdminPanel from './pages/AdminPanel/AdminPanel';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import { Loader } from './components/Loader/Loader';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -12,6 +11,16 @@ import { authActions } from './store/reducers/auth';
 import { useDispatch } from 'react-redux';
 import { countriesService } from './services/countries.service.ts';
 import { getErrorMessage } from './utils/helpers.ts';
+import ProgramsSection from './pages/AdminPanel/components/ProgramsSection.tsx';
+import AdminLayout from './pages/AdminPanel/AdminLayout.tsx';
+import HotelsCollectSection from './pages/AdminPanel/components/HotelsCollectSection.tsx';
+import HotelsListSection from './pages/AdminPanel/components/HotelsListSection.tsx';
+import RestaurantsCollectSection from './pages/AdminPanel/components/RestarauntsCollectSection.tsx';
+import RestaurantsListSection from './pages/AdminPanel/components/RestaurantsListSection.tsx';
+import InfoSection from './pages/AdminPanel/components/InfoSection.tsx';
+import ReferencesSection from './pages/AdminPanel/components/ReferencesSection.tsx';
+import HotelEditPage from './pages/AdminPanel/components/HotelEditPage.tsx';
+import RestaurantEditPage from './pages/AdminPanel/components/RestaurantEditPage.tsx';
 
 dayjs.locale('ru');
 dayjs.extend(customParseFormat);
@@ -55,7 +64,22 @@ const App = () => {
         <Route path="/restaurants/:id" element={<RestaurantsList />} />
         <Route path="/ulyseadmin" element={<AdminLogin />} />
         <Route path="/ulyseadmin/register" element={<AdminRegister />} />
-        <Route path="/admin" element={<AdminPanel />} />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<ProgramsSection />} />
+          <Route path="hotels">
+            <Route index element={<HotelsCollectSection />} />
+            <Route path="lists" element={<HotelsListSection />} />
+            <Route path="edit/:id" element={<HotelEditPage />} />
+          </Route>
+          <Route path="restaurants">
+            <Route index element={<RestaurantsCollectSection />} />
+            <Route path="lists" element={<RestaurantsListSection />} />
+            <Route path="edit/:id" element={<RestaurantEditPage />} />
+          </Route>
+          <Route path="info" element={<InfoSection />} />
+          <Route path="references" element={<ReferencesSection />} />
+        </Route>
         {/*<Route path="*" element={<AdminPanel />} />*/}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

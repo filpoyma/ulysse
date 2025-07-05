@@ -1,7 +1,7 @@
-import { FC } from "react";
-import { Edit, Trash2, ChevronDown, ChevronUp } from "lucide-react";
-import { ITravelProgramResponse } from "../../../types/travelProgram.types.ts";
-import styles from "../AdminPanel.module.css";
+import { FC } from 'react';
+import { Edit, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { ITravelProgramResponse } from '../../../types/travelProgram.types.ts';
+import styles from '../adminLayout.module.css';
 
 interface ProgramsTableProps {
   programs: ITravelProgramResponse[];
@@ -9,7 +9,7 @@ interface ProgramsTableProps {
   onProgramEdit: (id: string) => void;
   onDeleteProgram: (id: string) => void;
   sortField?: keyof ITravelProgramResponse;
-  sortOrder?: "asc" | "desc";
+  sortOrder?: 'asc' | 'desc';
   onSort?: (field: keyof ITravelProgramResponse) => void;
 }
 
@@ -24,7 +24,7 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
 }) => {
   const renderSortIcon = (field: keyof ITravelProgramResponse) => {
     if (!sortField || sortField !== field) return null;
-    return sortOrder === "asc" ? (
+    return sortOrder === 'asc' ? (
       <ChevronUp size={16} className={styles.sortArrow} />
     ) : (
       <ChevronDown size={16} className={styles.sortArrow} />
@@ -37,38 +37,28 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
         <thead>
           <tr>
             <th
-              onClick={() => onSort && onSort("name")}
-              style={{ cursor: "pointer", minWidth: 120 }}
-            >
+              onClick={() => onSort && onSort('name')}
+              style={{ cursor: 'pointer', minWidth: 120 }}>
               Имя программы
-              <span className={styles.sortArrow}>{renderSortIcon("name")}</span>
+              <span className={styles.sortArrow}>{renderSortIcon('name')}</span>
             </th>
             <th
-              onClick={() => onSort && onSort("createdAt")}
-              style={{ cursor: "pointer", minWidth: 120 }}
-            >
+              onClick={() => onSort && onSort('createdAt')}
+              style={{ cursor: 'pointer', minWidth: 120 }}>
               Дата создания
-              <span className={styles.sortArrow}>
-                {renderSortIcon("createdAt")}
-              </span>
+              <span className={styles.sortArrow}>{renderSortIcon('createdAt')}</span>
             </th>
             <th
-              onClick={() => onSort && onSort("updatedAt")}
-              style={{ cursor: "pointer", minWidth: 120 }}
-            >
+              onClick={() => onSort && onSort('updatedAt')}
+              style={{ cursor: 'pointer', minWidth: 120 }}>
               Дата обновления
-              <span className={styles.sortArrow}>
-                {renderSortIcon("updatedAt")}
-              </span>
+              <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
             </th>
             <th
-              onClick={() => onSort && onSort("bgImages")}
-              style={{ cursor: "pointer", minWidth: 120 }}
-            >
+              onClick={() => onSort && onSort('bgImages')}
+              style={{ cursor: 'pointer', minWidth: 120 }}>
               Кол-во фоновых картинок
-              <span className={styles.sortArrow}>
-                {renderSortIcon("bgImages")}
-              </span>
+              <span className={styles.sortArrow}>{renderSortIcon('bgImages')}</span>
             </th>
             <th>Действия</th>
           </tr>
@@ -79,8 +69,7 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
               <td>
                 <span
                   className={styles.programName}
-                  onClick={() => onProgramClick(program.name_eng)}
-                >
+                  onClick={() => onProgramClick(program.name_eng)}>
                   {program.name}
                 </span>
               </td>
@@ -92,15 +81,13 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
                   <button
                     className={styles.actionButton}
                     onClick={() => onProgramEdit(program._id)}
-                    title="Редактировать"
-                  >
+                    title="Редактировать">
                     <Edit size={16} />
                   </button>
                   <button
                     className={`${styles.actionButton} ${styles.deleteButton}`}
                     onClick={() => onDeleteProgram(program._id)}
-                    title="Удалить"
-                  >
+                    title="Удалить">
                     <Trash2 size={16} />
                   </button>
                 </div>

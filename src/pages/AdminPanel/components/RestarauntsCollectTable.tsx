@@ -1,6 +1,6 @@
 import { FC, RefObject } from 'react';
 import { Trash2, Check, X, ChevronDown, ChevronUp, Edit } from 'lucide-react';
-import styles from '../AdminPanel.module.css';
+import styles from '../adminLayout.module.css';
 import { IRestaurant } from '../../../types/restaurant.types';
 import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete';
 import { useNavigate } from 'react-router-dom';
@@ -179,8 +179,7 @@ const RestarauntsCollectTable: FC<Props> = ({
               <td
                 className={styles.programName}
                 style={{ cursor: 'pointer' }}
-                onClick={() => r._id && navigate(`/restaurant/${r._id}`)}
-              >
+                onClick={() => r._id && navigate(`/restaurant/${r._id}`)}>
                 {r.name}
               </td>
               <td>{r.country}</td>

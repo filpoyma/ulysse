@@ -80,6 +80,10 @@ export const useHotelsCollect = () => {
     setEditingHotelData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleHotelEdit = (id: string) => {
+    navigate(`/admin/hotels/edit/${id}`);
+  };
+
   const handleSaveEditHotel = async () => {
     if (!editingHotelId) return;
     if (!editingHotelData.name || !editingHotelData.country || !editingHotelData.city) {
@@ -177,6 +181,7 @@ export const useHotelsCollect = () => {
     handleSaveNewHotel,
     handleCancelNewHotel,
     handleNavigateToHotelPage,
+    handleHotelEdit,
     fetchHotels,
   };
 };

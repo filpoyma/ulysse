@@ -1,10 +1,10 @@
 import { FC, RefObject } from 'react';
 import { Edit, Trash2, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
-import styles from '../adminLayout.module.css';
-import { IHotel } from '../../../types/hotel.types.ts';
+import styles from '../../adminLayout.module.css';
+import { IHotel } from '../../../../types/hotel.types.ts';
 import dayjs from 'dayjs';
-import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete';
-import { SectionHeader } from './SectionHeader.tsx';
+import { CountryAutocomplete } from '../../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
+import { SectionHeader } from '../SectionHeader.tsx';
 
 interface HotelsTableProps {
   hotels: IHotel[];

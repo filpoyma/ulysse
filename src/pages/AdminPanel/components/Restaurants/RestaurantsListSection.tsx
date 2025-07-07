@@ -1,8 +1,8 @@
 import { FC, useEffect } from 'react';
-import { useRestaurantsList } from '../hooks/useRestaurantsList.ts';
+import { useRestaurantsList } from '../../hooks/useRestaurantsList.ts';
 import RestaurantsListTable from './RestaurantsListTable.tsx';
-import { Loader } from '../../../components/Loader/Loader';
-import styles from '../adminLayout.module.css';
+import { Loader } from '../../../../components/Loader/Loader.tsx';
+import styles from '../../adminLayout.module.css';
 
 const RestaurantsListSection: FC = () => {
   const {

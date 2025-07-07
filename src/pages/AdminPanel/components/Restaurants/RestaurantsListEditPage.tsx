@@ -1,14 +1,14 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { IRestaurant } from '../../../types/restaurant.types';
-import { restaurantsListService } from '../../../services/restaurantsList.service';
-import styles from '../adminLayout.module.css';
-import { Loader } from '../../../components/Loader/Loader';
-import { restaurantService } from '../../../services/restaurant.service.ts';
+import { IRestaurant } from '../../../../types/restaurant.types.ts';
+import { restaurantsListService } from '../../../../services/restaurantsList.service.ts';
+import styles from '../../adminLayout.module.css';
+import { Loader } from '../../../../components/Loader/Loader.tsx';
+import { restaurantService } from '../../../../services/restaurant.service.ts';
 import { useSelector } from 'react-redux';
-import { selectRestaurants } from '../../../store/selectors.ts';
-import { getErrorMessage } from '../../../utils/helpers.ts';
-import ChevronUp from '../../../assets/icons/chevronUp.svg';
-import ChevronDown from '../../../assets/icons/chevronDown.svg';
+import { selectRestaurants } from '../../../../store/selectors.ts';
+import { getErrorMessage } from '../../../../utils/helpers.ts';
+import ChevronUp from '../../../../assets/icons/chevronUp.svg';
+import ChevronDown from '../../../../assets/icons/chevronDown.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const RestaurantsListEditPage = () => {

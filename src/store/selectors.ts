@@ -17,5 +17,9 @@ export const selectHotelsListFull = (state: RootState) => state.hotelsData.hotel
 
 export const selectRestaurants = (state: RootState) => state.restaurantsData.restaurants;
 export const selectRestaurantsList = (state: RootState) => state.restaurantsData.restaurantsList;
+export const selectRestListName = (state: RootState) =>
+  state.restaurantsData.restaurantsListFull?.name || '';
+export const selectRestListId = (state: RootState) =>
+  state.restaurantsData.restaurantsListFull?._id || '';
 export const selectFullDataListRestaurants = (state: RootState) =>
-  state.restaurantsData.restaurantsListFull || [];
+  state.restaurantsData.restaurantsListFull?.restaurants || [];

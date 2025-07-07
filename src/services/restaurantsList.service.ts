@@ -20,7 +20,7 @@ export const restaurantsListService = {
 
   async getFullById(id: string) {
     const res = await restaurantsListApi.getFullById(id);
-    store.dispatch(restaurantActions.setRestaurantsListFull(res.data.restaurants));
+    store.dispatch(restaurantActions.setRestaurantsListFull(res.data));
   },
 
   create(data: ICreateRestaurantsListData) {

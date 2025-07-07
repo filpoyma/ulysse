@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { SectionHeader } from './SectionHeader';
-import RestarauntsCollectTable from './RestarauntsCollectTable';
-import { useRestarauntsCollect } from '../hooks/useRestarauntsCollect';
-import styles from '../adminLayout.module.css';
-import { Loader } from '../../../components/Loader/Loader';
+import { SectionHeader } from '../SectionHeader.tsx';
+import RestarauntsCollectTable from './RestarauntsCollectTable.tsx';
+import { useRestarauntsCollect } from '../../hooks/useRestarauntsCollect.ts';
+import styles from '../../adminLayout.module.css';
+import { Loader } from '../../../../components/Loader/Loader.tsx';
 
 const RestaurantsCollectSection = () => {
   const {

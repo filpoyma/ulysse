@@ -23,7 +23,7 @@ const DEFAULT_FIRST_PAGE: FirstPageType = {
 const TravelProgram: React.FC = () => {
   const { programName } = useParams();
   const detailsRef = useRef<HTMLElement>(null);
-  const navRef = useRef<HTMLElement>(null);
+  const headerNavRef = useRef<HTMLElement>(null);
   const [currentSection, setCurrentSection] = useState('hero');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -218,7 +218,7 @@ const TravelProgram: React.FC = () => {
     <>
       <Header
         currentSection={currentSection}
-        navRef={navRef}
+        navRef={headerNavRef}
         scrollToMap={scrollToMap}
         isLoggedIn={isLoggedIn}
         numOfDays={numOfDays}

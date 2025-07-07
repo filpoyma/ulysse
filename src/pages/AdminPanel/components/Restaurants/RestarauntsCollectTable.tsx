@@ -1,8 +1,8 @@
 import { FC, RefObject } from 'react';
 import { Trash2, Check, X, ChevronDown, ChevronUp, Edit } from 'lucide-react';
-import styles from '../adminLayout.module.css';
-import { IRestaurant } from '../../../types/restaurant.types';
-import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete';
+import styles from '../../adminLayout.module.css';
+import { IRestaurant } from '../../../../types/restaurant.types.ts';
+import { CountryAutocomplete } from '../../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {

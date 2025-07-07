@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { selectMapData, selectTravelProgram } from './selectors.ts';
+import { selectFullDataListRestaurants, selectMapData, selectTravelProgram } from './selectors.ts';
 import { getImagePath } from '../utils/helpers.ts';
 
 export const selectTravelProgramGallery = createSelector(
@@ -23,4 +23,13 @@ export const selectTravelProgramImages = createSelector(
 export const selectLogisticsData = createSelector(
   [selectMapData],
   (mapData) => mapData?.logistics || [],
+);
+
+export const selectRestaurantsNames = createSelector(
+  [selectFullDataListRestaurants],
+  (restaurants) =>
+    restaurants.map((restaurant) => ({
+      name: restaurant.name,
+      id: restaurant._id,
+    })),
 );

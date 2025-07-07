@@ -1,14 +1,14 @@
 import { FC, RefObject } from 'react';
-import Trash2 from '../../../assets/icons/trash2.svg';
-import Edit from '../../../assets/icons/edit.svg';
-import Check from '../../../assets/icons/check.svg';
-import X from '../../../assets/icons/x.svg';
-import ChevronDown from '../../../assets/icons/chevronDown.svg';
-import ChevronUp from '../../../assets/icons/chevronUp.svg';
-import styles from '../adminLayout.module.css';
+import Trash2 from '../../../../assets/icons/trash2.svg';
+import Edit from '../../../../assets/icons/edit.svg';
+import Check from '../../../../assets/icons/check.svg';
+import X from '../../../../assets/icons/x.svg';
+import ChevronDown from '../../../../assets/icons/chevronDown.svg';
+import ChevronUp from '../../../../assets/icons/chevronUp.svg';
+import styles from '../../adminLayout.module.css';
 import dayjs from 'dayjs';
-import { SectionHeader } from './SectionHeader.tsx';
-import { IHotelsList } from '../../../types/hotelsList.types.ts';
+import { SectionHeader } from '../SectionHeader.tsx';
+import { IHotelsList } from '../../../../types/hotelsList.types.ts';
 import { useNavigate } from 'react-router-dom';
 
 interface HotelsListTableProps {

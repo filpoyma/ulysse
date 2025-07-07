@@ -1,8 +1,8 @@
 import { FC, useEffect } from 'react';
-import { useHotelsCollect } from '../hooks/useHotelsCollect.ts';
+import { useHotelsCollect } from '../../hooks/useHotelsCollect.ts';
 import HotelsCollectTable from './HotelsCollectTable.tsx';
-import { Loader } from '../../../components/Loader/Loader';
-import styles from '../adminLayout.module.css';
+import { Loader } from '../../../../components/Loader/Loader.tsx';
+import styles from '../../adminLayout.module.css';
 
 const HotelsCollectSection: FC = () => {
   const {

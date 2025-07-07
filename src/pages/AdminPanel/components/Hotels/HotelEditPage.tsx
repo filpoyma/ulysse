@@ -1,13 +1,17 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { IHotel, TGalleryType } from '../../../types/hotel.types';
+import { IHotel, TGalleryType } from '../../../../types/hotel.types.ts';
 import styles from './HotelEditPage.module.css';
 import { useSelector } from 'react-redux';
-import { hotelService } from '../../../services/hotel.service';
-import { selectHotels } from '../../../store/selectors';
-import ImageUploadHotels from '../../../components/ImageUploadModal/ImageUploadHotels.tsx';
-import { IUploadedImage } from '../../../types/uploadImage.types.ts';
-import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
-import { getErrorMessage, getImagePath, validateHotelCoordinates } from '../../../utils/helpers.ts';
+import { hotelService } from '../../../../services/hotel.service.ts';
+import { selectHotels } from '../../../../store/selectors.ts';
+import ImageUploadHotels from '../../../../components/ImageUploadModal/ImageUploadHotels.tsx';
+import { IUploadedImage } from '../../../../types/uploadImage.types.ts';
+import { CountryAutocomplete } from '../../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
+import {
+  getErrorMessage,
+  getImagePath,
+  validateHotelCoordinates,
+} from '../../../../utils/helpers.ts';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const HotelEditPage = () => {

@@ -1,13 +1,17 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { IRestaurant } from '../../../types/restaurant.types';
-import styles from './HotelEditPage.module.css';
+import { IRestaurant } from '../../../../types/restaurant.types.ts';
+import styles from '../Hotels/HotelEditPage.module.css';
 import { useSelector } from 'react-redux';
-import { restaurantService } from '../../../services/restaurant.service';
-import { selectRestaurants } from '../../../store/selectors';
-import { IUploadedImage } from '../../../types/uploadImage.types.ts';
-import { CountryAutocomplete } from '../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
-import { getErrorMessage, getImagePath, validateHotelCoordinates } from '../../../utils/helpers.ts';
-import ImageUploadRestaurants from '../../../components/ImageUploadModal/ImageUploadRestaurants.tsx';
+import { restaurantService } from '../../../../services/restaurant.service.ts';
+import { selectRestaurants } from '../../../../store/selectors.ts';
+import { IUploadedImage } from '../../../../types/uploadImage.types.ts';
+import { CountryAutocomplete } from '../../../../components/CountryAutocomplete/CountryAutocomplete.tsx';
+import {
+  getErrorMessage,
+  getImagePath,
+  validateHotelCoordinates,
+} from '../../../../utils/helpers.ts';
+import ImageUploadRestaurants from '../../../../components/ImageUploadModal/ImageUploadRestaurants.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const RestaurantEditPage = () => {

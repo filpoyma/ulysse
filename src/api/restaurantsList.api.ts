@@ -5,7 +5,6 @@ import {
   IRestaurantsListWithRestaurants,
   IUpdateRestaurantsListData,
 } from '../types/restaurantsList.types';
-import { IRestaurant } from '../types/restaurant.types.ts';
 
 const restaurantsListApi = {
   basePath: 'restaurants-lists',
@@ -14,7 +13,7 @@ const restaurantsListApi = {
     return path ? `${this.basePath}/${path}` : this.basePath;
   },
 
-  getFullById(id: string): Promise<{ data: { restaurants: IRestaurant[] } }> {
+  getFullById(id: string): Promise<{ data: IRestaurantsListWithRestaurants }> {
     const url = this.getUrl(id);
     return api.get(url, { searchParams: { fullData: true } }).json();
   },

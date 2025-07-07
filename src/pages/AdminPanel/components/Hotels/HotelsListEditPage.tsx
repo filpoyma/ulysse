@@ -1,14 +1,14 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { IHotel } from '../../../types/hotel.types';
-import { hotelsListService } from '../../../services/hotelsList.service';
-import styles from '../adminLayout.module.css';
-import { Loader } from '../../../components/Loader/Loader';
-import { hotelService } from '../../../services/hotel.service.ts';
+import { IHotel } from '../../../../types/hotel.types.ts';
+import { hotelsListService } from '../../../../services/hotelsList.service.ts';
+import styles from '../../adminLayout.module.css';
+import { Loader } from '../../../../components/Loader/Loader.tsx';
+import { hotelService } from '../../../../services/hotel.service.ts';
 import { useSelector } from 'react-redux';
-import { selectHotels } from '../../../store/selectors.ts';
-import { getErrorMessage } from '../../../utils/helpers.ts';
-import ChevronUp from '../../../assets/icons/chevronUp.svg';
-import ChevronDown from '../../../assets/icons/chevronDown.svg';
+import { selectHotels } from '../../../../store/selectors.ts';
+import { getErrorMessage } from '../../../../utils/helpers.ts';
+import ChevronUp from '../../../../assets/icons/chevronUp.svg';
+import ChevronDown from '../../../../assets/icons/chevronDown.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const HotelsListEditPage = () => {

@@ -13,16 +13,16 @@ import { countriesService } from './services/countries.service.ts';
 import { getErrorMessage } from './utils/helpers.ts';
 import ProgramsSection from './pages/AdminPanel/components/ProgramsSection.tsx';
 import AdminLayout from './pages/AdminPanel/AdminLayout.tsx';
-import HotelsCollectSection from './pages/AdminPanel/components/HotelsCollectSection.tsx';
-import HotelsListSection from './pages/AdminPanel/components/HotelsListSection.tsx';
-import RestaurantsCollectSection from './pages/AdminPanel/components/RestarauntsCollectSection.tsx';
-import RestaurantsListSection from './pages/AdminPanel/components/RestaurantsListSection.tsx';
+import HotelsCollectSection from './pages/AdminPanel/components/Hotels/HotelsCollectSection.tsx';
+import HotelsListSection from './pages/AdminPanel/components/Hotels/HotelsListSection.tsx';
+import RestaurantsCollectSection from './pages/AdminPanel/components/Restaurants/RestarauntsCollectSection.tsx';
+import RestaurantsListSection from './pages/AdminPanel/components/Restaurants/RestaurantsListSection.tsx';
 import InfoSection from './pages/AdminPanel/components/InfoSection.tsx';
 import ReferencesSection from './pages/AdminPanel/components/ReferencesSection.tsx';
-import HotelEditPage from './pages/AdminPanel/components/HotelEditPage.tsx';
-import RestaurantEditPage from './pages/AdminPanel/components/RestaurantEditPage.tsx';
-import HotelsListEditPage from './pages/AdminPanel/components/HotelsListEditPage.tsx';
-import RestaurantsListEditPage from './pages/AdminPanel/components/RestaurantsListEditPage.tsx';
+import HotelEditPage from './pages/AdminPanel/components/Hotels/HotelEditPage.tsx';
+import RestaurantEditPage from './pages/AdminPanel/components/Restaurants/RestaurantEditPage.tsx';
+import HotelsListEditPage from './pages/AdminPanel/components/Hotels/HotelsListEditPage.tsx';
+import RestaurantsListEditPage from './pages/AdminPanel/components/Restaurants/RestaurantsListEditPage.tsx';
 
 dayjs.locale('ru');
 dayjs.extend(customParseFormat);
@@ -84,7 +84,6 @@ const App = () => {
           <Route path="info" element={<InfoSection />} />
           <Route path="references" element={<ReferencesSection />} />
         </Route>
-        {/*<Route path="*" element={<AdminPanel />} />*/}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>

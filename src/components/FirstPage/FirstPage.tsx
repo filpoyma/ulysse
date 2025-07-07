@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { ChevronDown, Check, X, Edit } from 'lucide-react';
+import ChevronDown from '../../assets/icons/chevronDown.svg';
+import Check from '../../assets/icons/check.svg';
+import X from '../../assets/icons/x.svg';
+import Edit from '../../assets/icons/edit.svg';
 import { IFirstPageData } from '../../types/travelProgram.types.ts';
 import { travelProgramService } from '../../services/travelProgram.service.ts';
 import styles from './FirstPage.module.css';
@@ -32,7 +35,7 @@ const FirstPage: React.FC<FirstPageProps> = ({
   }, [isEditing]);
 
   const handleFieldChange = useCallback((field: keyof IFirstPageData, value: string) => {
-    setEditedValues(prev => ({
+    setEditedValues((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -65,7 +68,7 @@ const FirstPage: React.FC<FirstPageProps> = ({
             ref={field === 'title' ? titleInputRef : null}
             type="text"
             value={editedValues[field]}
-            onChange={e => handleFieldChange(field, e.target.value)}
+            onChange={(e) => handleFieldChange(field, e.target.value)}
             className={`${styles[className]} ${styles.editable}`}
           />
         );
@@ -85,7 +88,7 @@ const FirstPage: React.FC<FirstPageProps> = ({
               if (isLoggedIn) setIsEditing(true);
             }}
             title="Сохранить">
-            <Edit size={16} />
+            <Edit height={16} width={16} />
           </button>
         </div>
       )}
@@ -100,15 +103,15 @@ const FirstPage: React.FC<FirstPageProps> = ({
         {isEditing && (
           <div className={styles.editButtons}>
             <button onClick={handleSave} className={styles.saveButton} title="Сохранить">
-              <Check size={16} />
+              <Check height={16} width={16} />
             </button>
             <button onClick={handleCancel} className={styles.cancelButton} title="Отмена">
-              <X size={16} />
+              <X height={16} width={16} />
             </button>
           </div>
         )}
         <button onClick={onScrollToDetails} className={styles.scrollButton}>
-          <ChevronDown className={styles.arrowDown} size={32} />
+          <ChevronDown className={styles.arrowDown} height={32} width={32} />
         </button>
       </div>
     </section>

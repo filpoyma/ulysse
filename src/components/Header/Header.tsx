@@ -1,5 +1,8 @@
 import { memo, RefObject } from 'react';
-import { Share2, Sun, Menu } from 'lucide-react';
+import Share2 from '../../assets/icons/share2.svg';
+import Sun from '../../assets/icons/sun.svg';
+import Menu from '../../assets/icons/menu.svg';
+
 import { useDebouncedCallback } from 'use-debounce';
 import { Logo } from '../../assets/icons/Logo.tsx';
 import { Link } from 'react-router-dom';
@@ -57,7 +60,7 @@ const Header = ({ currentSection, navRef, scrollToMap, isLoggedIn, numOfDays }: 
           className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>
           Карта
         </a>
-        {days.map(day => (
+        {days.map((day) => (
           <a
             key={day.id}
             href={`#day${day.num}`}
@@ -69,9 +72,9 @@ const Header = ({ currentSection, navRef, scrollToMap, isLoggedIn, numOfDays }: 
         ))}
       </nav>
       <div className={styles.utilities}>
-        <Share2 size={20} className={styles.utilityIcon} />
-        <Sun size={20} className={styles.utilityIcon} />
-        <Menu size={20} className={styles.utilityIcon} />
+        <Share2 height={20} width={20} className={styles.utilityIcon} />
+        <Sun height={20} width={20} className={styles.utilityIcon} />
+        <Menu height={20} width={20} className={styles.utilityIcon} />
       </div>
     </header>
   );

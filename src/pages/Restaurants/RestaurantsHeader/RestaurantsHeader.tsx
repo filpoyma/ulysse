@@ -1,7 +1,9 @@
 import { memo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Share2, Sun, Menu } from 'lucide-react';
+import Share2 from '../../../assets/icons/share2.svg';
+import Sun from '../../../assets/icons/sun.svg';
+import Menu from '../../../assets/icons/menu.svg';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { Logo } from '../../../assets/icons/Logo.tsx';
@@ -51,9 +53,9 @@ const RestaurantsHeader = ({ currentSection }: HeaderProps) => {
           {listName}
         </a>
         <a
-         href="#map"
-         className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>
-         Карта
+          href="#map"
+          className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>
+          Карта
         </a>
         {restNames.map((name) => (
           <a

@@ -1,5 +1,10 @@
 import { FC, RefObject } from 'react';
-import { Edit, Trash2, Check, X, ChevronDown, ChevronUp } from 'lucide-react';
+import ChevronDown from '../../../../assets/icons/chevronDown.svg';
+import ChevronUp from '../../../../assets/icons/chevronUp.svg';
+import X from '../../../../assets/icons/x.svg';
+import Edit from '../../../../assets/icons/edit.svg';
+import Check from '../../../../assets/icons/check.svg';
+import Trash2 from '../../../../assets/icons/trash2.svg';
 import styles from '../../adminLayout.module.css';
 import { IHotel } from '../../../../types/hotel.types.ts';
 import dayjs from 'dayjs';
@@ -42,9 +47,9 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
   const renderSortIcon = (field: keyof IHotel) => {
     if (!sortField || sortField !== field) return null;
     return sortOrder === 'asc' ? (
-      <ChevronUp size={16} className={styles.sortArrow} />
+      <ChevronUp height={16} width={16} className={styles.sortArrow} />
     ) : (
-      <ChevronDown size={16} className={styles.sortArrow} />
+      <ChevronDown height={16} width={16} className={styles.sortArrow} />
     );
   };
 
@@ -137,13 +142,13 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
                       className={styles.actionButton}
                       onClick={onSaveNewHotel}
                       title="Сохранить">
-                      <Check size={16} />
+                      <Check height={16} width={16} />
                     </button>
                     <button
                       className={`${styles.actionButton} ${styles.deleteButton}`}
                       onClick={onCancelNewHotel}
                       title="Отмена">
-                      <X size={16} />
+                      <X height={16} width={16} />
                     </button>
                   </div>
                 </td>
@@ -166,13 +171,13 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
                       className={styles.actionButton}
                       onClick={() => hotel._id && handleHotelEdit(hotel._id)}
                       title="Редактировать">
-                      <Edit size={16} />
+                      <Edit height={16} width={16} />
                     </button>
                     <button
                       className={`${styles.actionButton} ${styles.deleteButton}`}
                       onClick={() => hotel._id && onDeleteHotel(hotel._id)}
                       title="Удалить">
-                      <Trash2 size={16} />
+                      <Trash2 height={16} width={16} />
                     </button>
                   </div>
                 </td>

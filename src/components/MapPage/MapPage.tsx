@@ -4,7 +4,13 @@ import IconElipses from '../../assets/icons/mapIcons/list/elipses.svg';
 import { useSelector } from 'react-redux';
 import { selectTravelProgram } from '../../store/selectors.ts';
 import iconsMapList from '../../assets/icons/mapIcons/list';
-import { X, Check, Edit, Plus, Trash2, MoveDown, MoveUp } from 'lucide-react';
+import MoveDown from '../../assets/icons/chevronDown.svg';
+import MoveUp from '../../assets/icons/chevronUp.svg';
+import Check from '../../assets/icons/check.svg';
+import X from '../../assets/icons/x.svg';
+import Edit from '../../assets/icons/edit.svg';
+import Plus from '../../assets/icons/plus.svg';
+import Trash2 from '../../assets/icons/trash2.svg';
 import { mapService } from '../../services/map.service';
 import { ILogistics, TRouteType, TSourceListIcon } from '../../types/travelProgram.types';
 import { validateCoordinates } from '../../utils/helpers.ts';
@@ -194,7 +200,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       {isLoggedIn && !isEditing && (
         <div className={styles.headerContainer}>
           <button className={styles.editIcon} onClick={handleEdit}>
-            <Edit size={16} />
+            <Edit height={16} width={16} />
           </button>
         </div>
       )}
@@ -248,19 +254,19 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                       className={styles.iconBtn}
                       onClick={() => handleMoveUp(i)}
                       disabled={i === 0 || isSaving}>
-                      <MoveUp size={16} />
+                      <MoveUp height={16} width={16} />
                     </button>
                     <button
                       className={`${styles.iconBtn} ${styles.delIcon}`}
                       onClick={() => handleDelete(i)}
                       disabled={isSaving}>
-                      <Trash2 size={16} />
+                      <Trash2 height={16} width={16} />
                     </button>
                     <button
                       className={styles.iconBtn}
                       onClick={() => handleMoveDown(i)}
                       disabled={i === editedLogistics.length - 1 || isSaving}>
-                      <MoveDown size={16} />
+                      <MoveDown height={16} width={16} />
                     </button>
                   </div>
                   <select
@@ -297,15 +303,15 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
           </div>
           <div className={styles.editControls}>
             <button className={styles.editIcon} onClick={handleCancel} disabled={isSaving}>
-              <X size={16} />
+              <X height={16} width={16} />
             </button>
             {!isNewPoint && (
               <button className={styles.editIcon} onClick={handleAddNewPoint} disabled={isSaving}>
-                <Plus size={16} />
+                <Plus height={16} width={16} />
               </button>
             )}
             <button className={styles.editIcon} onClick={handleSave} disabled={isSaving}>
-              {isSaving ? <div className={styles.spinner} /> : <Check size={16} />}
+              {isSaving ? <div className={styles.spinner} /> : <Check height={16} width={16} />}
             </button>
           </div>
         </>

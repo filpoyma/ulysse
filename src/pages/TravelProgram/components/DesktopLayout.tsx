@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { IFirstPageData } from '../../../types/travelProgram.types';
 import FirstPage from '../../../components/FirstPage/FirstPage';
 import DetailsSection from '../../../components/DetailsSection/DetailsSection.tsx';
-import MapBox from '../../../components/MapBox/MapBoxCustomLayer.component';
+const MapBox = React.lazy(() => import('../../../components/MapBox/MapBoxCustomLayer.component'));
+
 import MapPage from '../../../components/MapPage/MapPage';
 import DaySection from '../../../components/DaySection/DaySection';
 import styles from '../TravelProgram.module.css';
 import DaysGallery from '../../../components/Gallery/DaysGallery.tsx';
+import { Loader } from '../../../components/Loader/Loader.tsx';
 
 interface DesktopLayoutProps {
   firstPageBg: string;
@@ -49,7 +51,9 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
         />
       </div>
       <div className={styles.backgroundImage}>
-        <MapBox isLoggedIn={isLoggedIn} />
+        <Suspense fallback={<Loader />}>
+          <MapBox isLoggedIn={isLoggedIn} />
+        </Suspense>
       </div>
       <div className={styles.backgroundImage}>
         <DaysGallery isLoggedIn={isLoggedIn} />

@@ -2,18 +2,7 @@
 @import "root.css";
 @import "react-image-gallery/styles/css/image-gallery.css";
 
-html {
-  scroll-behavior: smooth;
-}
 
-body {
-  font-family: 'Inter', sans-serif;
-  line-height: 1.6;
-  color: var(--primary-color);
-  background-color: var(--background-color);
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 
 .header {
   position: fixed;

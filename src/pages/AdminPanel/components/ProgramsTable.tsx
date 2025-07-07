@@ -1,5 +1,8 @@
 import { FC } from 'react';
-import { Edit, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import ChevronDown from '../../../assets/icons/chevronDown.svg';
+import Edit from '../../../assets/icons/edit.svg';
+import Trash2 from '../../../assets/icons/trash2.svg';
+import ChevronUp from '../../../assets/icons/chevronUp.svg';
 import { ITravelProgramResponse } from '../../../types/travelProgram.types.ts';
 import styles from '../adminLayout.module.css';
 
@@ -25,9 +28,9 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
   const renderSortIcon = (field: keyof ITravelProgramResponse) => {
     if (!sortField || sortField !== field) return null;
     return sortOrder === 'asc' ? (
-      <ChevronUp size={16} className={styles.sortArrow} />
+      <ChevronUp height={16} width={16} className={styles.sortArrow} />
     ) : (
-      <ChevronDown size={16} className={styles.sortArrow} />
+      <ChevronDown height={16} width={16} className={styles.sortArrow} />
     );
   };
 
@@ -82,13 +85,13 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
                     className={styles.actionButton}
                     onClick={() => onProgramEdit(program._id)}
                     title="Редактировать">
-                    <Edit size={16} />
+                    <Edit height={16} width={16} />
                   </button>
                   <button
                     className={`${styles.actionButton} ${styles.deleteButton}`}
                     onClick={() => onDeleteProgram(program._id)}
                     title="Удалить">
-                    <Trash2 size={16} />
+                    <Trash2 height={16} width={16} />
                   </button>
                 </div>
               </td>

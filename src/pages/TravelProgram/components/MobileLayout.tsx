@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { IFirstPageData } from '../../../types/travelProgram.types';
 import FirstPage from '../../../components/FirstPage/FirstPage';
 import DetailsSection from '../../../components/DetailsSection/DetailsSection.tsx';
-import MapBox from '../../../components/MapBox/MapBoxCustomLayer.component';
+
+const MapBox = React.lazy(() => import('../../../components/MapBox/MapBoxCustomLayer.component'));
+
 import MapPage from '../../../components/MapPage/MapPage';
 import DaySection from '../../../components/DaySection/DaySection';
 import styles from '../TravelProgram.module.css';
+import { Loader } from '../../../components/Loader/Loader.tsx';
 
 interface MobileLayoutProps {
   firstPageBg: string;
@@ -59,7 +62,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
       <DetailsSection ref={detailsRef} />
     </section>
     <div className={styles.backgroundImage}>
-      <MapBox isLoggedIn={isLoggedIn} />
+      <Suspense fallback={<Loader />}>
+        <MapBox isLoggedIn={isLoggedIn} />
+      </Suspense>
     </div>
     <section>
       <MapPage isLoggedIn={isLoggedIn} />

@@ -3,11 +3,29 @@ import mapboxgl, { LngLat } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { FeatureCollection, LineString } from 'geojson';
 import iconsMap from '../../assets/icons/mapIcons/map/icons.map.ts';
-import { copyToClipboardWithTooltip, createIconEl, getRouteType } from './map.utils.ts';
+import { createIconEl, getRouteType } from './map.utils.ts';
 import { useSelector } from 'react-redux';
 import { selectMapData } from '../../store/selectors.ts';
+import { copyToClipboard } from '../../utils/helpers.ts';
+import styles from './MapBox.module.css';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+
+export const copyToClipboardWithTooltip = (map: any, lngLat: LngLat) => {
+  console.log('Координаты клика:', lngLat.lng, lngLat.lat);
+  copyToClipboard(`${lngLat.lat.toFixed(5)} ${lngLat.lng.toFixed(5)}`);
+  const popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false,
+    offset: 5,
+  })
+    .setLngLat([lngLat.lng, lngLat.lat])
+    .setHTML(`<div class=${styles.tooltip}>Координаты скопированны</div>`)
+    .addTo(map);
+  setTimeout(() => {
+    popup.remove();
+  }, 500);
+};
 
 const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const mapRef = useRef(null);
@@ -27,7 +45,7 @@ const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     if (isLoggedIn) {
       map.getCanvas().style.cursor = 'default';
 
-      map.on('click', e => {
+      map.on('click', (e) => {
         const lngLat = e.lngLat; // объект {lng, lat}
         copyToClipboardWithTooltip(map, lngLat);
       });
@@ -38,7 +56,7 @@ const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     }
 
     // Добавляем маркеры
-    trackData.logistics.forEach(point => {
+    trackData.logistics.forEach((point) => {
       if (point.sourceMapIcon) {
         const el = createIconEl(iconsMap[point.sourceMapIcon]);
         new mapboxgl.Marker({ element: el })

@@ -20,9 +20,27 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--primary-color);
+    background-color: var(--background-color);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 input:focus,
 textarea:focus,
 select:focus,
 button:focus {
   outline: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
 }

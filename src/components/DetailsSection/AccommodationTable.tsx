@@ -2,7 +2,10 @@ import styles from './index.module.css';
 import { useSelector } from 'react-redux';
 import { selectTravelProgram, selectIsLoggedIn } from '../../store/selectors.ts';
 import { useState } from 'react';
-import { Check, Plus, X, Trash2 } from 'lucide-react';
+import Check from '../../assets/icons/check.svg';
+import X from '../../assets/icons/x.svg';
+import Plus from '../../assets/icons/plus.svg';
+import Trash2 from '../../assets/icons/trash2.svg';
 import { travelProgramService } from '../../services/travelProgram.service';
 
 export function AccommodationTable() {
@@ -105,8 +108,8 @@ export function AccommodationTable() {
                   type="text"
                   defaultValue={editedData?.period}
                   className={styles['editable-input']}
-                  onClick={e => e.stopPropagation()}
-                  onChange={e => handleInputChange('period', e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => handleInputChange('period', e.target.value)}
                 />
               ) : (
                 row.period
@@ -120,8 +123,8 @@ export function AccommodationTable() {
                   type="text"
                   defaultValue={editedData?.hotelName}
                   className={styles['editable-input']}
-                  onClick={e => e.stopPropagation()}
-                  onChange={e => handleInputChange('hotelName', e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => handleInputChange('hotelName', e.target.value)}
                 />
               ) : (
                 row.hotelName
@@ -135,8 +138,8 @@ export function AccommodationTable() {
                   type="text"
                   defaultValue={editedData?.details}
                   className={styles['editable-input']}
-                  onClick={e => e.stopPropagation()}
-                  onChange={e => handleInputChange('details', e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => handleInputChange('details', e.target.value)}
                 />
               ) : (
                 row.details
@@ -150,8 +153,8 @@ export function AccommodationTable() {
                   type="number"
                   defaultValue={editedData?.numOfNights}
                   className={styles['editable-input']}
-                  onClick={e => e.stopPropagation()}
-                  onChange={e => handleInputChange('numOfNights', e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => handleInputChange('numOfNights', e.target.value)}
                 />
               ) : (
                 row.numOfNights
@@ -165,16 +168,16 @@ export function AccommodationTable() {
             style={{ marginTop: 42, display: 'flex', justifyContent: 'flex-end' }}>
             <div className={styles['edit-icons']}>
               <button className={styles['edit-icon']} onClick={handleCancel} title="Отмена">
-                <X size={16} />
+                <X height={16} width={16} />
               </button>
               <button
                 className={`${styles['edit-icon']} ${styles['del-icon']}`}
                 onClick={handleDelete}
                 title="Удалить">
-                <Trash2 size={16} />
+                <Trash2 height={16} width={16} />
               </button>
               <button className={styles['edit-icon']} onClick={handleSave} title="Сохранить">
-                <Check size={16} />
+                <Check height={16} width={16} />
               </button>
             </div>
           </div>
@@ -183,7 +186,7 @@ export function AccommodationTable() {
       {isLoggedIn && editableRow === null && (
         <div className={styles['edit-icons-add-new-row']}>
           <button className={styles['edit-icon']} onClick={handleAddNewRow}>
-            <Plus size={16} />
+            <Plus height={16} width={16} />
           </button>
         </div>
       )}

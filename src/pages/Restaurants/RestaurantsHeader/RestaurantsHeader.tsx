@@ -37,17 +37,6 @@ const RestaurantsHeader = ({ currentSection }: HeaderProps) => {
 
   scrollMenuToCenter();
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    e.preventDefault();
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
-      targetElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
-
   return (
     <header className={styles.header}>
       <Link
@@ -56,25 +45,22 @@ const RestaurantsHeader = ({ currentSection }: HeaderProps) => {
         {isLoggedIn ? <span className={styles.adminText}>EDIT</span> : <Logo />}
       </Link>
       <nav className={styles.nav} ref={headerNavRef}>
-        <a
-          href="#hero"
-          onClick={(e) => handleNavClick(e, 'hero')}
-          className={`${styles.navLink} ${currentSection === 'hero' ? styles.navLinkActive : ''}`}>
-          {listName}
-        </a>
-        <a
-          href="#map"
-          onClick={(e) => handleNavClick(e, 'map')}
-          className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>
-          Карта
-        </a>
-        {restNames.map((name, index) => (
+        {/*<a*/}
+        {/*  href="#hero"*/}
+        {/*  className={`${styles.navLink} ${currentSection === 'hero' ? styles.navLinkActive : ''}`}>*/}
+        {/*  {listName}*/}
+        {/*</a>*/}
+        {/*<a*/}
+        {/*  href="#map"*/}
+        {/*  className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>*/}
+        {/*  Карта*/}
+        {/*</a>*/}
+        {restNames.map((name) => (
           <a
             key={name.id}
             href={`#${name.id}`}
-            onClick={(e) => handleNavClick(e, name.id)}
             className={`${styles.navLink} ${
-              currentSection === `name${index}` ? styles.navLinkActive : ''
+              currentSection === `${name.id}` ? styles.navLinkActive : ''
             }`}>
             {name.name}
           </a>

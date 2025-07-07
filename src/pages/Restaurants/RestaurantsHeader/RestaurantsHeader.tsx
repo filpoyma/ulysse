@@ -45,16 +45,16 @@ const RestaurantsHeader = ({ currentSection }: HeaderProps) => {
         {isLoggedIn ? <span className={styles.adminText}>EDIT</span> : <Logo />}
       </Link>
       <nav className={styles.nav} ref={headerNavRef}>
-        {/*<a*/}
-        {/*  href="#hero"*/}
-        {/*  className={`${styles.navLink} ${currentSection === 'hero' ? styles.navLinkActive : ''}`}>*/}
-        {/*  {listName}*/}
-        {/*</a>*/}
-        {/*<a*/}
-        {/*  href="#map"*/}
-        {/*  className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>*/}
-        {/*  Карта*/}
-        {/*</a>*/}
+        <a
+          href="#hero"
+          className={`${styles.navLink} ${currentSection === 'hero' ? styles.navLinkActive : ''}`}>
+          {listName}
+        </a>
+        <a
+         href="#map"
+         className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>
+         Карта
+        </a>
         {restNames.map((name) => (
           <a
             key={name.id}

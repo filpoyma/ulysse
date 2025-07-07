@@ -9,7 +9,7 @@ import styles from './styles.module.css';
 
 const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) => {
   return (
-    <div className={styles.container} id={restaurant._id}>
+    <div className={styles.container}>
       {/* Левая секция - главное изображение */}
       <div className={styles.leftSection}>
         <img

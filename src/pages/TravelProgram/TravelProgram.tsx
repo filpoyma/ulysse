@@ -201,8 +201,8 @@ const TravelProgram: React.FC = () => {
       },
     );
 
-    sections.forEach((s) => {
-      if (s.el) observer.observe(s.el);
+    sections.forEach((section) => {
+      if (section.el) observer.observe(section.el);
     });
 
     return () => observer.disconnect();

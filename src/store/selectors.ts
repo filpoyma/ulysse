@@ -21,5 +21,7 @@ export const selectRestListName = (state: RootState) =>
   state.restaurantsData.restaurantsListFull?.name || '';
 export const selectRestListId = (state: RootState) =>
   state.restaurantsData.restaurantsListFull?._id || '';
+export const selectRestListMainImage = (state: RootState) =>
+  state.restaurantsData.restaurantsListFull?.titleImage;
 export const selectFullDataListRestaurants = (state: RootState) =>
   state.restaurantsData.restaurantsListFull?.restaurants || [];

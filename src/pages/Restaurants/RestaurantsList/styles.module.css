@@ -2,6 +2,6 @@
   overflow-y: auto;
   scroll-behavior: smooth;
   height: 100vh;
-  /* padding-top: var(--header-height); */
+   padding-top: var(--header-height);
   position: relative;
 }

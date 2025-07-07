@@ -4,16 +4,19 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectFullDataListRestaurants } from '../../../store/selectors.ts';
 import SingleRestaurantComponent from '../SingleRestaurant/SingleRestaurant.component.tsx';
-import EditButton from '../SingleRestaurant/EditButton.tsx';
 import RestaurantsHeader from '../RestaurantsHeader/RestaurantsHeader.tsx';
 import styles from './styles.module.css';
+import TitlePage from './TitlePage.tsx';
+import MapPage from './MapPage.tsx';
 
 const RestaurantsList = () => {
   const { id } = useParams();
   const restaurantsListFull = useSelector(selectFullDataListRestaurants);
-  const [currentSection, setCurrentSection] = useState('');;
+  const [currentSection, setCurrentSection] = useState('hero');
   const containerRef = useRef<HTMLDivElement>(null);
   const restaurantRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const titlePageRef = useRef<HTMLDivElement>(null);
+  const mapPageRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (id) restaurantsListService.getFullById(id).catch(console.error);
@@ -28,14 +31,16 @@ const RestaurantsList = () => {
     };
     const handleIntersect = (entries: IntersectionObserverEntry[]) => {
       const visible = entries
-        .filter(entry => entry.isIntersecting)
-        .sort((a, b) => (a.boundingClientRect.top - b.boundingClientRect.top));
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
       if (visible.length > 0) {
         setCurrentSection(visible[0].target.id);
       }
     };
     const observer = new window.IntersectionObserver(handleIntersect, observerOptions);
-    restaurantRefs.current.forEach(ref => {
+    if (titlePageRef.current) observer.observe(titlePageRef.current);
+    if (mapPageRef.current) observer.observe(mapPageRef.current);
+    restaurantRefs.current.forEach((ref) => {
       if (ref) observer.observe(ref);
     });
     return () => {
@@ -44,20 +49,22 @@ const RestaurantsList = () => {
   }, [restaurantsListFull]);
 
   return (
-    <div>
-      <EditButton restaurantListId={id} />
-      <div className={styles.container} ref={containerRef}>
-        <RestaurantsHeader currentSection={currentSection} />
-        {restaurantsListFull.map((restaurant, idx) => (
-          <div
-            key={restaurant._id}
-            id={restaurant._id}
-             ref={el => (restaurantRefs.current[idx] = el)}
-          >
-            <SingleRestaurantComponent restaurant={restaurant} />
-          </div>
-        ))}
+    <div className={styles.container} ref={containerRef}>
+      <RestaurantsHeader currentSection={currentSection} />
+      <div ref={titlePageRef} id={'hero'}>
+        <TitlePage />
       </div>
+      <div ref={mapPageRef} id={'map'}>
+        <MapPage />
+      </div>
+      {restaurantsListFull.map((restaurant, idx) => (
+        <div
+          key={restaurant._id}
+          id={restaurant._id}
+          ref={(el) => (restaurantRefs.current[idx] = el)}>
+          <SingleRestaurantComponent restaurant={restaurant} />
+        </div>
+      ))}
     </div>
   );
 };

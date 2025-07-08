@@ -5,6 +5,11 @@ export interface IRestaurantsList {
   restaurants: string[];
   isActive: boolean;
   sortOrder: number;
+  titleImage?: {
+    _id: string;
+    path: string;
+    filename: string;
+  };
   metadata: {
     totalRestaurants: number;
     lastUpdated: string;
@@ -42,4 +47,5 @@ export interface IUpdateRestaurantsListData {
   restaurants?: string[];
   isActive?: boolean;
   sortOrder?: number;
+  titleImage?: string;
 } 

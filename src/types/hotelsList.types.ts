@@ -53,4 +53,5 @@ export interface IUpdateHotelsListData {
   hotels?: string[];
   isActive?: boolean;
   sortOrder?: number;
+  titleImage?: string;
 }

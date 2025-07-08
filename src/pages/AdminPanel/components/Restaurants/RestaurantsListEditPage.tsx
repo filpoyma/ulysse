@@ -6,10 +6,11 @@ import { Loader } from '../../../../components/Loader/Loader.tsx';
 import { restaurantService } from '../../../../services/restaurant.service.ts';
 import { useSelector } from 'react-redux';
 import { selectRestaurants } from '../../../../store/selectors.ts';
-import { getErrorMessage } from '../../../../utils/helpers.ts';
+import { getErrorMessage, getImagePath } from '../../../../utils/helpers.ts';
 import ChevronUp from '../../../../assets/icons/chevronUp.svg';
 import ChevronDown from '../../../../assets/icons/chevronDown.svg';
 import { useNavigate, useParams } from 'react-router-dom';
+import { imageService } from '../../../../services/image.service.ts';
 
 const RestaurantsListEditPage = () => {
   const { id } = useParams();
@@ -23,6 +24,9 @@ const RestaurantsListEditPage = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isEdited, setIsEdited] = useState(false);
+  const [titleImage, setTitleImage] = useState<{ _id: string; path: string; filename: string } | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   // Загрузка списка и всех ресторанов
   useEffect(() => {
@@ -32,12 +36,14 @@ const RestaurantsListEditPage = () => {
         try {
           await restaurantService.getAll();
           const listRes = await restaurantsListService.getById(id);
+          console.log(listRes)
           setListHeaders({
             name: listRes.data.name || '',
             description: listRes.data.description || '',
           });
           //@ts-ignore
           setSelectedRestaurants(listRes.data.restaurants);
+          setTitleImage(listRes.data.titleImage || null);
         } catch (err) {
           setError(getErrorMessage(err));
         } finally {
@@ -95,6 +101,22 @@ const RestaurantsListEditPage = () => {
     });
   };
 
+  const handleTitleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    setUploadError(null);
+    if (!e.target.files || e.target.files.length === 0) return;
+    setUploading(true);
+    try {
+      const file = e.target.files[0];
+      const res = await imageService.uploadImage(file);
+      setTitleImage(res.image);
+      setIsEdited(true);
+    } catch (err) {
+      setUploadError(getErrorMessage(err));
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!id) return;
     if (!listHeaders.name.trim() || selectedRestaurants.length === 0) {
@@ -110,6 +132,7 @@ const RestaurantsListEditPage = () => {
         restaurants: selectedRestaurants
           .map((r) => r._id)
           .filter((id): id is string => id !== undefined),
+        titleImage: titleImage ? titleImage._id : undefined,
       });
       setIsEdited(false);
       handlerReturnToRestLists();
@@ -150,6 +173,20 @@ const RestaurantsListEditPage = () => {
           value={listHeaders.description}
           onChange={handleChange}
         />
+      </div>
+      <div className={styles.formRow}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
+          <label>Обложка списка:</label>
+          {titleImage ? (
+            <img src={getImagePath(titleImage.path)} alt="title" style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />
+          ) : (
+            <div style={{ width: 120, height: 120, background: '#eee', borderRadius: 8, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa' }}>
+              Нет изображения
+            </div>
+          )}
+          <input type="file" accept="image/*" onChange={handleTitleImageChange} disabled={uploading} />
+          {uploadError && <div style={{ color: 'red' }}>{uploadError}</div>}
+        </div>
       </div>
       {error && <div className={styles.error}>{error}</div>}
       {loading ? (

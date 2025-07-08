@@ -139,6 +139,17 @@ const RestaurantEditPage = () => {
     }
   };
 
+  const handleSelectMainImage = async (img: IUploadedImage) => {
+    if (!restaurant || !restaurant._id) return;
+    try {
+      await restaurantService.updateTitleImage(restaurant._id, img._id);
+      setRestaurant((prev) => prev ? { ...prev, titleImage: img } : prev);
+      setIsModalOpen(false);
+    } catch (err) {
+      alert(getErrorMessage(err));
+    }
+  };
+
   if (!restaurant) return <div className={styles.error}>Загрузка...</div>;
 
   return (
@@ -150,6 +161,7 @@ const RestaurantEditPage = () => {
         isMany={isMany}
         galleryType={galleryType || undefined}
         belongsToId={restaurant._id}
+        onSelectImage={!isMany ? handleSelectMainImage : undefined}
       />
 
       {/* Левая панель - галерея */}

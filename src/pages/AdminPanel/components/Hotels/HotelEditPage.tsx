@@ -181,6 +181,17 @@ const HotelEditPage = () => {
     }
   };
 
+  const handleSelectMainImage = async (img: IUploadedImage) => {
+    if (!hotel || !hotel._id) return;
+    try {
+      await hotelService.updateMainImage(hotel._id, img._id);
+      setHotel((prev) => prev ? { ...prev, mainImage: img } : prev);
+      setIsModalOpen(false);
+    } catch (err) {
+      alert(getErrorMessage(err));
+    }
+  };
+
   if (!hotel) return <div className={styles.error}>Загрузка...</div>;
 
   return (
@@ -192,6 +203,7 @@ const HotelEditPage = () => {
         isMany={isMany}
         galleryType={galleryType || undefined}
         belongsToId={hotel._id}
+        onSelectImage={!isMany ? handleSelectMainImage : undefined}
       />
 
       {/* Левая панель - галерея */}

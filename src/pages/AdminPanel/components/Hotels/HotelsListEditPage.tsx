@@ -11,6 +11,7 @@ import ChevronUp from '../../../../assets/icons/chevronUp.svg';
 import ChevronDown from '../../../../assets/icons/chevronDown.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { imageService } from '../../../../services/image.service.ts';
+import ImageUploadHotels from '../../../../components/ImageUploadModal/ImageUploadHotels.tsx';
 
 const HotelsListEditPage = () => {
   const { id } = useParams();
@@ -26,6 +27,7 @@ const HotelsListEditPage = () => {
   const [titleImage, setTitleImage] = useState<{ _id: string; path: string; filename: string } | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Загрузка списка и всех отелей
   useEffect(() => {
@@ -94,20 +96,10 @@ const HotelsListEditPage = () => {
     });
   };
 
-  const handleTitleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    setUploadError(null);
-    if (!e.target.files || e.target.files.length === 0) return;
-    setUploading(true);
-    try {
-      const file = e.target.files[0];
-      const res = await imageService.uploadImage(file);
-      setTitleImage(res.image);
-      setIsEdited(true);
-    } catch (err) {
-      setUploadError(getErrorMessage(err));
-    } finally {
-      setUploading(false);
-    }
+  const handleSelectTitleImage = (img: { _id: string; path: string; filename: string }) => {
+    setTitleImage(img);
+    setIsEdited(true);
+    setIsModalOpen(false);
   };
 
   const handleSave = async () => {
@@ -136,6 +128,13 @@ const HotelsListEditPage = () => {
 
   return (
     <div className={styles.editPageWrapper}>
+      <ImageUploadHotels
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        isMany={false}
+        belongsToId={id}
+        onSelectImage={handleSelectTitleImage}
+      />
       <div className={styles.formRow}>
         <button
           className={styles.backButton}
@@ -168,14 +167,15 @@ const HotelsListEditPage = () => {
       <div className={styles.formRow}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
           <label>Обложка списка:</label>
-          {titleImage ? (
-            <img src={getImagePath(titleImage.path)} alt="title" style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />
-          ) : (
-            <div style={{ width: 120, height: 120, background: '#eee', borderRadius: 8, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa' }}>
-              Нет изображения
-            </div>
-          )}
-          <input type="file" accept="image/*" onChange={handleTitleImageChange} disabled={uploading} />
+          <div onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
+            {titleImage ? (
+              <img src={getImagePath(titleImage.path)} alt="title" style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />
+            ) : (
+              <div style={{ width: 120, height: 120, background: '#eee', borderRadius: 8, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa' }}>
+                Нет изображения
+              </div>
+            )}
+          </div>
           {uploadError && <div style={{ color: 'red' }}>{uploadError}</div>}
         </div>
       </div>

@@ -37,31 +37,16 @@ const useUploadRestaurantGallery = ({
 
   // Клик по превью для выбора изображения
   const handlePreviewClick = async (img: IUploadedImage) => {
-    if (!restaurantId) return;
-    const imageId = img._id || img.id;
-    if (!imageId) return;
-
-    try {
-      setLoading(true);
-      if (isMany && galleryType) {
-        // Для множественного выбора добавляем/удаляем изображение из выбранных
-        const isSelected = selectedImages.some((i) => (i._id || i.id) === imageId);
-        if (isSelected) {
-          setSelectedImages((prev) => prev.filter((i) => (i._id || i.id) !== imageId));
-        } else {
-          setSelectedImages((prev) => [...prev, img]);
-        }
+    if (isMany && galleryType) {
+      // Для множественного выбора добавляем/удаляем изображение из выбранных
+      const isSelected = selectedImages.some((i) => (i._id || i.id) === (img._id || img.id));
+      if (isSelected) {
+        setSelectedImages((prev) => prev.filter((i) => (i._id || i.id) !== (img._id || img.id)));
       } else {
-        // Для одиночного выбора обновляем главное изображение
-        await restaurantService.updateTitleImage(restaurantId, imageId);
-        setSuccess(true);
-        onClose();
+        setSelectedImages((prev) => [...prev, img]);
       }
-    } catch (err) {
-      setError(getErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
+    // Для одиночного выбора теперь ничего не делаем (логика в родителе через onSelectImage)
   };
 
   // Сохранение выбранных изображений в галерею

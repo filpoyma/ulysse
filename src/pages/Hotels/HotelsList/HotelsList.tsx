@@ -24,7 +24,7 @@ const HotelsList = () => {
   }, [id]);
 
   useEffect(() => {
-    if (!hotelsListFull.length) return;
+    if (!hotelsListFull) return;
     const observerOptions = {
       root: containerRef.current,
       rootMargin: '0px 0px -60% 0px', // Срабатывает, когда верхняя часть ресторана входит в верхнюю треть контейнера
@@ -58,7 +58,7 @@ const HotelsList = () => {
       <div ref={mapPageRef} id={'map'}>
         <MapPage />
       </div>
-      {hotels.map((hotel, i) => {
+      {hotels?.map((hotel, i) => {
         return (
           <div key={hotel._id} id={hotel._id} ref={(el) => (restaurantRefs.current[i] = el)}>
             <SingleHotelComponent hotel={hotel} />

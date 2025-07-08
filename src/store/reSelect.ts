@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import {
-  selectFullDataListHotels,
   selectFullDataListRestaurants,
+  selectHotelsListFull,
   selectMapData,
   selectTravelProgram,
 } from './selectors.ts';
@@ -39,9 +39,19 @@ export const selectRestaurantsNames = createSelector(
     })),
 );
 
-export const selectHotelsNames = createSelector([selectFullDataListHotels], (hotels) =>
-  hotels.map((hotel) => ({
+export const selectHotelsNames = createSelector([selectHotelsListFull], (hotels) => {
+  if (!hotels) return [];
+  return hotels.map((hotel) => ({
     name: hotel.name,
     id: hotel._id,
-  })),
-);
+  }));
+});
+
+export const selectHotelsForMap = createSelector([selectHotelsListFull], (hotels) => {
+  if (!hotels) return [];
+  return hotels.map((hotel) => ({
+    coordinates: hotel.coordinates,
+    name: hotel.name,
+    id: hotel._id,
+  }));
+});

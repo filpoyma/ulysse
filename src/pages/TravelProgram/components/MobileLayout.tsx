@@ -3,7 +3,9 @@ import { IFirstPageData } from '../../../types/travelProgram.types';
 import FirstPage from '../../../components/FirstPage/FirstPage';
 import DetailsSection from '../../../components/DetailsSection/DetailsSection.tsx';
 
-const MapBox = React.lazy(() => import('../../../components/MapBox/MapBoxCustomLayer.component'));
+const MapBoxWithTrack = React.lazy(
+  () => import('../../../components/MapBox/MapBox.track.component.tsx'),
+);
 
 import MapPage from '../../../components/MapPage/MapPage';
 import DaySection from '../../../components/DaySection/DaySection';
@@ -63,7 +65,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
     </section>
     <div className={styles.backgroundImage}>
       <Suspense fallback={<Loader />}>
-        <MapBox isLoggedIn={isLoggedIn} />
+        <MapBoxWithTrack isLoggedIn={isLoggedIn} />
       </Suspense>
     </div>
     <section>

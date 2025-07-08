@@ -102,6 +102,7 @@ export const useRestarauntsCollect = () => {
   };
 
   const handleDeleteRestaraunt = async (id: string) => {
+    if (!window.confirm('Вы уверены, что хотите удалить этот ресторан?')) return;
     try {
       setLoading(true);
       await restaurantService.delete(id);

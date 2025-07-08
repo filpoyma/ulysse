@@ -27,7 +27,7 @@ export const copyToClipboardWithTooltip = (map: any, lngLat: LngLat) => {
   }, 500);
 };
 
-const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const MapBoxWithTrack: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   const mapRef = useRef(null);
   const trackData = useSelector(selectMapData);
   const setScreenPosition = (mapCenter: LngLat, zoom: number) => {
@@ -159,4 +159,4 @@ const MapWithCustomLayer: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
   return <div ref={mapRef} style={{ width: '100%', height: '100%' }} />;
 };
 
-export default memo(MapWithCustomLayer);
+export default memo(MapBoxWithTrack);

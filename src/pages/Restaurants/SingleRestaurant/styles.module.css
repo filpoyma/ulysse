@@ -13,7 +13,6 @@
   position: sticky;
   top: 0;
   height: fit-content;
-  /*padding-top: var(--header-height);*/
 }
 
 .rightSection {
@@ -22,7 +21,6 @@
   flex-direction: column;
   padding-right: 5rem;
   padding-left: 5rem;
-  /*padding-top: var(--header-height);*/
 }
 
 .mainImage {
@@ -214,4 +212,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+[id] {
+  scroll-margin-top: var(--header-height);
 }

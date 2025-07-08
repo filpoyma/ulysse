@@ -6,7 +6,6 @@ import {
   IHotelsListWithHotels,
   IUpdateHotelsListData,
 } from '../types/hotelsList.types.ts';
-import { IHotel } from '../types/hotel.types.ts';
 
 const hotelsListApi = {
   basePath: 'hotels-lists',
@@ -41,7 +40,7 @@ const hotelsListApi = {
     return api.get(url).json();
   },
 
-  getFullById(id: string): Promise<{ data: { hotels: IHotel[] } }> {
+  getFullById(id: string): Promise<{ data: IHotelsListWithHotels }> {
     const url = this.getUrl(id);
     return api.get(url, { searchParams: { fullData: true } }).json();
   },

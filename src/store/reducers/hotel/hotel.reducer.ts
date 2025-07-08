@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IHotel } from '../../../types/hotel.types.ts';
-import { IHotelsList } from '../../../types/hotelsList.types.ts';
+import { IHotelsList, IHotelsListWithHotels } from '../../../types/hotelsList.types.ts';
 
 interface HotelState {
   hotels: IHotel[];
-  hotelsListFull: IHotel[];
+  hotelsListFull: IHotelsListWithHotels | null;
   hotel: IHotel | null;
   hotelsList: IHotelsList[];
 }
@@ -13,7 +13,7 @@ const initialState: HotelState = {
   hotels: [],
   hotel: null,
   hotelsList: [],
-  hotelsListFull: [],
+  hotelsListFull: null,
 };
 
 const { reducer: hotelReducer, actions: hotelActions } = createSlice({
@@ -23,7 +23,7 @@ const { reducer: hotelReducer, actions: hotelActions } = createSlice({
     setHotels(state, action: PayloadAction<IHotel[]>) {
       state.hotels = action.payload;
     },
-    setHotelsListFull(state, action: PayloadAction<IHotel[]>) {
+    setHotelsListFull(state, action: PayloadAction<IHotelsListWithHotels>) {
       state.hotelsListFull = action.payload;
     },
     setHotel(state, action: PayloadAction<IHotel | null>) {

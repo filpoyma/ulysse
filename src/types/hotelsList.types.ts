@@ -5,6 +5,11 @@ export interface IHotelsList {
   hotels: string[];
   isActive: boolean;
   sortOrder: number;
+  titleImage: {
+    _id: string;
+    path: string;
+    filename: string;
+  };
   metadata: {
     totalHotels: number;
     lastUpdated: string;

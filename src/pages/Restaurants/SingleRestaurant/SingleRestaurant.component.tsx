@@ -4,7 +4,6 @@ import RestHeader from './RestHeader.tsx';
 import RestIcon from '../../../assets/icons/forkAndSpoon.svg';
 import FlowerIcon from '../../../assets/icons/flower.svg';
 import CookerIcon from '../../../assets/icons/cooker.svg';
-import GalleryIcon from '../../../assets/icons/gallery.svg';
 import styles from './styles.module.css';
 import ImageGallery from 'react-image-gallery';
 import { LeftNav, RightNav } from '../../../components/Gallery/NavIcons.tsx';
@@ -76,25 +75,25 @@ const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) 
           </>
         )}
 
-        {restaurant.gallery && restaurant.gallery.length > 0 && (
-          <>
-            <RestHeader title={'ГАЛЛЕРЕЯ'} Icon={GalleryIcon} />
-            <div>
-              {/* 2 картинки из gallery */}
+        {/*{restaurant.gallery && restaurant.gallery.length > 0 && (*/}
+        {/*  <>*/}
+        {/*    <RestHeader title={'ГАЛЛЕРЕЯ'} Icon={GalleryIcon} />*/}
+        {/*    <div>*/}
+        {/*      /!* 2 картинки из gallery *!/*/}
 
-              <div className={styles.galleryContainer}>
-                {restaurant.gallery.slice(0, 2).map((img, idx) => (
-                  <img
-                    key={img._id || idx}
-                    src={getImagePath(img.path)}
-                    alt={`Restaurant gallery ${idx + 1}`}
-                    className={styles.galleryImage}
-                  />
-                ))}
-              </div>
-            </div>
-          </>
-        )}
+        {/*      <div className={styles.galleryContainer}>*/}
+        {/*        {restaurant.gallery.slice(0, 2).map((img, idx) => (*/}
+        {/*          <img*/}
+        {/*            key={img._id || idx}*/}
+        {/*            src={getImagePath(img.path)}*/}
+        {/*            alt={`Restaurant gallery ${idx + 1}`}*/}
+        {/*            className={styles.galleryImage}*/}
+        {/*          />*/}
+        {/*        ))}*/}
+        {/*      </div>*/}
+        {/*    </div>*/}
+        {/*  </>*/}
+        {/*)}*/}
       </div>
     </div>
   );

@@ -9,21 +9,23 @@ import { useDebouncedCallback } from 'use-debounce';
 import { Logo } from '../../../assets/icons/Logo.tsx';
 import styles from './styles.module.css';
 import {
+  selectHotelsListId,
+  selectHotelsListName,
   selectIsLoggedIn,
   selectRestListId,
   selectRestListName,
 } from '../../../store/selectors.ts';
-import { selectRestaurantsNames } from '../../../store/reSelect.ts';
+import { selectHotelsNames, selectRestaurantsNames } from '../../../store/reSelect.ts';
 
 interface HeaderProps {
   currentSection: string;
 }
 
-const RestaurantsHeader = ({ currentSection }: HeaderProps) => {
+const HotelsHeader = ({ currentSection }: HeaderProps) => {
   const headerNavRef = useRef<HTMLElement>(null);
-  const listName = useSelector(selectRestListName);
-  const listId = useSelector(selectRestListId);
-  const restNames = useSelector(selectRestaurantsNames);
+  const listName = useSelector(selectHotelsListName);
+  const listId = useSelector(selectHotelsListId);
+  const hotelsNames = useSelector(selectHotelsNames);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const scrollMenuToCenter = useDebouncedCallback(() => {
@@ -42,7 +44,7 @@ const RestaurantsHeader = ({ currentSection }: HeaderProps) => {
   return (
     <header className={styles.header}>
       <Link
-        to={isLoggedIn ? `/admin/restaurants/list/edit/${listId}` : `/restaurants/${listName}`}
+        to={isLoggedIn ? `/admin/hotels/list/edit/${listId}` : `/hotels/${listName}`}
         className={styles.logo}>
         {isLoggedIn ? <span className={styles.adminText}>EDIT</span> : <Logo />}
       </Link>
@@ -57,14 +59,14 @@ const RestaurantsHeader = ({ currentSection }: HeaderProps) => {
           className={`${styles.navLink} ${currentSection === 'map' ? styles.navLinkActive : ''}`}>
           Карта
         </a>
-        {restNames.map((name) => (
+        {hotelsNames.map((item) => (
           <a
-            key={name.id}
-            href={`#${name.id}`}
+            key={item.id}
+            href={`#${item.id}`}
             className={`${styles.navLink} ${
-              currentSection === `${name.id}` ? styles.navLinkActive : ''
+              currentSection === `${item.id}` ? styles.navLinkActive : ''
             }`}>
-            {name.name}
+            {item.name}
           </a>
         ))}
       </nav>
@@ -77,4 +79,4 @@ const RestaurantsHeader = ({ currentSection }: HeaderProps) => {
   );
 };
 
-export default memo(RestaurantsHeader);
+export default memo(HotelsHeader);

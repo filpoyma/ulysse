@@ -13,7 +13,15 @@ export const selectMapData = (state: RootState) => state.travelProgram.program?.
 
 export const selectHotels = (state: RootState) => state.hotelsData.hotels;
 export const selectHotelsList = (state: RootState) => state.hotelsData.hotelsList;
-export const selectHotelsListFull = (state: RootState) => state.hotelsData.hotelsListFull || [];
+export const selectHotelsListFull = (state: RootState) =>
+  state.hotelsData.hotelsListFull?.hotels || [];
+export const selectHotelsListName = (state: RootState) =>
+  state.hotelsData.hotelsListFull?.name || '';
+export const selectHotelsListId = (state: RootState) => state.hotelsData.hotelsListFull?._id || '';
+export const selectFullDataListHotels = (state: RootState) =>
+  state.hotelsData.hotelsListFull?.hotels || [];
+export const selectHotelListMainImage = (state: RootState) =>
+  state.hotelsData.hotelsListFull?.titleImage; //todo
 
 export const selectRestaurants = (state: RootState) => state.restaurantsData.restaurants;
 export const selectRestaurantsList = (state: RootState) => state.restaurantsData.restaurantsList;
@@ -22,6 +30,6 @@ export const selectRestListName = (state: RootState) =>
 export const selectRestListId = (state: RootState) =>
   state.restaurantsData.restaurantsListFull?._id || '';
 export const selectRestListMainImage = (state: RootState) =>
-  state.restaurantsData.restaurantsListFull?.titleImage;
+  state.restaurantsData.restaurantsListFull?.titleImage; //todo
 export const selectFullDataListRestaurants = (state: RootState) =>
   state.restaurantsData.restaurantsListFull?.restaurants || [];

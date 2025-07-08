@@ -10,8 +10,10 @@ import { getErrorMessage, getImagePath } from '../../../../utils/helpers.ts';
 import ChevronUp from '../../../../assets/icons/chevronUp.svg';
 import ChevronDown from '../../../../assets/icons/chevronDown.svg';
 import { useNavigate, useParams } from 'react-router-dom';
-import { imageService } from '../../../../services/image.service.ts';
 import ImageUploadRestaurants from '../../../../components/ImageUploadModal/ImageUploadRestaurants.tsx';
+import X from '../../../../assets/icons/x.svg';
+import Edit from '../../../../assets/icons/edit.svg';
+import Plus from '../../../../assets/icons/plus.svg';
 
 const RestaurantsListEditPage = () => {
   const { id } = useParams();
@@ -25,9 +27,11 @@ const RestaurantsListEditPage = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isEdited, setIsEdited] = useState(false);
-  const [titleImage, setTitleImage] = useState<{ _id: string; path: string; filename: string } | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [titleImage, setTitleImage] = useState<{
+    _id: string;
+    path: string;
+    filename: string;
+  } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Загрузка списка и всех ресторанов
@@ -103,7 +107,7 @@ const RestaurantsListEditPage = () => {
   };
 
   const handleSelectTitleImage = (img: { _id: string; path: string; filename: string }) => {
-    console.log(img)
+    console.log(img);
     setTitleImage(img);
     setIsEdited(true);
     setIsModalOpen(false);
@@ -179,14 +183,34 @@ const RestaurantsListEditPage = () => {
           <label>Обложка списка:</label>
           <div onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
             {titleImage ? (
-              <img src={getImagePath(titleImage.path)} alt="title" style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />
+              <img
+                src={getImagePath(titleImage.path)}
+                alt="title"
+                style={{
+                  width: 120,
+                  height: 120,
+                  objectFit: 'cover',
+                  borderRadius: 8,
+                  marginBottom: 8,
+                }}
+              />
             ) : (
-              <div style={{ width: 120, height: 120, background: '#eee', borderRadius: 8, marginBottom: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa' }}>
+              <div
+                style={{
+                  width: 120,
+                  height: 120,
+                  background: '#eee',
+                  borderRadius: 8,
+                  marginBottom: 8,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#aaa',
+                }}>
                 Нет изображения
               </div>
             )}
           </div>
-          {uploadError && <div style={{ color: 'red' }}>{uploadError}</div>}
         </div>
       </div>
       {error && <div className={styles.error}>{error}</div>}
@@ -204,7 +228,7 @@ const RestaurantsListEditPage = () => {
                   <th>Страна</th>
                   <th>Город</th>
                   <th>Порядок</th>
-                  <th></th>
+                  <th>Действия</th>
                 </tr>
               </thead>
               <tbody>
@@ -236,7 +260,13 @@ const RestaurantsListEditPage = () => {
                         className={styles.deleteButton}
                         onClick={() => restaurant._id && handleRemoveRestaurant(restaurant._id)}
                         title="Удалить">
-                        ×
+                        <X height={16} width={16} />
+                      </button>
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => navigate(`/admin/restaurants/restaurant/edit/${restaurant._id}`)}
+                        title="Редактировать">
+                        <Edit height={16} width={16} />
                       </button>
                     </td>
                   </tr>
@@ -267,7 +297,7 @@ const RestaurantsListEditPage = () => {
                   <th>Название</th>
                   <th>Страна</th>
                   <th>Город</th>
-                  <th></th>
+                  <th>Действия</th>
                 </tr>
               </thead>
               <tbody>
@@ -281,7 +311,7 @@ const RestaurantsListEditPage = () => {
                         className={styles.actionButton}
                         onClick={() => handleAddRestaurant(restaurant)}
                         title="Добавить">
-                        +
+                        <Plus height={16} width={16} />
                       </button>
                     </td>
                   </tr>

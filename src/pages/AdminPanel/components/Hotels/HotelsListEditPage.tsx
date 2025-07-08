@@ -10,8 +10,10 @@ import { getErrorMessage, getImagePath } from '../../../../utils/helpers.ts';
 import ChevronUp from '../../../../assets/icons/chevronUp.svg';
 import ChevronDown from '../../../../assets/icons/chevronDown.svg';
 import { useNavigate, useParams } from 'react-router-dom';
-import { imageService } from '../../../../services/image.service.ts';
 import ImageUploadHotels from '../../../../components/ImageUploadModal/ImageUploadHotels.tsx';
+import Edit from '../../../../assets/icons/edit.svg';
+import X from '../../../../assets/icons/x.svg';
+import Plus from '../../../../assets/icons/plus.svg';
 
 const HotelsListEditPage = () => {
   const { id } = useParams();
@@ -25,8 +27,6 @@ const HotelsListEditPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isEdited, setIsEdited] = useState(false);
   const [titleImage, setTitleImage] = useState<{ _id: string; path: string; filename: string } | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Загрузка списка и всех отелей
@@ -176,7 +176,7 @@ const HotelsListEditPage = () => {
               </div>
             )}
           </div>
-          {uploadError && <div style={{ color: 'red' }}>{uploadError}</div>}
+      
         </div>
       </div>
       {error && <div className={styles.error}>{error}</div>}
@@ -226,7 +226,14 @@ const HotelsListEditPage = () => {
                         className={styles.deleteButton}
                         onClick={() => handleRemoveHotel(hotel._id)}
                         title="Удалить">
-                        ×
+                        <X height={16} width={16} />
+                      </button>
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => navigate(`/admin/hotels/hotel/edit/${hotel._id}`)}
+                        title="Редактировать"
+                        >
+                        <Edit height={16} width={16} />
                       </button>
                     </td>
                   </tr>
@@ -257,7 +264,7 @@ const HotelsListEditPage = () => {
                   <th>Название</th>
                   <th>Страна</th>
                   <th>Город</th>
-                  <th></th>
+                  <th>Действия</th>
                 </tr>
               </thead>
               <tbody>
@@ -271,7 +278,7 @@ const HotelsListEditPage = () => {
                         className={styles.actionButton}
                         onClick={() => handleAddHotel(hotel)}
                         title="Добавить">
-                        +
+                        <Plus height={16} width={16} />
                       </button>
                     </td>
                   </tr>

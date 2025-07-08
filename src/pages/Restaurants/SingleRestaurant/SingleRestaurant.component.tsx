@@ -6,17 +6,43 @@ import FlowerIcon from '../../../assets/icons/flower.svg';
 import CookerIcon from '../../../assets/icons/cooker.svg';
 import GalleryIcon from '../../../assets/icons/gallery.svg';
 import styles from './styles.module.css';
+import ImageGallery from 'react-image-gallery';
+import { LeftNav, RightNav } from '../../../components/Gallery/NavIcons.tsx';
 
 const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) => {
   return (
     <div className={styles.container}>
       {/* Левая секция - главное изображение */}
       <div className={styles.leftSection}>
-        <img
-          src={getImagePath(restaurant.titleImage?.path)}
-          alt={restaurant.name}
-          className={styles.mainImage}
-        />
+        {restaurant.gallery && restaurant.gallery.length > 0 ? (
+          <div className={styles.galleryWrapper}>
+            <ImageGallery
+              items={restaurant.gallery.map((img) => ({
+                original: getImagePath(img.path),
+
+                originalAlt: restaurant.name,
+              }))}
+              showFullscreenButton={false}
+              showPlayButton={false}
+              showNav={true}
+              showThumbnails={false}
+              slideOnThumbnailOver={true}
+              showBullets={true}
+              renderLeftNav={(onClick: () => void, disabled: boolean) => (
+                <LeftNav onClick={onClick} disabled={disabled} />
+              )}
+              renderRightNav={(onClick: () => void, disabled: boolean) => (
+                <RightNav onClick={onClick} disabled={disabled} />
+              )}
+            />
+          </div>
+        ) : (
+          <img
+            src={getImagePath(restaurant.titleImage?.path)}
+            alt={restaurant.name}
+            className={styles.mainImage}
+          />
+        )}
       </div>
 
       {/* Правая секция - информация о ресторане */}

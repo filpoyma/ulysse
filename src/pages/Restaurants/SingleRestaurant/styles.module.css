@@ -186,3 +186,32 @@
 .editButton:hover {
   background: #f5f5f5;
 }
+
+.galleryWrapper {
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.galleryWrapper :global(.image-gallery) {
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+}
+
+.galleryWrapper_ :global(.image-gallery-slide) {
+  height: calc(100vh - var(--header-height));
+}
+
+.galleryWrapper :global(.image-gallery-slide img) {
+  height: calc(100vh - var(--header-height));
+  object-fit: cover;
+}
+
+.galleryWrapper :global(.image-gallery-slide .image-gallery-image) {
+  height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

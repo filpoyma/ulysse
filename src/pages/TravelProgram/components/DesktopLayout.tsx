@@ -22,6 +22,8 @@ interface DesktopLayoutProps {
   onScrollToDay: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
   detailsRef: React.RefObject<HTMLElement>;
+  markerId: string | null;
+  setMarkerId: (id: string) => void;
 }
 
 const DesktopLayout: React.FC<DesktopLayoutProps> = ({
@@ -33,46 +35,50 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   onScrollToDetails,
   setIsModalOpen,
   detailsRef,
-}) => (
-  <div className={styles.pageContainer}>
-    <div className={styles.leftSide}>
-      <div className={styles.backgroundImage}>
-        <img
-          src={firstPageBg}
-          alt="First page background"
-          onClick={() => setIsModalOpen(true)}
-          className={styles.leftSideBgImage}
+  markerId,
+  setMarkerId,
+}) => {
+  return (
+    <div className={styles.pageContainer}>
+      <div className={styles.leftSide}>
+        <div className={styles.backgroundImage}>
+          <img
+            src={firstPageBg}
+            alt="First page background"
+            onClick={() => setIsModalOpen(true)}
+            className={styles.leftSideBgImage}
+          />
+        </div>
+        <div className={styles.backgroundImage}>
+          <img
+            src={secondPageBg}
+            alt="Second page background"
+            onClick={() => setIsModalOpen(true)}
+            className={styles.leftSideBgImage}
+          />
+        </div>
+        <div className={styles.backgroundImage}>
+          <Suspense fallback={<Loader />}>
+            <MapBoxWithTrack isLoggedIn={isLoggedIn} markerId={markerId} />
+          </Suspense>
+        </div>
+        <div className={styles.backgroundImage}>
+          <DaysGallery isLoggedIn={isLoggedIn} />
+        </div>
+      </div>
+      <div className={styles.rightSide}>
+        <FirstPage
+          firstPage={firstPage}
+          programName={programName}
+          isLoggedIn={isLoggedIn}
+          onScrollToDetails={onScrollToDetails}
         />
-      </div>
-      <div className={styles.backgroundImage}>
-        <img
-          src={secondPageBg}
-          alt="Second page background"
-          onClick={() => setIsModalOpen(true)}
-          className={styles.leftSideBgImage}
-        />
-      </div>
-      <div className={styles.backgroundImage}>
-        <Suspense fallback={<Loader />}>
-          <MapBoxWithTrack isLoggedIn={isLoggedIn} />
-        </Suspense>
-      </div>
-      <div className={styles.backgroundImage}>
-        <DaysGallery isLoggedIn={isLoggedIn} />
+        <DetailsSection ref={detailsRef} />
+        <MapPage isLoggedIn={isLoggedIn} setMarkerId={setMarkerId} />
+        <DaySection />
       </div>
     </div>
-    <div className={styles.rightSide}>
-      <FirstPage
-        firstPage={firstPage}
-        programName={programName}
-        isLoggedIn={isLoggedIn}
-        onScrollToDetails={onScrollToDetails}
-      />
-      <DetailsSection ref={detailsRef} />
-      <MapPage isLoggedIn={isLoggedIn} />
-      <DaySection />
-    </div>
-  </div>
-);
+  );
+};
 
 export default DesktopLayout;

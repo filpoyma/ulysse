@@ -29,6 +29,7 @@ const TravelProgram: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const selectedImageNumberRef = useRef<number | null>(0);
   const isMobile = useIsMobile();
+  const [markerId, setMarkerId] = useState<string | null>(null);
 
   const program = useSelector(selectTravelProgram);
   const numOfDays = (program?.fourthPageDay.daysData || []).length;
@@ -242,6 +243,8 @@ const TravelProgram: React.FC = () => {
           onScrollToDay={scrollToDay}
           setIsModalOpen={setIsModalOpen}
           detailsRef={detailsRef}
+          markerId={markerId}
+          setMarkerId={setMarkerId}
         />
       ) : (
         <DesktopLayout
@@ -254,6 +257,8 @@ const TravelProgram: React.FC = () => {
           onScrollToDay={scrollToDay}
           setIsModalOpen={setIsModalOpen}
           detailsRef={detailsRef}
+          markerId={markerId}
+          setMarkerId={setMarkerId}
         />
       )}
     </>

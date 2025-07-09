@@ -25,9 +25,7 @@ export const hotelService = {
     store.dispatch(hotelActions.updateHotel(res.data));
   },
   async delete(id: string) {
-    await HotelsListApi.removeHotelsFromLists(id);
     await HotelApi.delete(id);
-    await hotelsListService.getAll();
     store.dispatch(hotelActions.removeHotel(id));
   },
   async updateMainImage(hotelId: string, imageId: string) {

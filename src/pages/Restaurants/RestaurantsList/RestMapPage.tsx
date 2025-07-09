@@ -3,25 +3,23 @@ import RestHeader from '../SingleRestaurant/RestHeader.tsx';
 import FlowerIcon from '../../../assets/icons/flower.svg';
 import { useSelector } from 'react-redux';
 import { selectRestListName } from '../../../store/selectors.ts';
-import { selectRestaurantsNames } from '../../../store/reSelect.ts';
+import { selectRestaurantsNames, selectRestsForMap } from '../../../store/reSelect.ts';
+import { Loader } from '../../../components/Loader/Loader.tsx';
+import MapBoxWithMarkers from '../../../components/MapBox/MapBox.marker.component.tsx';
+import { Suspense, useState } from 'react';
 
-const MapPage = () => {
+const RestMapPage = () => {
   const listName = useSelector(selectRestListName);
   const restNames = useSelector(selectRestaurantsNames);
+  const [currentRestId, setCurrentRestId] = useState<string | null>(null);
+  const points = useSelector(selectRestsForMap);
   return (
     <div className={styles.container}>
       {/* Левая секция - главное изображение */}
-      <div className={styles.leftSection}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100vh',
-            border: 'solid black 1px',
-          }}>
-          MAP
-        </div>
+      <div className={styles.leftSectionMap}>
+        <Suspense fallback={<Loader />}>
+          <MapBoxWithMarkers markerId={currentRestId} points={points} />
+        </Suspense>
       </div>
 
       {/* Правая секция - информация о списках */}
@@ -35,7 +33,9 @@ const MapPage = () => {
 
             <ul className={styles.infoListCustom}>
               {restNames.map((item) => (
-                <li key={item.id}>{item.name}</li>
+                <li key={item.id} onClick={() => setCurrentRestId(item.id)}>
+                  {item.name}
+                </li>
               ))}
             </ul>
           </>
@@ -45,4 +45,4 @@ const MapPage = () => {
   );
 };
 
-export default MapPage;
+export default RestMapPage;

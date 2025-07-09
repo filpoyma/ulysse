@@ -7,7 +7,7 @@ import SingleRestaurantComponent from '../SingleRestaurant/SingleRestaurant.comp
 import RestaurantsHeader from '../RestaurantsHeader/RestaurantsHeader.tsx';
 import styles from './styles.module.css';
 import TitlePage from './TitlePage.tsx';
-import MapPage from './MapPage.tsx';
+import RestMapPage from './RestMapPage.tsx';
 
 const RestaurantsList = () => {
   const { id } = useParams();
@@ -55,7 +55,7 @@ const RestaurantsList = () => {
         <TitlePage />
       </div>
       <div ref={mapPageRef} id={'map'}>
-        <MapPage />
+        <RestMapPage />
       </div>
       {restaurantsListFull.map((restaurant, idx) => (
         <div

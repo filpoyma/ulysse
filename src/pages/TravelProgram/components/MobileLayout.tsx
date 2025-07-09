@@ -22,6 +22,8 @@ interface MobileLayoutProps {
   onScrollToDay: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
   detailsRef: React.RefObject<HTMLElement>;
+  markerId: string | null;
+  setMarkerId: (id: string) => void;
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({
@@ -34,6 +36,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   // onScrollToDay,
   setIsModalOpen,
   detailsRef,
+  markerId,
+  setMarkerId,
 }) => (
   <div className={styles.pageContainer}>
     <div className={styles.backgroundImage}>
@@ -65,11 +69,11 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
     </section>
     <div className={styles.backgroundImage}>
       <Suspense fallback={<Loader />}>
-        <MapBoxWithTrack isLoggedIn={isLoggedIn} />
+        <MapBoxWithTrack isLoggedIn={isLoggedIn} markerId={markerId} />
       </Suspense>
     </div>
     <section>
-      <MapPage isLoggedIn={isLoggedIn} />
+      <MapPage isLoggedIn={isLoggedIn} setMarkerId={setMarkerId} />
     </section>
     <div className={styles.backgroundImage}>
       <img

@@ -39,6 +39,15 @@ export const selectRestaurantsNames = createSelector(
     })),
 );
 
+export const selectRestsForMap = createSelector([selectFullDataListRestaurants], (rests) => {
+  if (!rests) return [];
+  return rests.map((rest) => ({
+    coordinates: rest.coordinates,
+    name: rest.name,
+    id: rest._id,
+  }));
+});
+
 export const selectHotelsNames = createSelector([selectHotelsListFull], (hotels) => {
   if (!hotels) return [];
   return hotels.map((hotel) => ({

@@ -35,7 +35,10 @@ const locationTypeLabels: Record<string, string> = {
   restMarker: 'Ресторан',
 };
 
-const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const MapPage: React.FC<{ isLoggedIn: boolean; setMarkerId: (id: string) => void }> = ({
+  isLoggedIn,
+  setMarkerId,
+}) => {
   const logistics = useSelector(selectLogisticsData);
   const program = useSelector(selectTravelProgram);
   const [isEditing, setIsEditing] = useState(false);
@@ -328,7 +331,7 @@ const MapPage: React.FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
                     </div>
                   )}
                 </div>
-                <div className={styles.infoCol}>
+                <div className={styles.infoCol} onClick={() => setMarkerId(item._id)}>
                   <div className={styles.city}>{item.city}</div>
                   <div className={styles.hotel}>{item.hotel}</div>
                 </div>

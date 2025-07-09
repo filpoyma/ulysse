@@ -7,7 +7,7 @@ import SingleHotelComponent from '../SingleHotel/SingleHotel.component.tsx';
 import styles from './styles.module.css';
 import HotelsHeader from '../HotelsHeader/HotelsHeader.tsx';
 import TitlePage from './TitlePage.tsx';
-import MapPage from '../HotelsList/MapPage.tsx';
+import HotelsMapPage from './HotelsMapPage.tsx';
 
 const HotelsList = () => {
   const { id } = useParams();
@@ -56,7 +56,7 @@ const HotelsList = () => {
         <TitlePage />
       </div>
       <div ref={mapPageRef} id={'map'}>
-        <MapPage />
+        <HotelsMapPage />
       </div>
       {hotels?.map((hotel, i) => {
         return (

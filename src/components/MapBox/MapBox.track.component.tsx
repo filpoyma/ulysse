@@ -3,32 +3,23 @@ import mapboxgl, { LngLat } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { FeatureCollection, LineString } from 'geojson';
 import iconsMap from '../../assets/icons/mapIcons/map/icons.map.ts';
-import { createIconEl, getRouteType } from './map.utils.ts';
+import {
+  centerMapOnMarkers,
+  copyToClipboardWithTooltip,
+  createIconEl,
+  getRouteType,
+} from './map.utils.ts';
 import { useSelector } from 'react-redux';
 import { selectMapData } from '../../store/selectors.ts';
-import { copyToClipboard } from '../../utils/helpers.ts';
-import styles from './MapBox.module.css';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
-export const copyToClipboardWithTooltip = (map: any, lngLat: LngLat) => {
-  console.log('Координаты клика:', lngLat.lng, lngLat.lat);
-  copyToClipboard(`${lngLat.lat.toFixed(5)} ${lngLat.lng.toFixed(5)}`);
-  const popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false,
-    offset: 5,
-  })
-    .setLngLat([lngLat.lng, lngLat.lat])
-    .setHTML(`<div class=${styles.tooltip}>Координаты скопированны</div>`)
-    .addTo(map);
-  setTimeout(() => {
-    popup.remove();
-  }, 500);
-};
-
-const MapBoxWithTrack: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
+const MapBoxWithTrack: FC<{ isLoggedIn: boolean; markerId: string | null }> = ({
+  isLoggedIn,
+  markerId,
+}) => {
   const mapRef = useRef(null);
+  const mapInstance = useRef<mapboxgl.Map | null>(null);
   const trackData = useSelector(selectMapData);
   const setScreenPosition = (mapCenter: LngLat, zoom: number) => {
     console.log('file-MapBoxCustomLayer.component.tsx mapCenter, zoom:', mapCenter, zoom);
@@ -39,9 +30,12 @@ const MapBoxWithTrack: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
     const map = new mapboxgl.Map({
       container: mapRef.current!,
       style: 'mapbox://styles/mapbox/streets-v12',
-      center: trackData.mapCenter,
-      zoom: trackData.zoom,
+      // center: trackData.mapCenter,
+      // zoom: trackData.zoom,
     });
+
+    mapInstance.current = map;
+
     if (isLoggedIn) {
       map.getCanvas().style.cursor = 'default';
 
@@ -71,6 +65,12 @@ const MapBoxWithTrack: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
       }
     });
 
+    // Центрируем карту по маркерам после загрузки
+    map.on('load', () => {
+      centerMapOnMarkers(map, trackData.logistics);
+    });
+
+    //прокладываеи трек
     map.on('load', async () => {
       const accessToken = mapboxgl.accessToken;
       let fullRoute: number[][] = [trackData.logistics[0].coordinates];
@@ -155,6 +155,18 @@ const MapBoxWithTrack: FC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => {
 
     return () => map.remove();
   }, [isLoggedIn, trackData]);
+
+  useEffect(() => {
+    if (!markerId || !mapInstance.current) return;
+    const point = trackData?.logistics.find((p) => p._id === markerId);
+    if (point) {
+      mapInstance.current.flyTo({
+        center: point.coordinates,
+        zoom: 8,
+        speed: 3,
+      });
+    }
+  }, [markerId, trackData]);
 
   return <div ref={mapRef} style={{ width: '100%', height: '100%' }} />;
 };

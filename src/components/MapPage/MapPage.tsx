@@ -331,7 +331,9 @@ const MapPage: React.FC<{ isLoggedIn: boolean; setMarkerId: (id: string) => void
                     </div>
                   )}
                 </div>
-                <div className={styles.infoCol} onClick={() => setMarkerId(item._id)}>
+                <div
+                  className={`${styles.infoCol} ${styles.infoColPointer}`}
+                  onClick={() => setMarkerId(item._id)}>
                   <div className={styles.city}>{item.city}</div>
                   <div className={styles.hotel}>{item.hotel}</div>
                 </div>

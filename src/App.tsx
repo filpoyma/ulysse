@@ -11,18 +11,6 @@ import { authActions } from './store/reducers/auth';
 import { useDispatch } from 'react-redux';
 import { countriesService } from './services/countries.service.ts';
 import { getErrorMessage } from './utils/helpers.ts';
-import ProgramsSection from './pages/AdminPanel/components/ProgramsSection.tsx';
-import AdminLayout from './pages/AdminPanel/AdminLayout.tsx';
-import HotelsCollectSection from './pages/AdminPanel/components/Hotels/HotelsCollectSection.tsx';
-import HotelsListSection from './pages/AdminPanel/components/Hotels/HotelsListSection.tsx';
-import RestaurantsCollectSection from './pages/AdminPanel/components/Restaurants/RestarauntsCollectSection.tsx';
-import RestaurantsListSection from './pages/AdminPanel/components/Restaurants/RestaurantsListSection.tsx';
-import InfoSection from './pages/AdminPanel/components/InfoSection.tsx';
-import ReferencesSection from './pages/AdminPanel/components/ReferencesSection.tsx';
-import HotelEditPage from './pages/AdminPanel/components/Hotels/HotelEditPage.tsx';
-import RestaurantEditPage from './pages/AdminPanel/components/Restaurants/RestaurantEditPage.tsx';
-import HotelsListEditPage from './pages/AdminPanel/components/Hotels/HotelsListEditPage.tsx';
-import RestaurantsListEditPage from './pages/AdminPanel/components/Restaurants/RestaurantsListEditPage.tsx';
 
 dayjs.locale('ru');
 dayjs.extend(customParseFormat);
@@ -37,6 +25,38 @@ const SingleRestaurant = React.lazy(
 );
 const RestaurantsList = React.lazy(
   () => import('./pages/Restaurants/RestaurantsList/RestaurantsList.tsx'),
+);
+const RestaurantsListEditPage = React.lazy(
+  () => import('./pages/AdminPanel/components/Restaurants/RestaurantsListEditPage.tsx'),
+);
+const HotelsListEditPage = React.lazy(
+  () => import('./pages/AdminPanel/components/Hotels/HotelsListEditPage.tsx'),
+);
+const RestaurantEditPage = React.lazy(
+  () => import('./pages/AdminPanel/components/Restaurants/RestaurantEditPage.tsx'),
+);
+const HotelEditPage = React.lazy(
+  () => import('./pages/AdminPanel/components/Hotels/HotelEditPage.tsx'),
+);
+const ReferencesSection = React.lazy(
+  () => import('./pages/AdminPanel/components/ReferencesSection.tsx'),
+);
+const InfoSection = React.lazy(() => import('./pages/AdminPanel/components/InfoSection.tsx'));
+const RestaurantsListSection = React.lazy(
+  () => import('./pages/AdminPanel/components/Restaurants/RestaurantsListSection.tsx'),
+);
+const RestaurantsCollectSection = React.lazy(
+  () => import('./pages/AdminPanel/components/Restaurants/RestarauntsCollectSection.tsx'),
+);
+const HotelsListSection = React.lazy(
+  () => import('./pages/AdminPanel/components/Hotels/HotelsListSection.tsx'),
+);
+const HotelsCollectSection = React.lazy(
+  () => import('./pages/AdminPanel/components/Hotels/HotelsCollectSection.tsx'),
+);
+const AdminLayout = React.lazy(() => import('./pages/AdminPanel/AdminLayout.tsx'));
+const ProgramsSection = React.lazy(
+  () => import('./pages/AdminPanel/components/ProgramsSection.tsx'),
 );
 
 const App = () => {
@@ -64,9 +84,11 @@ const App = () => {
         <Route path="/hotels/:id" element={<HotelsList />} />
         <Route path="/restaurant/:name" element={<SingleRestaurant />} />
         <Route path="/restaurants/:id" element={<RestaurantsList />} />
+        <Route path="info" element={<InfoSection />} />
+        <Route path="references" element={<ReferencesSection />} />
+
         <Route path="/ulyseadmin" element={<AdminLogin />} />
         <Route path="/ulyseadmin/register" element={<AdminRegister />} />
-
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<ProgramsSection />} />
           <Route path="hotels">
@@ -81,9 +103,8 @@ const App = () => {
             <Route path="restaurant/edit/:id" element={<RestaurantEditPage />} />
             <Route path="list/edit/:id" element={<RestaurantsListEditPage />} />
           </Route>
-          <Route path="info" element={<InfoSection />} />
-          <Route path="references" element={<ReferencesSection />} />
         </Route>
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>

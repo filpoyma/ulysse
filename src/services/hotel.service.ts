@@ -2,8 +2,6 @@ import HotelApi from '../api/hotel.api';
 import { store } from '../store';
 import { hotelActions } from '../store/reducers/hotel';
 import { IHotel, IHotelCreate, TGalleryType } from '../types/hotel.types.ts';
-import HotelsListApi from '../api/hotelsList.api.ts';
-import { hotelsListService } from './hotelsList.service.ts';
 
 export const hotelService = {
   async getAll() {

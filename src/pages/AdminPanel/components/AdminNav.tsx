@@ -134,14 +134,14 @@ const AdminNav: FC<AdminNavProps> = ({ handleLogout }) => {
       </div>
 
       <NavLink
-        to="/admin/info"
+        to="/info"
         className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
         onClick={handleCloseDropdowns}>
         Info
       </NavLink>
 
       <NavLink
-        to="/admin/references"
+        to="/references"
         className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
         onClick={handleCloseDropdowns}>
         References

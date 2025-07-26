@@ -11,6 +11,8 @@ import { authActions } from './store/reducers/auth';
 import { useDispatch } from 'react-redux';
 import { countriesService } from './services/countries.service.ts';
 import { getErrorMessage } from './utils/helpers.ts';
+import Info from './pages/Info/Info.tsx';
+import References from './pages/References/References.tsx';
 
 dayjs.locale('ru');
 dayjs.extend(customParseFormat);
@@ -84,8 +86,8 @@ const App = () => {
         <Route path="/hotels/:id" element={<HotelsList />} />
         <Route path="/restaurant/:name" element={<SingleRestaurant />} />
         <Route path="/restaurants/:id" element={<RestaurantsList />} />
-        <Route path="info" element={<InfoSection />} />
-        <Route path="references" element={<ReferencesSection />} />
+        <Route path="/info/:name" element={<Info />} />
+        <Route path="/references/:name" element={<References />} />
 
         <Route path="/ulyseadmin" element={<AdminLogin />} />
         <Route path="/ulyseadmin/register" element={<AdminRegister />} />
@@ -103,6 +105,8 @@ const App = () => {
             <Route path="restaurant/edit/:id" element={<RestaurantEditPage />} />
             <Route path="list/edit/:id" element={<RestaurantsListEditPage />} />
           </Route>
+          <Route path="info" element={<InfoSection />} />
+          <Route path="references" element={<ReferencesSection />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

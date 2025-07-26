@@ -1,7 +1,8 @@
-import React from 'react';
+import { useParams } from 'react-router-dom';
 
-const InfoSection = (props) => {
-  return <div>InfoSection</div>;
+const InfoSection = () => {
+  const { name } = useParams();
+  return <div>AdminInfoSection {name}</div>;
 };
 
 export default InfoSection;

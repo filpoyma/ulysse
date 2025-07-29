@@ -275,14 +275,7 @@ const RestaurantEditPage = () => {
                 onChange={(e) => handleInputChange('link', e.target.value)}
               />
             </div>
-            <div className={styles.field}>
-              <label>Менеджер</label>
-              <input
-                type="text"
-                value={restaurant.manager}
-                onChange={(e) => handleInputChange('manager', e.target.value)}
-              />
-            </div>
+     
             <div className={styles.field}>
               <label>Количество звёзд</label>
               <input

@@ -9,6 +9,7 @@ export interface IHotel {
   region: string;
   link: string;
   address: string;
+  manager: string;
   mainImage: IUploadedImage;
   coordinates: [number, number];
   hotelInfo: {

@@ -78,17 +78,18 @@ const RestarauntsCollectTable: FC<Props> = ({
               Регион
               <span className={styles.sortArrow}>{renderSortIcon('region')}</span>
             </th>
-            <th
-              onClick={() => onSort && onSort('manager')}
-              style={{ cursor: 'pointer', minWidth: 100 }}>
-              Менеджер
-              <span className={styles.sortArrow}>{renderSortIcon('manager')}</span>
-            </th>
+           
             <th
               onClick={() => onSort && onSort('stars')}
               style={{ cursor: 'pointer', minWidth: 80 }}>
               Звёзды
               <span className={styles.sortArrow}>{renderSortIcon('stars')}</span>
+            </th>
+            <th
+              onClick={() => onSort && onSort('manager')}
+              style={{ cursor: 'pointer', minWidth: 100 }}>
+              Менеджер
+              <span className={styles.sortArrow}>{renderSortIcon('manager')}</span>
             </th>
             <th>Действия</th>
           </tr>
@@ -190,8 +191,9 @@ const RestarauntsCollectTable: FC<Props> = ({
               <td>{restaraunt.country}</td>
               <td>{restaraunt.city}</td>
               <td>{restaraunt.region}</td>
-              <td>{restaraunt.manager}</td>
               <td>{restaraunt.stars}</td>
+              <td>{restaraunt.manager}</td>
+              
               <td>
                 <div className={styles.actions}>
                   <button

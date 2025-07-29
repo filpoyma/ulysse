@@ -6,7 +6,7 @@ import InfoCircle from '../../../assets/icons/infoInCircle.svg';
 import { IHotel } from '../../../types/hotel.types.ts';
 import { getImagePath } from '../../../utils/helpers.ts';
 const SingleHotelComponent = ({ hotel }: { hotel: IHotel }) => {
-  // Подготовка галереи для react-image-gallery
+
   const hotelGalleryImages =
     hotel.hotelInfo?.gallery?.map((img) => ({
       original: getImagePath(img.path),

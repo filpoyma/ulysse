@@ -31,3 +31,9 @@ export const selectRestListMainImage = (state: RootState) =>
   state.restaurantsData.restaurantsListFull?.titleImage;
 export const selectFullDataListRestaurants = (state: RootState) =>
   state.restaurantsData.restaurantsListFull?.restaurants || [];
+
+export const selectInfos = (state: RootState) => state.infoData.infos;
+export const selectInfo = (state: RootState) => state.infoData.info;
+
+export const selectReferences = (state: RootState) => state.referencesData.references;
+export const selectReference = (state: RootState) => state.referencesData.currentReference;

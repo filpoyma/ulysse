@@ -4,6 +4,8 @@ import { travelProgramReducer } from './reducers/travelProgram';
 import { hotelReducer } from './reducers/hotel';
 import { restaurantReducer } from './reducers/restaurant';
 import { countriesReducer } from './reducers/countries';
+import { infoReducer } from './reducers/info';
+import { referencesReducer } from './reducers/references';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -11,6 +13,8 @@ export const store = configureStore({
     hotelsData: hotelReducer,
     restaurantsData: restaurantReducer,
     countries: countriesReducer,
+    infoData: infoReducer,
+    referencesData: referencesReducer,
   },
 });
 

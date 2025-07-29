@@ -3,30 +3,27 @@ import ChevronDown from '../../../assets/icons/chevronDown.svg';
 import Edit from '../../../assets/icons/edit.svg';
 import Trash2 from '../../../assets/icons/trash2.svg';
 import ChevronUp from '../../../assets/icons/chevronUp.svg';
-import { ITravelProgramResponse } from '../../../types/travelProgram.types.ts';
+import { IReferencesResponse } from '../../../types/references.types';
 import styles from '../adminLayout.module.css';
-import dayjs from 'dayjs';
 
-interface ProgramsTableProps {
-  programs: ITravelProgramResponse[];
-  onProgramClick: (id: string) => void;
-  onProgramEdit: (id: string) => void;
-  onDeleteProgram: (id: string) => void;
-  sortField?: keyof ITravelProgramResponse;
+interface ReferencesTableProps {
+  references: IReferencesResponse[];
+  onReferenceEdit: (id: string) => void;
+  onDeleteReference: (id: string) => void;
+  sortField?: keyof IReferencesResponse;
   sortOrder?: 'asc' | 'desc';
-  onSort?: (field: keyof ITravelProgramResponse) => void;
+  onSort?: (field: keyof IReferencesResponse) => void;
 }
 
-const ProgramsTable: FC<ProgramsTableProps> = ({
-  programs,
-  onProgramClick,
-  onDeleteProgram,
-  onProgramEdit,
+const ReferencesTable: FC<ReferencesTableProps> = ({
+  references,
+  onReferenceEdit,
+  onDeleteReference,
   sortField,
   sortOrder,
   onSort,
 }) => {
-  const renderSortIcon = (field: keyof ITravelProgramResponse) => {
+  const renderSortIcon = (field: keyof IReferencesResponse) => {
     if (!sortField || sortField !== field) return null;
     return sortOrder === 'asc' ? (
       <ChevronUp height={16} width={16} className={styles.sortArrow} />
@@ -43,15 +40,9 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
             <th
               onClick={() => onSort && onSort('name')}
               style={{ cursor: 'pointer', minWidth: 120 }}>
-              Имя программы
+              Название
               <span className={styles.sortArrow}>{renderSortIcon('name')}</span>
             </th>
-            {/* <th
-              onClick={() => onSort && onSort('createdAt')}
-              style={{ cursor: 'pointer', minWidth: 120 }}>
-              Дата создания
-              <span className={styles.sortArrow}>{renderSortIcon('createdAt')}</span>
-            </th> */}
             <th
               onClick={() => onSort && onSort('manager')}
               style={{ cursor: 'pointer', minWidth: 120 }}>
@@ -68,29 +59,24 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {programs.map((program) => (
-            <tr key={program._id}>
-              <td>
-                <span
-                  className={styles.programName}
-                  onClick={() => onProgramClick(program.name_eng)}>
-                  {program.name}
-                </span>
+          {references.map((reference) => (
+            <tr key={reference._id}>
+              <td style={{ cursor: 'pointer' }} onClick={() => onReferenceEdit(reference.name_eng)}>
+                {reference.name}
               </td>
-              {/* <td>{new Date(program.createdAt).toLocaleString()}</td> */}
-              <td>{program.manager}</td>
-              <td>{dayjs(program.updatedAt).format('DD.MM.YYYY')}</td>
+              <td>{reference.manager}</td>
+              <td>{new Date(reference.updatedAt).toLocaleString()}</td>
               <td>
                 <div className={styles.actions}>
                   <button
                     className={styles.actionButton}
-                    onClick={() => onProgramEdit(program._id)}
+                    onClick={() => onReferenceEdit(reference.name_eng)}
                     title="Редактировать">
                     <Edit height={16} width={16} />
                   </button>
                   <button
                     className={`${styles.actionButton} ${styles.deleteButton}`}
-                    onClick={() => onDeleteProgram(program._id)}
+                    onClick={() => onDeleteReference(reference._id)}
                     title="Удалить">
                     <Trash2 height={16} width={16} />
                   </button>
@@ -104,4 +90,4 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
   );
 };
 
-export default ProgramsTable;
+export default ReferencesTable; 

@@ -93,6 +93,11 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
                 style={{ cursor: 'pointer', minWidth: 120 }}>
                 Дата обновления
                 <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
+              </th><th
+                onClick={() => onSort && onSort('manager')}
+                style={{ cursor: 'pointer', minWidth: 120 }}>
+                Менеджер
+                <span className={styles.sortArrow}>{renderSortIcon('manager')}</span>
               </th>
               <th>Действия</th>
             </tr>
@@ -136,6 +141,7 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
                   />
                 </td>
                 <td colSpan={1}></td>
+                <td colSpan={1}></td>
                 <td>
                   <div className={styles.actions}>
                     <button
@@ -165,6 +171,7 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
                 <td>{hotel.city}</td>
                 <td>{hotel.region}</td>
                 <td>{hotel.updatedAt ? dayjs(hotel.updatedAt).format('DD.MM.YYYY') : ''}</td>
+                <td>{hotel.manager}</td>
                 <td>
                   <div className={styles.actions}>
                     <button

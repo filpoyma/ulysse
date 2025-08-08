@@ -7,6 +7,7 @@ import styles from '../../adminLayout.module.css';
 const HotelsListSection: FC = () => {
   const {
     hotelsLists,
+    currentManager,
     isCreatingList,
     newList,
     sortField,
@@ -21,6 +22,7 @@ const HotelsListSection: FC = () => {
     handleSaveNewList,
     handleCancelNewList,
     handleNavigateToListPage,
+    handleCopyList,
     fetchHotelsLists,
   } = useHotelsList();
 
@@ -36,6 +38,7 @@ const HotelsListSection: FC = () => {
       ) : (
         <HotelsListTable
           hotelsLists={hotelsLists}
+          currentManager={currentManager}
           onDeleteList={handleDeleteList}
           isCreatingList={isCreatingList}
           newList={newList}
@@ -48,6 +51,7 @@ const HotelsListSection: FC = () => {
           onSort={handleSortLists}
           handleCreateListClick={handleCreateListClick}
           handleNavigateToListPage={handleNavigateToListPage}
+          handleCopyList={handleCopyList}
         />
       )}
     </>

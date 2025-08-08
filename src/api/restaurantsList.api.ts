@@ -47,6 +47,11 @@ const restaurantsListApi = {
     return api.post(this.getUrl(), { json: data }).json();
   },
 
+  // Копировать список ресторанов
+  copy(id: string): Promise<{ data: IRestaurantsList }> {
+    return api.post(this.getUrl('copy'), { json: { id } }).json();
+  },
+
   // Обновить список ресторанов
   update(id: string, data: IUpdateRestaurantsListData): Promise<{ data: IRestaurantsList }> {
     return api.patch(this.getUrl(id), { json: data }).json();

@@ -37,6 +37,12 @@ export const hotelsListService = {
     return hotelsListApi.create(data);
   },
 
+  // Копировать список отелей
+  async copy(id: string) {
+    const resp = await hotelsListApi.copy(id);
+    store.dispatch(hotelActions.addHotelsList(resp.data));
+  },
+
   // Обновить список отелей
   async update(id: string, data: IUpdateHotelsListData) {
     const resp = await hotelsListApi.update(id, data);

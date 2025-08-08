@@ -12,7 +12,6 @@ import HotelsMapPage from './HotelsMapPage.tsx';
 const HotelsList = () => {
   const { id } = useParams();
   const hotels = useSelector(selectHotelsListFull);
-  const hotelsListFull = useSelector(selectHotelsListFull);
   const [currentSection, setCurrentSection] = useState('hero');
   const containerRef = useRef<HTMLDivElement>(null);
   const restaurantRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -24,7 +23,7 @@ const HotelsList = () => {
   }, [id]);
 
   useEffect(() => {
-    if (!hotelsListFull) return;
+    if (!hotels) return;
     const observerOptions = {
       root: containerRef.current,
       rootMargin: '0px 0px -60% 0px', // Срабатывает, когда верхняя часть ресторана входит в верхнюю треть контейнера
@@ -47,7 +46,7 @@ const HotelsList = () => {
     return () => {
       observer.disconnect();
     };
-  }, [hotelsListFull]);
+  }, [hotels]);
 
   return (
     <div className={styles.container} ref={containerRef}>

@@ -7,6 +7,7 @@ import styles from '../../adminLayout.module.css';
 const RestaurantsListSection: FC = () => {
   const {
     restaurantsLists,
+    currentManager,
     isCreatingList,
     newList,
     sortField,
@@ -21,16 +22,13 @@ const RestaurantsListSection: FC = () => {
     handleSaveNewList,
     handleCancelNewList,
     handleNavigateToListPage,
+    handleCopyList,
     fetchRestaurantsLists,
   } = useRestaurantsList();
 
   useEffect(() => {
     if (!restaurantsLists.length) fetchRestaurantsLists();
   }, []);
-
-  const handleEditSuccess = () => {
-    fetchRestaurantsLists();
-  };
 
   return (
     <>
@@ -40,6 +38,7 @@ const RestaurantsListSection: FC = () => {
       ) : (
         <RestaurantsListTable
           restaurantsLists={restaurantsLists}
+          currentManager={currentManager}
           onDeleteList={handleDeleteList}
           isCreatingList={isCreatingList}
           newList={newList}
@@ -52,6 +51,7 @@ const RestaurantsListSection: FC = () => {
           onSort={handleSortLists}
           handleCreateListClick={handleCreateListClick}
           handleNavigateToListPage={handleNavigateToListPage}
+          handleCopyList={handleCopyList}
         />
       )}
     </>

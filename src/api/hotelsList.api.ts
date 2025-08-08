@@ -50,6 +50,11 @@ const hotelsListApi = {
     return api.post(this.getUrl(), { json: data }).json();
   },
 
+  // копировать список отелей
+  copy(id: string): Promise<{ data: IHotelsList }> {
+    return api.post(this.getUrl('copy'), { json: { id } }).json();
+  },
+
   // Обновить список отелей
   update(id: string, data: IUpdateHotelsListData): Promise<{ data: IHotelsList }> {
     return api.patch(this.getUrl(id), { json: data }).json();

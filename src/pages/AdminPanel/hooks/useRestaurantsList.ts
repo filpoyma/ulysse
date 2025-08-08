@@ -4,24 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import { ICreateRestaurantsListData, IRestaurantsList } from '../../../types/restaurantsList.types';
 import { useSelector } from 'react-redux';
-import { selectRestaurantsList } from '../../../store/selectors.ts';
+import { selectAdminEmail, selectRestaurantsList } from '../../../store/selectors.ts';
 
 export const useRestaurantsList = () => {
   const navigate = useNavigate();
 
   const restaurantsLists = useSelector(selectRestaurantsList);
+  const currentManager = useSelector(selectAdminEmail) || '';
   const [isCreatingList, setIsCreatingList] = useState(false);
   const [newList, setNewList] = useState<ICreateRestaurantsListData>({
     name: '',
     description: '',
   });
-  const [sortField, setSortField] = useState<keyof IRestaurantsList>('name');
+  const [sortField, setSortField] = useState<keyof IRestaurantsList>('manager');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   const sortedRestaurantsLists = useMemo(() => {
+    if (sortField === 'manager') return restaurantsLists;
     const arr = [...restaurantsLists];
     arr.sort((a, b) => {
       const aValue = a[sortField] || '';
@@ -61,7 +63,7 @@ export const useRestaurantsList = () => {
       setError(null);
       await restaurantsListService.delete(id);
       await fetchRestaurantsLists();
-    } catch (err: any) {
+    } catch (err) {
       setError('Ошибка удаления списка: ' + getErrorMessage(err));
       console.error('Error deleting list:', err);
     }
@@ -94,6 +96,16 @@ export const useRestaurantsList = () => {
     }
   };
 
+  const handleCopyList = async (id: string) => {
+    try {
+      setError(null);
+      await restaurantsListService.copy(id);
+    } catch (err) {
+      setError(`Ошибка при копирвании списка ${getErrorMessage(err)}`);
+      console.error('Error copy list:', err);
+    }
+  };
+
   const handleCancelNewList = () => {
     setIsCreatingList(false);
     setError(null);
@@ -106,6 +118,7 @@ export const useRestaurantsList = () => {
 
   return {
     restaurantsLists: sortedRestaurantsLists,
+    currentManager,
     isCreatingList,
     newList,
     sortField,
@@ -121,5 +134,6 @@ export const useRestaurantsList = () => {
     handleCancelNewList,
     handleNavigateToListPage,
     fetchRestaurantsLists,
+    handleCopyList,
   };
 };

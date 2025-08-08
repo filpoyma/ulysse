@@ -2,6 +2,7 @@ export interface IRestaurantsList {
   _id: string;
   name: string;
   description: string;
+  manager: string;
   restaurants: string[];
   isActive: boolean;
   sortOrder: number;
@@ -23,6 +24,7 @@ export interface IRestaurantsListWithRestaurants extends Omit<IRestaurantsList, 
     _id: string;
     name: string;
     country: string;
+    manager: string;
     city: string;
     region: string;
     titleImage: {
@@ -48,4 +50,4 @@ export interface IUpdateRestaurantsListData {
   isActive?: boolean;
   sortOrder?: number;
   titleImage?: string;
-} 
+}

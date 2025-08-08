@@ -3,6 +3,7 @@ import Trash2 from '../../../../assets/icons/trash2.svg';
 import Edit from '../../../../assets/icons/edit.svg';
 import Check from '../../../../assets/icons/check.svg';
 import X from '../../../../assets/icons/x.svg';
+import Copy from '../../../../assets/icons/copy.svg';
 import ChevronDown from '../../../../assets/icons/chevronDown.svg';
 import ChevronUp from '../../../../assets/icons/chevronUp.svg';
 import styles from '../../adminLayout.module.css';
@@ -13,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface RestaurantsListTableProps {
   restaurantsLists: IRestaurantsList[];
+  currentManager: string;
   onDeleteList: (id: string) => void;
   isCreatingList?: boolean;
   newList?: Partial<IRestaurantsList>;
@@ -20,6 +22,7 @@ interface RestaurantsListTableProps {
   onSaveNewList?: () => void;
   handleCreateListClick: () => void;
   handleNavigateToListPage: (id: string) => void;
+  handleCopyList: (id: string) => void;
   onCancelNewList?: () => void;
   nameInputRef?: RefObject<HTMLInputElement>;
   sortField?: keyof IRestaurantsList;
@@ -29,6 +32,7 @@ interface RestaurantsListTableProps {
 
 const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
   restaurantsLists,
+  currentManager,
   onDeleteList,
   isCreatingList = false,
   newList = {},
@@ -41,6 +45,7 @@ const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
   onSort,
   handleCreateListClick,
   handleNavigateToListPage,
+  handleCopyList,
 }) => {
   const navigate = useNavigate();
   const renderSortIcon = (field: keyof IRestaurantsList) => {
@@ -53,7 +58,6 @@ const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
   };
 
   const handleEditListPage = (id: string) => navigate(`/admin/restaurants/list/edit/${id}`);
-
   return (
     <>
       <SectionHeader
@@ -78,17 +82,18 @@ const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
                 <span className={styles.sortArrow}>{renderSortIcon('description')}</span>
               </th>
               <th style={{ minWidth: 80 }}>Количество ресторанов</th>
-              <th
-                onClick={() => onSort && onSort('isActive')}
-                style={{ cursor: 'pointer', minWidth: 100 }}>
-                Статус
-                <span className={styles.sortArrow}>{renderSortIcon('isActive')}</span>
-              </th>
+
               <th
                 onClick={() => onSort && onSort('updatedAt')}
                 style={{ cursor: 'pointer', minWidth: 120 }}>
                 Дата обновления
                 <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
+              </th>
+              <th
+                onClick={() => onSort && onSort('manager')}
+                style={{ cursor: 'pointer', minWidth: 120 }}>
+                Менеджер
+                <span className={styles.sortArrow}>{renderSortIcon('manager')}</span>
               </th>
               <th>Действия</th>
             </tr>
@@ -118,10 +123,8 @@ const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
                   />
                 </td>
                 <td>0</td>
-                <td>
-                  <span className={styles.statusActive}>Активен</span>
-                </td>
                 <td>{dayjs().format('DD.MM.YYYY')}</td>
+                <td>{currentManager}</td>
                 <td>
                   <div className={styles.actions}>
                     <button
@@ -149,26 +152,33 @@ const RestaurantsListTable: FC<RestaurantsListTableProps> = ({
                 </td>
                 <td>{list.description || '-'}</td>
                 <td>{list.metadata?.totalRestaurants || list.restaurants?.length || 0}</td>
-                <td>
-                  <span className={list.isActive ? styles.statusActive : styles.statusInactive}>
-                    {list.isActive ? 'Активен' : 'Неактивен'}
-                  </span>
-                </td>
                 <td>{list.updatedAt ? dayjs(list.updatedAt).format('DD.MM.YYYY') : ''}</td>
+                <td>{list.manager}</td>
                 <td>
                   <div className={styles.actions}>
-                    <button
-                      className={styles.actionButton}
-                      onClick={() => list._id && handleEditListPage(list._id)}
-                      title="Редактировать список">
-                      <Edit />
-                    </button>
-                    <button
-                      className={`${styles.actionButton} ${styles.deleteButton}`}
-                      onClick={() => list._id && onDeleteList(list._id)}
-                      title="Удалить">
-                      <Trash2 />
-                    </button>
+                    {currentManager === list.manager ? (
+                      <>
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => list._id && handleEditListPage(list._id)}
+                          title="Редактировать список">
+                          <Edit />
+                        </button>
+                        <button
+                          className={`${styles.actionButton} ${styles.deleteButton}`}
+                          onClick={() => list._id && onDeleteList(list._id)}
+                          title="Удалить">
+                          <Trash2 />
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => list._id && handleCopyList(list._id)}
+                        title="Копировать список">
+                        <Copy />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>

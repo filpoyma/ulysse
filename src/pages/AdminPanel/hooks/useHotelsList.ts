@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import { ICreateHotelsListData, IHotelsList } from '../../../types/hotelsList.types.ts';
 import { useSelector } from 'react-redux';
-import { selectHotelsList } from '../../../store/selectors.ts';
+import { selectAdminEmail, selectHotelsList } from '../../../store/selectors.ts';
 
 export const useHotelsList = () => {
   const navigate = useNavigate();
+  const currentManager = useSelector(selectAdminEmail) || '';
 
   const hotelsLists = useSelector(selectHotelsList);
   const [isCreatingList, setIsCreatingList] = useState(false);
@@ -136,6 +137,16 @@ export const useHotelsList = () => {
     }
   };
 
+  const handleCopyList = async (id: string) => {
+    try {
+      setError(null);
+      await hotelsListService.copy(id);
+    } catch (err) {
+      setError(`Ошибка при копирвании списка ${getErrorMessage(err)}`);
+      console.error('Error copy list:', err);
+    }
+  };
+
   const handleCancelNewList = () => {
     setIsCreatingList(false);
     setError(null);
@@ -148,6 +159,7 @@ export const useHotelsList = () => {
 
   return {
     hotelsLists: sortedHotelsLists,
+    currentManager,
     isCreatingList,
     newList,
     editingListId,
@@ -168,6 +180,7 @@ export const useHotelsList = () => {
     handleSaveNewList,
     handleCancelNewList,
     handleNavigateToListPage,
+    handleCopyList,
     fetchHotelsLists,
   };
 };

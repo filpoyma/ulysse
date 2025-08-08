@@ -37,6 +37,9 @@ const { reducer: restaurantReducer, actions: restaurantActions } = createSlice({
         rest._id === action.payload._id ? action.payload : rest,
       );
     },
+    addRestaurantList(state, action: PayloadAction<IRestaurantsList>) {
+      state.restaurantsList.push(action.payload);
+    },
     setRestaurant(state, action: PayloadAction<IRestaurant | null>) {
       state.restaurant = action.payload;
     },

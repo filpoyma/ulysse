@@ -2,6 +2,7 @@ export interface IHotelsList {
   _id: string;
   name: string;
   description: string;
+  manager: string;
   hotels: string[];
   isActive: boolean;
   sortOrder: number;
@@ -22,6 +23,7 @@ export interface IHotelsListWithHotels extends Omit<IHotelsList, 'hotels'> {
   hotels: Array<{
     _id: string;
     name: string;
+    manager: string;
     country: string;
     region: string;
     mainImage: {

@@ -27,6 +27,11 @@ export const restaurantsListService = {
     return restaurantsListApi.create(data);
   },
 
+  async copy(id: string) {
+    const resp = await restaurantsListApi.copy(id);
+    if (resp.data) store.dispatch(restaurantActions.addRestaurantList(resp.data));
+  },
+
   async update(id: string, data: IUpdateRestaurantsListData) {
     const res = await restaurantsListApi.update(id, data);
     if (res.data) store.dispatch(restaurantActions.updateRestaurantList(res.data));

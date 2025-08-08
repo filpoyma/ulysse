@@ -37,6 +37,9 @@ const { reducer: hotelReducer, actions: hotelActions } = createSlice({
         hotel._id === action.payload._id ? action.payload : hotel,
       );
     },
+    addHotelsList(state, action: PayloadAction<IHotelsList>) {
+      state.hotelsList.push(action.payload);
+    },
     updateHotel(state, action: PayloadAction<IHotel>) {
       state.hotels = state.hotels.map((hotel) =>
         hotel._id === action.payload._id ? action.payload : hotel,

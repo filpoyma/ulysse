@@ -18,7 +18,6 @@ const SingleRestaurantComponent = ({ restaurant }: { restaurant: IRestaurant }) 
             <ImageGallery
               items={restaurant.gallery.map((img) => ({
                 original: getImagePath(img.path),
-
                 originalAlt: restaurant.name,
               }))}
               showFullscreenButton={false}

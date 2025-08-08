@@ -7,6 +7,7 @@ const baseApi = ky.create({
   prefixUrl: API_URL,
   timeout: 15000,
   credentials: 'include',
+  // credentials: 'same-origin',
 });
 
 const tokenInterceptor = (request: Request) => {

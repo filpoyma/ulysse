@@ -1,10 +1,11 @@
-import { useCallback, useState, useRef, useMemo } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { restaurantService } from '../../../services/restaurant.service';
 import { IRestaurant } from '../../../types/restaurant.types';
 import { useSelector } from 'react-redux';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import { selectAdminEmail, selectRestaurants } from '../../../store/selectors.ts';
 import { useNavigate } from 'react-router-dom';
+import useSortList from './useSort.ts';
 
 const emptyRestaurant: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'> = {
   name: '',
@@ -27,7 +28,7 @@ const emptyRestaurant: Omit<IRestaurant, '_id' | 'createdAt' | 'updatedAt'> = {
 export const useRestarauntsCollect = () => {
   const navigate = useNavigate();
   const restaraunts = useSelector(selectRestaurants);
-  const currentUser = useSelector(selectAdminEmail) || '';
+  const currentManager = useSelector(selectAdminEmail) || '';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isCreatingRestaraunt, setIsCreatingRestaraunt] = useState(false);
@@ -36,17 +37,7 @@ export const useRestarauntsCollect = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const nameInputRef = useRef<HTMLInputElement>(null);
 
-  const sortedRestaraunts = useMemo(() => {
-    const arr = [...restaraunts];
-    arr.sort((a, b) => {
-      const aValue = a[sortField] || '';
-      const bValue = b[sortField] || '';
-      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    });
-    return arr;
-  }, [restaraunts, sortField, sortOrder]);
+  const sortedRestaraunts = useSortList(restaraunts, sortField, sortOrder, currentManager);
 
   const handleSortRestaraunts = (field: keyof IRestaurant) => {
     if (sortField === field) {
@@ -132,7 +123,7 @@ export const useRestarauntsCollect = () => {
 
   return {
     restaraunts: sortedRestaraunts,
-    currentUser,
+    currentManager,
     isCreatingRestaraunt,
     newRestaraunt,
     sortField,

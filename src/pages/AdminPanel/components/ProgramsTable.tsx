@@ -2,29 +2,52 @@ import { FC } from 'react';
 import ChevronDown from '../../../assets/icons/chevronDown.svg';
 import Edit from '../../../assets/icons/edit.svg';
 import Trash2 from '../../../assets/icons/trash2.svg';
+import Copy from '../../../assets/icons/copy.svg';
 import ChevronUp from '../../../assets/icons/chevronUp.svg';
+import Check from '../../../assets/icons/check.svg';
+import X from '../../../assets/icons/x.svg';
 import { ITravelProgramResponse } from '../../../types/travelProgram.types.ts';
 import styles from '../adminLayout.module.css';
 import dayjs from 'dayjs';
 
 interface ProgramsTableProps {
   programs: ITravelProgramResponse[];
+  currentManager: string;
   onProgramClick: (id: string) => void;
-  onProgramEdit: (id: string) => void;
   onDeleteProgram: (id: string) => void;
+  onProgramCopy: (id: string) => void;
   sortField?: keyof ITravelProgramResponse;
   sortOrder?: 'asc' | 'desc';
   onSort?: (field: keyof ITravelProgramResponse) => void;
+  // Пропсы для редактирования
+  editingId: string | null;
+  editingName: string;
+  isSaving: boolean;
+  onEditClick: (program: ITravelProgramResponse) => void;
+  onSave: () => void;
+  onCancel: () => void;
+  onKeyPress: (e: React.KeyboardEvent) => void;
+  onEditingNameChange: (name: string) => void;
 }
 
 const ProgramsTable: FC<ProgramsTableProps> = ({
   programs,
+  currentManager,
   onProgramClick,
   onDeleteProgram,
-  onProgramEdit,
   sortField,
   sortOrder,
   onSort,
+  onProgramCopy,
+  // Пропсы для редактирования
+  editingId,
+  editingName,
+  isSaving,
+  onEditClick,
+  onSave,
+  onCancel,
+  onKeyPress,
+  onEditingNameChange,
 }) => {
   const renderSortIcon = (field: keyof ITravelProgramResponse) => {
     if (!sortField || sortField !== field) return null;
@@ -71,29 +94,75 @@ const ProgramsTable: FC<ProgramsTableProps> = ({
           {programs.map((program) => (
             <tr key={program._id}>
               <td>
-                <span
-                  className={styles.programName}
-                  onClick={() => onProgramClick(program.name_eng)}>
-                  {program.name}
-                </span>
+                {editingId === program._id ? (
+                  <div className={styles.editNameContainer}>
+                    <input
+                      type="text"
+                      value={editingName}
+                      onChange={(e) => onEditingNameChange(e.target.value)}
+                      onKeyDown={onKeyPress}
+                      className={styles.editNameInput}
+                      disabled={isSaving}
+                      autoFocus
+                    />
+                  </div>
+                ) : (
+                  <span
+                    className={styles.programName}
+                    onClick={() => onProgramClick(program.name_eng)}>
+                    {program.name}
+                  </span>
+                )}
               </td>
               {/* <td>{new Date(program.createdAt).toLocaleString()}</td> */}
               <td>{program.manager}</td>
               <td>{dayjs(program.updatedAt).format('DD.MM.YYYY')}</td>
               <td>
                 <div className={styles.actions}>
-                  <button
-                    className={styles.actionButton}
-                    onClick={() => onProgramEdit(program._id)}
-                    title="Редактировать">
-                    <Edit height={16} width={16} />
-                  </button>
-                  <button
-                    className={`${styles.actionButton} ${styles.deleteButton}`}
-                    onClick={() => onDeleteProgram(program._id)}
-                    title="Удалить">
-                    <Trash2 height={16} width={16} />
-                  </button>
+                  {program.manager === currentManager ? (
+                    <>
+                      {editingId === program._id ? (
+                        <>
+                          <button
+                            onClick={onSave}
+                            disabled={isSaving}
+                            className={styles.actionButton}
+                            title="Сохранить">
+                            <Check height={16} width={16} />
+                          </button>
+                          <button
+                            onClick={onCancel}
+                            disabled={isSaving}
+                            className={`${styles.actionButton} ${styles.deleteButton}`}
+                            title="Отмена">
+                            <X height={16} width={16} />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            className={styles.actionButton}
+                            onClick={() => onEditClick(program)}
+                            title="Редактировать">
+                            <Edit height={16} width={16} />
+                          </button>
+                          <button
+                            className={`${styles.actionButton} ${styles.deleteButton}`}
+                            onClick={() => onDeleteProgram(program._id)}
+                            title="Удалить">
+                            <Trash2 height={16} width={16} />
+                          </button>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <button
+                      className={styles.actionButton}
+                      onClick={() => onProgramCopy(program._id)}
+                      title="Копировать программу">
+                      <Copy height={16} width={16} />
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>

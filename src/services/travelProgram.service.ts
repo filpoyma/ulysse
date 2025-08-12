@@ -12,6 +12,10 @@ export const travelProgramService = {
     const resp = await travelProgramApi.createTemplate(name);
     if (resp?.data) store.dispatch(travelProgramActions.addProgram(resp.data));
   },
+  async copy(id: string) {
+    const resp = await travelProgramApi.copy(id);
+    if (resp?.data) store.dispatch(travelProgramActions.addProgram(resp.data));
+  },
   async getById(id: string) {
     const res = await travelProgramApi.getById(id);
     if (res?.data) store.dispatch(travelProgramActions.setProgram(res.data));
@@ -221,5 +225,26 @@ export const travelProgramService = {
         );
       }
     }
+  },
+
+  async updateProgramName(programId: string, name: string) {
+    const res = await travelProgramApi.updateProgramName(programId, name);
+    if (res?.data) {
+      const { name_eng } = res.data;
+      // Обновляем программу в списке программ
+      store.dispatch(
+        travelProgramActions.updateProgramInList({
+          id: programId,
+          name,
+          name_eng,
+        }),
+      );
+      // Если это текущая открытая программа, обновляем и её
+      const currentProgram = store.getState().travelProgram.program;
+      if (currentProgram && currentProgram._id === programId) {
+        store.dispatch(travelProgramActions.updateProgram({ name, name_eng }));
+      }
+    }
+    return res;
   },
 };

@@ -1,10 +1,11 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef } from 'react';
 import { hotelsListService } from '../../../services/hotelsList.service';
 import { useNavigate } from 'react-router-dom';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import { ICreateHotelsListData, IHotelsList } from '../../../types/hotelsList.types.ts';
 import { useSelector } from 'react-redux';
 import { selectAdminEmail, selectHotelsList } from '../../../store/selectors.ts';
+import useSortList from './useSort.ts';
 
 export const useHotelsList = () => {
   const navigate = useNavigate();
@@ -27,17 +28,7 @@ export const useHotelsList = () => {
   const [loading, setLoading] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
-  const sortedHotelsLists = useMemo(() => {
-    const arr = [...hotelsLists];
-    arr.sort((a, b) => {
-      const aValue = a[sortField] || '';
-      const bValue = b[sortField] || '';
-      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    });
-    return arr;
-  }, [hotelsLists, sortField, sortOrder]);
+  const sortedHotelsLists = useSortList(hotelsLists, sortField, sortOrder, currentManager);
 
   const fetchHotelsLists = async () => {
     try {
@@ -104,7 +95,7 @@ export const useHotelsList = () => {
       setError(null);
       await hotelsListService.delete(id);
       await fetchHotelsLists(); // Обновляем список
-    } catch (err: any) {
+    } catch (err) {
       setError('Ошибка удаления списка: ' + getErrorMessage(err));
       console.error('Error deleting list:', err);
     }

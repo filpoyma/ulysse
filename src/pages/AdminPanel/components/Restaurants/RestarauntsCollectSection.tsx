@@ -8,7 +8,7 @@ import { Loader } from '../../../../components/Loader/Loader.tsx';
 const RestaurantsCollectSection = () => {
   const {
     restaraunts,
-    currentUser,
+    currentManager,
     loading,
     error,
     isCreatingRestaraunt,
@@ -44,7 +44,7 @@ const RestaurantsCollectSection = () => {
       ) : (
         <RestarauntsCollectTable
           restaraunts={restaraunts}
-          currentUser={currentUser}
+          currentUser={currentManager}
           onRestarauntEdit={handleRestarauntEdit}
           onDeleteRestaraunt={handleDeleteRestaraunt}
           isCreatingRestaraunt={isCreatingRestaraunt}

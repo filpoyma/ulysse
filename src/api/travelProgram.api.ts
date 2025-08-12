@@ -26,6 +26,10 @@ const travelProgramApi = {
     const url = this.getUrl('template');
     return api.post(url, { json: { name } }).json();
   },
+  async copy(id: string): Promise<TravelProgramSingleResponse> {
+    const url = this.getUrl('copy');
+    return api.post(url, { json: { id } }).json();
+  },
   async getById(id: string): Promise<TravelProgramSingleResponse> {
     const url = this.getUrl(id);
     return api.get(url).json();
@@ -62,7 +66,10 @@ const travelProgramApi = {
         };
       }[];
     },
-  ): Promise<{ data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review'][0]; success: boolean }> {
+  ): Promise<{
+    data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review'][0];
+    success: boolean;
+  }> {
     const url = this.getUrl(`${id}/review-day/${dayIndex}`);
     return api.put(url, { json: data }).json();
   },
@@ -70,7 +77,10 @@ const travelProgramApi = {
   async deleteReviewDay(
     id: string,
     dayIndex: number,
-  ): Promise<{ data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review']; success: boolean }> {
+  ): Promise<{
+    data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review'];
+    success: boolean;
+  }> {
     const url = this.getUrl(`${id}/review-day/${dayIndex}`);
     return api.delete(url).json();
   },
@@ -79,7 +89,10 @@ const travelProgramApi = {
     id: string,
     fromIndex: number,
     toIndex: number,
-  ): Promise<{ data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review']; success: boolean }> {
+  ): Promise<{
+    data: ITravelProgramResponse['secondPageTables']['routeDetailsTable']['review'];
+    success: boolean;
+  }> {
     const url = this.getUrl(`${id}/review-days/reorder`);
     return api.put(url, { json: { fromIndex, toIndex } }).json();
   },
@@ -145,6 +158,14 @@ const travelProgramApi = {
   ): Promise<{ data: IFourthDayData[]; success: boolean }> {
     const url = this.getUrl(`${programId}/day-section/${dayIndex}`);
     return api.delete(url).json();
+  },
+
+  async updateProgramName(
+    programId: string,
+    name: string,
+  ): Promise<{ data: ITravelProgramResponse; success: boolean }> {
+    const url = this.getUrl(`${programId}/name`);
+    return api.put(url, { json: { name } }).json();
   },
 };
 

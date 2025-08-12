@@ -8,6 +8,7 @@ import styles from '../adminLayout.module.css';
 const ProgramsSection = () => {
   const {
     programs,
+    currentManager,
     loading,
     error,
     isModalOpen,
@@ -19,7 +20,16 @@ const ProgramsSection = () => {
     handleCreateTemplateSubmit,
     handleDeleteProgram,
     handleProgramClick,
-    handleProgramEdit,
+    handleProgramCopy,
+    // Состояние и методы для редактирования
+    editingId,
+    editingName,
+    isSaving,
+    handleEditClick,
+    handleSave,
+    handleCancel,
+    handleKeyPress,
+    onEditingNameChange,
   } = usePrograms();
 
   if (loading) return <Loader />;
@@ -30,12 +40,22 @@ const ProgramsSection = () => {
       {error && <div className={styles.error}>{error}</div>}
       <ProgramsTable
         programs={programs}
+        currentManager={currentManager}
         onProgramClick={handleProgramClick}
-        onProgramEdit={handleProgramEdit}
+        onProgramCopy={handleProgramCopy}
         onDeleteProgram={handleDeleteProgram}
         sortField={sortField}
         sortOrder={sortOrder}
         onSort={handleSortPrograms}
+        // Состояние и методы для редактирования
+        editingId={editingId}
+        editingName={editingName}
+        isSaving={isSaving}
+        onEditClick={handleEditClick}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        onKeyPress={handleKeyPress}
+        onEditingNameChange={onEditingNameChange}
       />
 
       <CreateTemplateModal

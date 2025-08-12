@@ -1,4 +1,6 @@
 import { FC, RefObject } from 'react';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import Trash2 from '../../../../assets/icons/trash2.svg';
 import Edit from '../../../../assets/icons/edit.svg';
 import Check from '../../../../assets/icons/check.svg';
@@ -7,10 +9,8 @@ import Copy from '../../../../assets/icons/copy.svg';
 import ChevronDown from '../../../../assets/icons/chevronDown.svg';
 import ChevronUp from '../../../../assets/icons/chevronUp.svg';
 import styles from '../../adminLayout.module.css';
-import dayjs from 'dayjs';
 import { SectionHeader } from '../SectionHeader.tsx';
 import { IHotelsList } from '../../../../types/hotelsList.types.ts';
-import { useNavigate } from 'react-router-dom';
 
 interface HotelsListTableProps {
   hotelsLists: IHotelsList[];
@@ -71,26 +71,23 @@ const HotelsListTable: FC<HotelsListTableProps> = ({
         <table className={styles.table}>
           <thead>
             <tr>
-              <th
-                onClick={() => onSort && onSort('name')}
-                style={{ cursor: 'pointer', minWidth: 120 }}>
+              <th onClick={() => onSort && onSort('name')} className={styles.sortItem}>
                 Название
                 <span className={styles.sortArrow}>{renderSortIcon('name')}</span>
               </th>
-              <th
-                onClick={() => onSort && onSort('description')}
-                style={{ cursor: 'pointer', minWidth: 200 }}>
+              <th onClick={() => onSort && onSort('description')} className={styles.sortItem}>
                 Описание
                 <span className={styles.sortArrow}>{renderSortIcon('description')}</span>
               </th>
               <th style={{ minWidth: 80 }}>Количество отелей</th>
-              <th
-                onClick={() => onSort && onSort('updatedAt')}
-                style={{ cursor: 'pointer', minWidth: 120 }}>
+              <th onClick={() => onSort && onSort('updatedAt')} className={styles.sortItem}>
                 Дата обновления
                 <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
               </th>
-              <th>Менеджер</th>
+              <th onClick={() => onSort && onSort('manager')} className={styles.sortItem}>
+                Менеджер
+                <span className={styles.sortArrow}>{renderSortIcon('manager')}</span>
+              </th>
               <th>Действия</th>
             </tr>
           </thead>

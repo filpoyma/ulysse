@@ -59,7 +59,7 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
   width: 100%;
-margin-top: 24px;
+  margin-top: 24px;
   padding: 0.8rem 0.5rem;
 }
 
@@ -236,12 +236,16 @@ margin-top: 24px;
   background-color: var(--header-bg);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 10;
   margin-top: 0.5rem;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
 }
 
 .dropdownMenuVisible {
@@ -310,12 +314,14 @@ margin-top: 24px;
   padding: 8px 12px;
   font-size: 1rem;
   color: #3d2e13;
-  transition: border 0.2s, box-shadow 0.2s;
+  transition:
+    border 0.2s,
+    box-shadow 0.2s;
 }
 
 .hotelCreateInput:focus {
   border: 1.5px solid #bfa16b;
-  box-shadow: 0 0 0 2px rgba(191, 161, 107, 0.10);
+  box-shadow: 0 0 0 2px rgba(191, 161, 107, 0.1);
   outline: none;
 }
 
@@ -332,6 +338,11 @@ margin-top: 24px;
   margin-left: 2px;
   line-height: 1;
   font-size: 0.9em;
+}
+
+.sortItem {
+  cursor: pointer;
+  min-width: 80px;
 }
 
 .saveBtnContainer {
@@ -370,7 +381,9 @@ margin-top: 24px;
   font-weight: 500;
   cursor: pointer;
   margin-right: 1rem;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .backButton:hover {
@@ -379,7 +392,7 @@ margin-top: 24px;
 }
 
 .tablesRow {
- display: flex;
+  display: flex;
   flex-direction: column;
   gap: 24px;
 }
@@ -390,3 +403,32 @@ margin-top: 24px;
   height: 2.5rem;
   line-height: 1;
 }
+
+/* Стили для редактирования имени программы */
+.editNameContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editNameInput {
+  flex: 0.8;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: white;
+}
+
+.editNameInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(191, 161, 107, 0.1);
+}
+
+.editNameInput:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+

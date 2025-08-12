@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useRestaurantsList } from '../../hooks/useRestaurantsList.ts';
 import RestaurantsListTable from './RestaurantsListTable.tsx';
 import { Loader } from '../../../../components/Loader/Loader.tsx';
@@ -23,12 +23,7 @@ const RestaurantsListSection: FC = () => {
     handleCancelNewList,
     handleNavigateToListPage,
     handleCopyList,
-    fetchRestaurantsLists,
   } = useRestaurantsList();
-
-  useEffect(() => {
-    if (!restaurantsLists.length) fetchRestaurantsLists();
-  }, []);
 
   return (
     <>

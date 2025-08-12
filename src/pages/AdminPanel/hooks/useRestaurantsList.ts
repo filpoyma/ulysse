@@ -1,10 +1,11 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { restaurantsListService } from '../../../services/restaurantsList.service';
 import { useNavigate } from 'react-router-dom';
 import { getErrorMessage } from '../../../utils/helpers.ts';
 import { ICreateRestaurantsListData, IRestaurantsList } from '../../../types/restaurantsList.types';
 import { useSelector } from 'react-redux';
 import { selectAdminEmail, selectRestaurantsList } from '../../../store/selectors.ts';
+import useSortList from './useSort.ts';
 
 export const useRestaurantsList = () => {
   const navigate = useNavigate();
@@ -16,24 +17,22 @@ export const useRestaurantsList = () => {
     name: '',
     description: '',
   });
-  const [sortField, setSortField] = useState<keyof IRestaurantsList>('manager');
+  const [sortField, setSortField] = useState<keyof IRestaurantsList>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
-  const sortedRestaurantsLists = useMemo(() => {
-    if (sortField === 'manager') return restaurantsLists;
-    const arr = [...restaurantsLists];
-    arr.sort((a, b) => {
-      const aValue = a[sortField] || '';
-      const bValue = b[sortField] || '';
-      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    });
-    return arr;
-  }, [restaurantsLists, sortField, sortOrder]);
+  useEffect(() => {
+    if (!restaurantsLists.length) fetchRestaurantsLists();
+  }, []);
+
+  const sortedRestaurantsLists = useSortList(
+    restaurantsLists,
+    sortField,
+    sortOrder,
+    currentManager,
+  );
 
   const fetchRestaurantsLists = async () => {
     try {

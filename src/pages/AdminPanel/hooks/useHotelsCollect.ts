@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { hotelService } from '../../../services/hotel.service';
 import { hotelActions } from '../../../store/reducers/hotel';
@@ -6,6 +6,7 @@ import { IHotel, IHotelCreate } from '../../../types/hotel.types.ts';
 import { selectAdminEmail, selectHotels } from '../../../store/selectors.ts';
 import { useNavigate } from 'react-router-dom';
 import { getErrorMessage } from '../../../utils/helpers.ts';
+import useSortList from './useSort.ts';
 
 const defaultHotel = {
   name: '',
@@ -30,17 +31,7 @@ export const useHotelsCollect = () => {
   const [loading, setLoading] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
-  const sortedHotels = useMemo(() => {
-    const sortedHotels = [...hotels];
-    sortedHotels.sort((a, b) => {
-      const aValue = a[sortField] || '';
-      const bValue = b[sortField] || '';
-      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
-    });
-    return sortedHotels;
-  }, [hotels, sortField, sortOrder]);
+  const sortedHotels = useSortList(hotels, sortField, sortOrder, currentManager);
 
   const fetchHotels = async () => {
     try {

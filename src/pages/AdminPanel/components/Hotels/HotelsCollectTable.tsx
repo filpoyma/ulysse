@@ -69,39 +69,27 @@ const HotelsCollectTable: FC<HotelsTableProps> = ({
         <table className={styles.table}>
           <thead>
             <tr>
-              <th
-                onClick={() => onSort && onSort('name')}
-                style={{ cursor: 'pointer', minWidth: 120 }}>
+              <th onClick={() => onSort && onSort('name')} className={styles.sortItem}>
                 Название
                 <span className={styles.sortArrow}>{renderSortIcon('name')}</span>
               </th>
-              <th
-                onClick={() => onSort && onSort('country')}
-                style={{ cursor: 'pointer', minWidth: 100 }}>
+              <th onClick={() => onSort && onSort('country')} className={styles.sortItem}>
                 Страна
                 <span className={styles.sortArrow}>{renderSortIcon('country')}</span>
               </th>
-              <th
-                onClick={() => onSort && onSort('city')}
-                style={{ cursor: 'pointer', minWidth: 100 }}>
+              <th onClick={() => onSort && onSort('city')} className={styles.sortItem}>
                 Город
                 <span className={styles.sortArrow}>{renderSortIcon('city')}</span>
               </th>
-              <th
-                onClick={() => onSort && onSort('region')}
-                style={{ cursor: 'pointer', minWidth: 100 }}>
+              <th onClick={() => onSort && onSort('region')} className={styles.sortItem}>
                 Регион
                 <span className={styles.sortArrow}>{renderSortIcon('region')}</span>
               </th>
-              <th
-                onClick={() => onSort && onSort('updatedAt')}
-                style={{ cursor: 'pointer', minWidth: 120 }}>
+              <th onClick={() => onSort && onSort('updatedAt')} className={styles.sortItem}>
                 Дата обновления
                 <span className={styles.sortArrow}>{renderSortIcon('updatedAt')}</span>
               </th>
-              <th
-                onClick={() => onSort && onSort('manager')}
-                style={{ cursor: 'pointer', minWidth: 120 }}>
+              <th onClick={() => onSort && onSort('manager')} className={styles.sortItem}>
                 Менеджер
                 <span className={styles.sortArrow}>{renderSortIcon('manager')}</span>
               </th>

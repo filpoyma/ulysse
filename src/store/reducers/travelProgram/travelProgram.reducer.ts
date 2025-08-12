@@ -51,6 +51,20 @@ const { reducer: travelProgramReducer, actions: travelProgramActions } = createS
             return program; 
         })
     },
+    updateProgramInList(
+      state: ITravelProgramState,
+      action: PayloadAction<Partial<ITravelProgramResponse> & { id: string }>,
+    ) {
+      state.programs = state.programs.map(program => {
+        if (program._id === action.payload.id) {
+          return {
+            ...program,
+            ...action.payload,
+          };
+        }
+        return program;
+      });
+    },
     addProgram(state: ITravelProgramState, action: PayloadAction<ITravelProgramResponse>) {
       state.programs.push(action.payload);
     },
